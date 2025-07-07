@@ -1,0 +1,65 @@
+*******************************************************************************
+HEADER    'SCF-start data created by xband  {generation_date}'
+*******************************************************************************
+TITLE     'SPR-KKR calculation for {system}'
+SYSTEM    {system}
+PACKAGE   SPRKKR
+FORMAT    6  (21.05.2007)
+*******************************************************************************
+GLOBAL SYSTEM PARAMETER
+NQ                 {nq}
+NT                 {nt}
+NM                 {nm}
+IREL               {irel}
+*******************************************************************************
+SCF-INFO
+INFO      NONE
+SCFSTATUS START
+FULLPOT   F
+BREITINT  F
+NONMAG    F
+ORBPOL    NONE
+EXTFIELD  F
+BLCOUPL   F
+BEXT      0.0000000000
+SEMICORE  F
+LLOYD     F
+NE        {ne}
+IBZINT    {ibzint}
+NKTAB     {nktab}
+XC-POT    PBE
+SCF-ALG   BROYDEN2
+SCF-ITER  0
+SCF-MIX   0.2
+SCF-TOL   0.00001
+RMSAVV    999999.0
+RMSAVB    999999.0
+EF        0
+VMTZ      0
+*******************************************************************************
+LATTICE
+{lattice}
+*******************************************************************************
+SITES
+CARTESIAN T
+BASSCALE      1.0000000000    1.0000000000    1.0000000000
+{sites}
+*******************************************************************************
+OCCUPATION
+{occupations}
+*******************************************************************************
+REFERENCE SYSTEM
+{ref_system}
+*******************************************************************************
+MAGNETISATION DIRECTION
+KMROT              0
+QMVEC         0.0000000000    0.0000000000    0.0000000000
+{mag_directions}
+*******************************************************************************
+MESH INFORMATION
+MESH-TYPE EXPONENTIAL
+{mesh_info}
+*******************************************************************************
+TYPES
+{types}
+

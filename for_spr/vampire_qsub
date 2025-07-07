@@ -1,0 +1,39 @@
+#!/bin/bash
+#PBS -d .
+#PBS -l nodes=1:ppn=17 #:iband
+#PBS -N Vampire_for_spr
+#PBS -j oe
+#PBS -l walltime=2000:00:00
+
+currDir=`pwd`
+
+LD_LIBRARY_PATH=/share/intel/mkl/lib/intel64/:$LD_LIBRARY_PATH
+. /share/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh
+export I_MPI_FALLBACK_DEVICE=disable
+export I_MPI_FABRICS=shm #:ofa
+export I_MPI_PIN=disable
+export LD_LIBRARY_PATH
+
+ulimit -s unlimited
+
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Ti4Mn8Rh4/216/FiM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Ti4Mn8Rh4/119/FiM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Ti4Fe8Cu4/216/FiM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Ti4Fe8Cu4/119/FiM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/V4Fe8Ir4/216/FM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/V4Fe8Ir4/119/FiM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Mn8Nb4Ir4/119/FiM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Sc4Co4Ni8/216/FM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Sc4Co4Ni8/139/FiM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Mn8Cr4Pt4/225/FiM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Mn8Cr4Pt4/139/FiM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Zr4Nb4Co8/216/FM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Co8Ru4Ir4/119/FM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Ti4Ni8Ru4/216/FM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Ti4Ni8Ru4/119/FM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Sc4Co8Hg4/119/FM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+(cd /home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Ta4Fe8Ru4/216/FM/vampire;      /share/vampire/bin/vampire-serial-intel) &
+
+
+
+wait

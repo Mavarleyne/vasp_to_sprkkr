@@ -1,0 +1,33 @@
+#!/bin/bash
+#PBS -d .
+#PBS -l nodes=4:ppn=20
+#PBS -N Jxc_100
+#PBS -j oe
+#PBS -l walltime=240:00:00
+
+
+export HOME_DIR=`pwd`
+echo $HOME_DIR
+
+(cd $HOME_DIR/Ti4Mn8Rh4/216/FiM;           	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Ti4Mn8Rh4/119/FiM;           	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Ti4Fe8Cu4/216/FiM;           	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Ti4Fe8Cu4/119/FiM;           	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/V4Fe8Ir4/216/FiM;            	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/V4Fe8Ir4/119/FiM;            	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Mn8Nb4Ir4/119/FiM;           	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Sc4Co4Ni8/216/FiM;           	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Sc4Co4Ni8/139/FiM;           	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Hf4Fe8Ru4/119/FiM;           	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Mn8Cr4Pt4/225/FiM;           	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Mn8Cr4Pt4/139/FiM;           	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Zr4Nb4Co8/216/FiM;           	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Ta4Ti8Mo4/216/FM;            	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Co8Ru4Ir4/119/FM;            	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Ti4Ni8Ru4/216/FM;            	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Ti4Ni8Ru4/119/FM;            	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Sc4Co8Hg4/119/FiM;           	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+(cd $HOME_DIR/Ta4Fe8Ru4/216/FiM;           	    /share/SPRKKR-8.6/kkrgen8.6MPI *JXC.inp > *JXC.out 2>&1) &
+
+
+wait

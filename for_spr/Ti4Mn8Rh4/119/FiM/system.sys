@@ -1,0 +1,43 @@
+system data-file created by pymatgen2sprkkr
+<generated-system>
+xband-version
+5.0
+dimension
+3D
+9 tetragonal body-centered 4/mmm D_4h
+space group number (ITXC and AP)
+119 361
+structure type
+UNKNOWN
+lattice parameter A  [a.u.]
+7.197173946071
+ratio of lattice parameters  b/a  c/a
+1.000000000000 1.846715928824
+lattice parameters  a b c  [a.u.]
+7.197173946071 7.197173946071 13.291135768726
+lattice angles  alpha beta gamma  [deg]
+90.000000000000 90.000000000000 90.000000000000
+primitive vectors     (cart. coord.) [A]
+  -0.500000000000  0.500000000000  0.923357964412
+  0.500000000000  -0.500000000000  0.923357964412
+  0.500000000000  0.500000000000  -0.923357964412
+number of sites NQ
+  4
+ IQ ICL     basis vectors     (cart. coord.) [A]                      RWS [a.u.]  NLQ  NOQ ITOQ
+  1   1  -0.000000000000   0.500000000000   0.461678982206       2.762862746829   3    1   3
+  2   2   0.500000000000   0.000000000000   0.461678982206       2.762862746829   3    1   1
+  3   3   0.000000000000   0.000000000000   0.000000000000       2.762862746829   3    1   1
+  4   4  -0.000000000000   0.000000000000   0.923357964412       2.664189077299   3    1   2
+number of sites classes NCL 
+  4
+ICL WYCK NQCL IQECL (equivalent sites)
+  1   -    1  1
+  2   -    1  2
+  3   -    1  3
+  4   -    1  4
+number of atom types NT
+  3
+ IT  ZT  TXTT  NAT  CONC  IQAT (sites occupied)
+  1  25    Mn    2  1.000  2 3
+  2  45    Rh    1  1.000  4
+  3  22    Ti    1  1.000  1
