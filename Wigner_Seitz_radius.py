@@ -1,4 +1,6 @@
 import os
+from pathlib import Path
+
 from pymatgen.core import Structure
 
 
@@ -14,21 +16,22 @@ def load_rws_vst(rws_file_path="rws.vst"):
     """
     rws_vst = {}
     try:
-        with open(os.path.expanduser(rws_file_path), 'r') as f:
+        with open(Path(rws_file_path), 'r') as f:
             for line in f:
                 if line.strip() and not line.startswith('#'):
                     parts = line.split()
                     if len(parts) >= 2:
-                        element, radius = parts[0], float(parts[1])
+                        element, radius = parts[-1], float(parts[1])
                         rws_vst[element] = radius
     except FileNotFoundError:
         print(f"Файл {rws_file_path} не найден. Используются дефолтные радиусы.")
         # Дефолтные радиусы для Mn, Cr, Pt (на основе целевых значений)
         # rws_vst = {'Mn': 1.35, 'Cr': 1.34, 'Pt': 1.45}
+    # print(rws_vst)
     return rws_vst
 
 
-def get_rws(structure: Structure, rws_file_path=None, base_radii=None, volume_override=None):
+def get_rws(structure: Structure, rws_file_path='rws.vst', base_radii=None, volume_override=None):
     """
     Масштабирует радиусы Вигнера-Зейтца для 3D-систем, чтобы суммарный объём сфер соответствовал объёму ячейки.
 
@@ -44,6 +47,7 @@ def get_rws(structure: Structure, rws_file_path=None, base_radii=None, volume_ov
     Raises:
         ValueError: Если сумма атомов не соответствует числу сайтов в структуре
     """
+    # print(structure)
     # Константы
     PI = 3.141592653589793238462643
 
@@ -64,13 +68,14 @@ def get_rws(structure: Structure, rws_file_path=None, base_radii=None, volume_ov
     # Загрузка базовых радиусов
     if base_radii is None:
         base_radii = load_rws_vst(rws_file_path) if rws_file_path else {
-            element.symbol: element.atomic_radius if element.atomic_radius else 1.3
+            element.symbol: element.atomic_radius_calculated if element.atomic_radius_calculated else 1.3
             for element in composition
         }
 
     # Формирование словаря радиусов и числа атомов
     atomic_radii = {element: (base_radii.get(element, 1.3), natoms[element])
                     for element in natoms}
+
 
     # Сумма кубов базовых радиусов, умноженных на количество атомов
     total_r3 = sum(count * radius ** 3 for _, (radius, count) in atomic_radii.items())

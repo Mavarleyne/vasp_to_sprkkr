@@ -1,0 +1,49 @@
+system data-file created by sprkkr_sysgen on Fri 12 Dec 14:02:14  2025
+Fe4Co2Sn2
+xband-version
+6.3
+dimension
+3D
+Bravais lattice
+            8        tetragonal  primitive      4/mmm  D_4h  
+space group number (ITXC and AP)
+ 129  361
+structure type
+UNKNOWN
+lattice parameter A  [a.u.]
+        7.944857862504
+ratio of lattice parameters  b/a  c/a
+        1.000000000000        1.441600059325
+lattice parameters  a b c  [a.u.]
+        7.944857862504        7.944857862504       11.453307565915
+lattice angles  alpha beta gamma  [deg]
+      90.000000000000      90.000000000000      90.000000000000
+primitive vectors     (cart. coord.) [A]
+        1.000000000000       0.000000000000       0.000000000000
+        0.000000000000       1.000000000000       0.000000000000
+        0.000000000000       0.000000000000       1.441600059325
+number of sites NQ
+  8
+ IQ ICL     basis vectors     (cart. coord.) [A]                      RWS [a.u.]  NLQ  NOQ ITOQ
+  1   1       0.500000       0.500000       0.720800       2.562027415768   3    1   1
+  2   2       0.000000       0.000000       0.720800       2.562027415768   3    1   1
+  3   3       0.500000       0.000000       0.374627       2.562027415768   3    1   2
+  4   4       0.000000       0.500000       1.066973       2.562027415768   3    1   2
+  5   5       0.000000       0.000000       0.000000       2.522567188853   3    1   3
+  6   6       0.500000       0.500000       0.000000       2.522567188853   3    1   3
+  7   7       0.000000       0.500000       0.349796       3.320433728174   3    1   4
+  8   8       0.500000       0.000000       1.091804       3.320433728174   3    1   4
+number of sites classes NCL
+  8
+ICL WYCK NQCL IQECL (equivalent sites)
+  1   -    2  1 2
+  2   -    2  3 4
+  3   -    2  5 6
+  4   -    2  7 8
+number of atom types NT
+  4
+ IT  ZT  TXTT  NAT  CONC  IQAT (sites occupied)
+   1   26  Fe_1       2 1.000  1 2
+   2   26  Fe_2       2 1.000  3 4
+   3   27  Co         2 1.000  5 6
+   4   50  Sn         2 1.000  7 8

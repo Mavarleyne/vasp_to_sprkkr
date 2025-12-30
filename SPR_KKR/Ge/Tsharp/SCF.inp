@@ -1,0 +1,21 @@
+###############################################################################
+#  SPR-KKR input file    *SCF.inp 
+###############################################################################
+
+CONTROL  DATASET     = Fe8Co4Ge4 
+         ADSI        = SCF 
+         POTFIL      = Fe8Co4Ge4.pot 
+         PRINT = 0    
+
+MODE     SP-SREL 
+
+TAU      BZINT= POINTS  NKTAB= 1000 
+
+ENERGY   GRID={5}  NE={30} 
+         ImE=0.0 Ry   EMIN=-0.2 Ry
+
+SCF      NITER=200 MIX=0.05 VXC=PBE
+         TOL=0.00001  MIXOP=0.20  ISTBRY=1 
+         QIONSCL=0.80 
+         NOSSITER
+         MSPIN={1.722 1.722 1.531 1.531 2.69 2.69 2.69 2.69 0.955 1.065 0.955 1.065 -0.051 -0.051 -0.051 -0.051} 

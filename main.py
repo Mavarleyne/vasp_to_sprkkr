@@ -1,4 +1,5 @@
 import os
+import shutil
 from pathlib import Path
 from Potential import generate_pot
 from System import generate_sys
@@ -34,25 +35,25 @@ for alloy in alloys:
         orders = [i for i in os.listdir(f'{wd}/{alloy}/{group}') if os.path.isdir(f'{wd}/{alloy}/{group}/{i}')]
         # min_e = 0
         for order in orders:
-            path = f'{wd}/{alloy}/{group}/{order}'
-            current += 1
-            sys = generate_sys(f'{path}/POSCAR')
-            with open(f'{path}/system.sys', 'w') as f:
-                f.write(sys)
-
-            pot = generate_pot(f'{path}/POSCAR')
-            with open(f'{path}/potential.pot', 'w') as f:
-                f.write(pot)
+            # path = f'{wd}/{alloy}/{group}/{order}'
+            # current += 1
+            # sys = generate_sys(f'{path}/POSCAR')
+            # with open(f'{path}/system.sys', 'w') as f:
+            #     f.write(sys)
+            #
+            # pot = generate_pot(f'{path}/POSCAR')
+            # with open(f'{path}/potential.pot', 'w') as f:
+            #     f.write(pot)
 
 
 
 
             # TODO: CLEANER
-            # files = [i for i in os.listdir(f'{wd}/{alloy}/{group}/{order}')]
-            # for file in files:
-            #     path = f'{wd}/{alloy}/{group}/{order}/{file}'
-            #     if file not in ['POSCAR', 'magmoms']:
-            #         try:
-            #             shutil.rmtree(path)
-            #         except:
-            #             os.remove(path)
+            files = [i for i in os.listdir(f'{wd}/{alloy}/{group}/{order}')]
+            for file in files:
+                path = f'{wd}/{alloy}/{group}/{order}/{file}'
+                if file not in ['POSCAR', 'magmoms']:
+                    try:
+                        shutil.rmtree(path)
+                    except:
+                        os.remove(path)
