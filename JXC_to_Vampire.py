@@ -140,6 +140,31 @@ def read_cell(path='*JXC.out'):
     return primitive_vectors * a_lat * 0.52917721090, basis
     # return struc.lattice.matrix * a_lat * 0.52917721090,  struc.frac_coords
 
+    # A_real = primitive_vectors
+    #
+    # # 2. Метрический тензор
+    # G = A_real @ A_real.T
+    #
+    # # 3. Собственные значения для длин осей
+    # eigvals = np.linalg.eigvalsh(G)
+    # lengths = np.sqrt(np.sort(eigvals))  # длины a,b,c
+    #
+    # # 4. Построим конвенциональную ортогональную матрицу базиса
+    # # Используем собственные векторы метрического тензора
+    # eigvals_full, eigvecs = np.linalg.eigh(G)
+    #
+    # # Собственные векторы формируют ортогональные оси
+    # A_conventional = eigvecs * np.sqrt(eigvals_full)  # масштабируем по длине осей
+    #
+    # # 5. Переводим атомные координаты в новую систему
+    # # coords_new = coords @ P.T @ np.linalg.inv(A_conventional.T)
+    # coords_new = basis @ np.linalg.inv(primitive_vectors.T) @ np.linalg.inv(A_conventional.T)
+    #
+    # # Приводим к [0,1)
+    # coords_new = coords_new % 1.0
+    #
+    # return A_conventional, coords_new, lengths
+
 
 #### Считываем обменные интегралы ####
 def read_J(d_a, path='*JXC.out'):
