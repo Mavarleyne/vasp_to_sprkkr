@@ -78,7 +78,6 @@ def split_atom_types_by_magmom(prim: Structure,
     return types, site2type, magmoms
 
 
-
 def generate_sys_data(structure, magmoms=None):
     """
     Анализирует структуру, возвращает все данные, необходимые

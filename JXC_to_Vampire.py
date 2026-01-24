@@ -91,6 +91,7 @@ def read_atoms(path='*JXC.out'):
 
 #### Считывание файла JXC.out ####
 def read_cell(path='*JXC.out'):
+    print(path)
     f = open(path, "r")
     lines = f.readlines()
     f.close()
@@ -114,15 +115,15 @@ def read_cell(path='*JXC.out'):
     primitive_vectors = np.array(Data_lattice[:9])
     primitive_vectors.shape = (3, 3)
 
-    # lat = Lattice(primitive_vectors)
-    # print(lat.angles)
+    lat = Lattice(primitive_vectors)
+
     # print(lat.matrix)
     basis = np.array(Data_lattice[9:len(Data_lattice)])
     basis.shape = (int(len(basis) / 3), 3)
-    # species = [i.split('_')[0] for i in read_atoms(path)[0]]
-    # print(primitive_vectors)
-    # print(species)
-    # print(basis)
+    species = [i.split('_')[0] for i in read_atoms(path)[0]]
+    print(f'Primitive: \n{primitive_vectors}')
+    print(species)
+    print(basis)
     # struc = Structure(lattice=primitive_vectors * a_lat,
     #                   species=species,
     #                   coords=basis,
@@ -132,7 +133,10 @@ def read_cell(path='*JXC.out'):
     # print(Poscar(struc))
     # print(SpacegroupAnalyzer(Poscar(struc).structure).get_space_group_number())
     # exit()
-
+    print(f'Lattice Object')
+    print(lat.abc)
+    print(lat.angles)
+    print(lat.matrix)
     return primitive_vectors * a_lat * 0.52917721090, basis
     # return struc.lattice.matrix * a_lat * 0.52917721090,  struc.frac_coords
 
@@ -258,6 +262,7 @@ def write_ucf_and_input(path: str):
         file.write('#output:material-magnetisation\n')
         file.write('output:magnetisation-length\n')
         file.write('output:mean-total-energy\n')
+        file.write('exchange:ab-initio = True\n')
 
 
 def generate_vampire_inputs(wd: str):
@@ -356,10 +361,31 @@ def get_curve(wd):
 
 if __name__ == '__main__':
     wd = '/home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr'
-    generate_vampire_inputs(wd)
-    # read_cell('/home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr/Ti4Fe8Cu4/119/FiM/vampire/JXC.out')
-    generate_run(wd)
+    # generate_vampire_inputs(wd)
+    read_cell('/home/buche/VaspTesting/Danil/magnetocaloric_nn/new_parser/Ti4Fe8Cu4/119/FiM/*JXC.out')
+    # generate_run(wd)
     # get_curve(wd)
+    pos = Poscar.from_string('''Ti2 Fe4 Cu2
+1.0
+   0.0000000000000004    2.6697164148707921    3.4780319178278170
+   5.3394328297415843    0.0000000000000000    0.0000000000000004
+   0.0000000000000004    2.6697164148707921   -3.4780319178278161
+Ti Fe Cu
+2 4 2
+direct
+   0.0000000000000000    0.4999999999999999    0.0000000000000000 Ti
+   0.5000000000000000    0.9999999999999999    0.4999999999999999 Ti
+   0.5000000000000000    0.2500000000000001    0.0000000000000000 Fe,spin=2.2
+   0.0000000000000000    0.7500000000000001    0.4999999999999998 Fe,spin=-2.2
+   0.0000000000000000    0.0000000000000000    0.0000000000000000 Fe,spin=2.2
+   0.5000000000000000    0.4999999999999999    0.4999999999999999 Fe,spin=2.2
+   0.5000000000000000    0.7500000000000001    0.9999999999999999 Cu
+   0.0000000000000000    0.2500000000000000    0.5000000000000000 Cu
+''')
+
+    print(pos.structure.lattice.abc)
+    sga = SpacegroupAnalyzer(pos.structure)
+    print(sga.get_primitive_standard_structure().lattice.abc)
 
 '''
 #!/bin/bash
