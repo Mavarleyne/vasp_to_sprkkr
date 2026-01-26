@@ -4,6 +4,7 @@
 import random
 import os
 import shutil
+from pathlib import Path
 
 import numpy as np
 import scipy.constants as constants
@@ -60,6 +61,11 @@ material[index]:uniaxial-anisotropy-direction = 0.0 , 0.0, 1.0
 
 #### Считываем тип атомов ####
 def read_atoms(path='*JXC.out'):
+    '''
+
+    :param path:
+    :return: indexes, concentrates
+    '''
     f = open(path, "r")
     lines = f.readlines()
     f.close()
@@ -73,8 +79,8 @@ def read_atoms(path='*JXC.out'):
             # for i in range(int(inp[len(inp) - 1]) - int(inp[8]) + 1):
 
             for i in range(int(inp[nat_i])):
-                IQ += [inp[1]]
-                conc += [float(inp[7])]
+                IQ.append(inp[1])
+                conc.append(float(inp[7]))
 
         if len(inp) > 3:
             if inp[0] == 'type' and inp[1] == 'TXTT' and inp[2] == 'NL':
@@ -89,12 +95,46 @@ def read_atoms(path='*JXC.out'):
     return IQ, conc
 
 
+def get_ba_ca(path: Path):
+    sys_path = [i for i in path.parent.glob('*.sys')]
+    print(path)
+    if not sys_path:
+        sys_path = [i for i in path.parents[1].glob('*.sys')]
+        if not sys_path:
+            print('.sys doesn\'t exist')
+            raise FileExistsError
+            # return '.sys doesn\'t exist'
+
+    sys_text = sys_path[0].read_text().split('\n')
+    flag = False
+    for line in sys_text:
+        if flag:
+            ba, ca = (float(i.strip()) for i in line.split())
+            return ba, ca
+
+        if 'ratio of lattice parameters' in line:
+            flag = True
+
+    print('ba, ca didn\'t define')
+    raise ValueError
+    # return 'ba, ca didn\'t define'
+
+
+
 #### Считывание файла JXC.out ####
 def read_cell(path='*JXC.out'):
+    '''
+
+    :param path:
+    :return: tuple of basis and coords
+    '''
     print(path)
     f = open(path, "r")
     lines = f.readlines()
     f.close()
+
+    ba, ca = get_ba_ca(Path(path))
+    # ba, ca = 1, 1
 
     #### Считываем вектора трансляций, базис ####
     Data_lattice = []
@@ -114,56 +154,19 @@ def read_cell(path='*JXC.out'):
 
     primitive_vectors = np.array(Data_lattice[:9])
     primitive_vectors.shape = (3, 3)
+    primitive_vectors[:, 1] /= ba
+    primitive_vectors[:, 2] /= ca
 
     lat = Lattice(primitive_vectors)
 
     # print(lat.matrix)
     basis = np.array(Data_lattice[9:len(Data_lattice)])
     basis.shape = (int(len(basis) / 3), 3)
-    species = [i.split('_')[0] for i in read_atoms(path)[0]]
-    print(f'Primitive: \n{primitive_vectors}')
-    print(species)
-    print(basis)
-    # struc = Structure(lattice=primitive_vectors * a_lat,
-    #                   species=species,
-    #                   coords=basis,
-    #                   to_unit_cell=True)
-    # sga = SpacegroupAnalyzer(struc).get_space_group_number()
-    # print(sga)
-    # print(Poscar(struc))
-    # print(SpacegroupAnalyzer(Poscar(struc).structure).get_space_group_number())
-    # exit()
-    print(f'Lattice Object')
-    print(lat.abc)
-    print(lat.angles)
-    print(lat.matrix)
-    return primitive_vectors * a_lat * 0.52917721090, basis
-    # return struc.lattice.matrix * a_lat * 0.52917721090,  struc.frac_coords
+    basis[:, 1] /= ba
+    basis[:, 2] /= ca
+    # species = [i.split('_')[0] for i in read_atoms(path)[0]]
 
-    # A_real = primitive_vectors
-    #
-    # # 2. Метрический тензор
-    # G = A_real @ A_real.T
-    #
-    # # 3. Собственные значения для длин осей
-    # eigvals = np.linalg.eigvalsh(G)
-    # lengths = np.sqrt(np.sort(eigvals))  # длины a,b,c
-    #
-    # # 4. Построим конвенциональную ортогональную матрицу базиса
-    # # Используем собственные векторы метрического тензора
-    # eigvals_full, eigvecs = np.linalg.eigh(G)
-    #
-    # # Собственные векторы формируют ортогональные оси
-    # A_conventional = eigvecs * np.sqrt(eigvals_full)  # масштабируем по длине осей
-    #
-    # # 5. Переводим атомные координаты в новую систему
-    # # coords_new = coords @ P.T @ np.linalg.inv(A_conventional.T)
-    # coords_new = basis @ np.linalg.inv(primitive_vectors.T) @ np.linalg.inv(A_conventional.T)
-    #
-    # # Приводим к [0,1)
-    # coords_new = coords_new % 1.0
-    #
-    # return A_conventional, coords_new, lengths
+    return np.round(primitive_vectors * a_lat * 0.52917721090, 5), np.round(basis, 3)
 
 
 #### Считываем обменные интегралы ####
@@ -203,6 +206,13 @@ def read_J(d_a, path='*JXC.out'):
 
 #### Считывание магнитных моментов из SCF.out ####
 def read_magmom(num_atoms, composition: list, path='*SCF.out'):
+    '''
+
+    :param num_atoms:
+    :param composition: list of atom_labels
+    :param path:
+    :return: ndarray of float magmom from SCF.out
+    '''
     f = open(path, "r")
     lines = f.readlines()
     f.close()
@@ -287,7 +297,7 @@ def write_ucf_and_input(path: str):
         file.write('#output:material-magnetisation\n')
         file.write('output:magnetisation-length\n')
         file.write('output:mean-total-energy\n')
-        file.write('exchange:ab-initio = True\n')
+        # file.write('exchange:ab-initio = True\n')
 
 
 def generate_vampire_inputs(wd: str):
@@ -340,6 +350,55 @@ def generate_vampire_inputs(wd: str):
                 write_ucf_and_input(path)
 
 
+def generate_vampire_inputs_recursive(root_path: Path, depth: int):
+    # depth = 2
+
+    for system_path in root_path.rglob('*JXC.out'):
+        if len(system_path.relative_to(wd).parts) != depth + 1:
+            continue
+        print(system_path)
+        path = system_path.parent
+
+        # if (path / 'vampire').exists():
+        #     shutil.rmtree(f'{path}/vampire')
+        #
+        # continue
+        if not (path / 'vampire').exists():
+            (path / 'vampire').mkdir()
+
+        for file in ['*JXC.out', '*SCF.out']:
+            src = path / file
+            dst = path / 'vampire' / file
+            shutil.copy2(src, dst)
+        path = path / 'vampire'
+        shutil.copy2('/home/buche/VaspTesting/Danil/magnetocaloric_nn/vampire/vampire.mat',
+                     f'{path}/vampire.mat')
+
+        print(path)
+        labels = read_atoms(f'{path}/*JXC.out')[0]
+        rwss = read_atoms(f'{path}/*JXC.out')[0]
+        num = len(read_atoms(f'{path}/*JXC.out')[0])
+        mags = read_magmom(num, labels, f'{path}/*SCF.out')
+        mags = [abs(float(mag)) for mag in mags]
+        # print(mags)
+
+        with open(f'{path}/vampire.mat', 'w') as f:
+            f.write(f'material:num-materials = {num}\n')
+            for i in range(num):
+                # mat =  ''
+
+                mat = mat_sample.format(i + 1, labels[i], mags[i], labels[i].split('_')[0]).replace('[index]',
+                                                                                                    f'[{i + 1}]')
+                if mags[i] < 0.1:
+                    mat = mat.replace(f'material[{i + 1}]:atomic-spin-moment',
+                                      f'# material[{i + 1}]:atomic-spin-moment')
+
+                f.write(mat)
+        # for i in range(num):
+        #     print(mat_sample.format(i+1, labels[i], mags[i], labels[i].split('_')[0]), end='')
+        write_ucf_and_input(path.as_posix())
+
+
 def generate_run(wd: str):
     comms = ''
     alloys = [i for i in os.listdir(f'{wd}') if os.path.isdir(f'{wd}/{i}')]
@@ -350,12 +409,21 @@ def generate_run(wd: str):
                 continue
             orders = [i for i in os.listdir(f'{wd}/{alloy}/{group}') if os.path.isdir(f'{wd}/{alloy}/{group}/{i}')]
             for order in orders:
-                path = f'{wd}/{alloy}/{group}/{order}/vampire'
-                comms += command_vampire.replace('PATH_TO_VAMP_INP', f'{path};') + '\n'
+                path = f'{wd}{alloy}/{group}/{order}/vampire'
+                comms += command_vampire.replace('PATH_TO_VAMP_INP', f'{path}') + '\n'
 
     with open(f'{wd}/vampire_qsub', 'w') as f:
         f.write(vampire_run.replace('COMMANDS', comms))
     # print(vampire_run.replace('COMMANDS', comms))
+
+
+def generate_run_recursively(root_path: Path):
+    commands = ''
+    for system_path in root_path.rglob('*.UCF'):
+        path = system_path.parent.as_posix()
+        commands += command_vampire.replace('PATH_TO_VAMP_INP', f'{path}') + '\n'
+
+    (root_path / 'vampire_qsub').write_text(vampire_run.replace('COMMANDS', commands))
 
 
 def get_curve(wd):
@@ -385,32 +453,19 @@ def get_curve(wd):
 
 
 if __name__ == '__main__':
-    wd = '/home/buche/VaspTesting/Danil/magnetocaloric_nn/for_spr'
+    wd = '/home/buche/VaspTesting/Danil/magnetocaloric_nn/new_parser/'
     # generate_vampire_inputs(wd)
-    read_cell('/home/buche/VaspTesting/Danil/magnetocaloric_nn/new_parser/Ti4Fe8Cu4/119/FiM/*JXC.out')
+    # read_cell('/home/buche/VaspTesting/Danil/magnetocaloric_nn/new_parser/Ti4Fe8Cu4/119/FiM/*JXC.out')
     # generate_run(wd)
     # get_curve(wd)
-    pos = Poscar.from_string('''Ti2 Fe4 Cu2
-1.0
-   0.0000000000000004    2.6697164148707921    3.4780319178278170
-   5.3394328297415843    0.0000000000000000    0.0000000000000004
-   0.0000000000000004    2.6697164148707921   -3.4780319178278161
-Ti Fe Cu
-2 4 2
-direct
-   0.0000000000000000    0.4999999999999999    0.0000000000000000 Ti
-   0.5000000000000000    0.9999999999999999    0.4999999999999999 Ti
-   0.5000000000000000    0.2500000000000001    0.0000000000000000 Fe,spin=2.2
-   0.0000000000000000    0.7500000000000001    0.4999999999999998 Fe,spin=-2.2
-   0.0000000000000000    0.0000000000000000    0.0000000000000000 Fe,spin=2.2
-   0.5000000000000000    0.4999999999999999    0.4999999999999999 Fe,spin=2.2
-   0.5000000000000000    0.7500000000000001    0.9999999999999999 Cu
-   0.0000000000000000    0.2500000000000000    0.5000000000000000 Cu
-''')
 
-    print(pos.structure.lattice.abc)
-    sga = SpacegroupAnalyzer(pos.structure)
-    print(sga.get_primitive_standard_structure().lattice.abc)
+    # exit()
+
+    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ')
+    generate_vampire_inputs_recursive(wd, 2)
+    generate_run_recursively(wd)
+
+
 
 '''
 #!/bin/bash
