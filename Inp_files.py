@@ -79,8 +79,9 @@ def create_inp_file(type: str, tags_to_replace: dict, output_path: Path=None):
     inp = templates[type]
     for key, val in tags_to_replace.items():
         inp = inp.replace(key, val)
-    # with open(f'{output_path}/{type.upper()}.inp', 'w') as f:
-    #     f.write(inp)
+
+    with open(f'{output_path}/{type.upper()}.inp', 'w') as f:
+        f.write(inp)
     return inp
 
 

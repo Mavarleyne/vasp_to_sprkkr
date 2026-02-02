@@ -77,45 +77,46 @@ def sites_section(data: Dict) -> str:
     """Создаёт секцию NQ (atomic sites)."""
     prim = data["prim_structure"]
     rws_dict = data["rws_dict"]
-    site2type = data["site2type"]
     a_ang = data['a_ang']
 
     n_sites = len(prim.sites)
     s = f"number of sites NQ\n  {n_sites}\n"
     s += " IQ ICL     basis vectors     (cart. coord.) [A]                      RWS [a.u.]  NLQ  NOQ ITOQ\n"
     for i, site in enumerate(prim.sites, start=1):
-        # frac = np.mod(site.frac_coords, 1.0)
-        # frac = site.frac_coords
         frac = site.coords / a_ang
         elem = site.specie.symbol
         rws = rws_dict.get(elem, 2.5)
         s += (
             f"{i:3d}   {i:1d}   {_fmt_short(frac[0])}   {_fmt_short(frac[1])}   {_fmt_short(frac[2])}"
-            f"       {_fmt(rws, width=12, prec=12)}   3    1   {site2type[i-1]}\n"
+            f"       {_fmt(rws, width=12, prec=12)}   3    1   {site.type_idx}\n"
         )
 
     s += "number of sites classes NCL\n"
     s += f"  {n_sites}\n"
     s += "ICL WYCK NQCL IQECL (equivalent sites)\n"
-    # for i in range(1, n_sites + 1):
-    #     s += f"  {i:1d}   -    1  {i}\n"
 
-    atom_types = data["atom_types"]
-    for i, (label, Z, avg_mag, site_inds) in enumerate(atom_types, start=1):
-        sites_str = " ".join(str(idx + 1) for idx in site_inds)
+    symmetrized = data["symmetrized"].equivalent_sites
+    symmetrized_idx = data["symmetrized"].equivalent_indices
+    for i, _ in enumerate(symmetrized, start=1):
+        sites_str = " ".join([str(j + 1) for j in symmetrized_idx[i - 1]])
         s += f"  {i:1d}   -    {len(sites_str.split())}  {sites_str}\n"
     return s
 
 
 def atom_types_section(data: Dict) -> str:
     """Секция ATOM TYPES."""
-    atom_types = data["atom_types"]
+    symmetrized = data["symmetrized"].equivalent_sites
+    symmetrized_idx = data["symmetrized"].equivalent_indices
     s = "number of atom types NT\n"
-    s += f"  {len(atom_types)}\n"
+    s += f"  {len(symmetrized_idx)}\n"
     s += " IT  ZT  TXTT  NAT  CONC  IQAT (sites occupied)\n"
-    for i, (label, Z, avg_mag, site_inds) in enumerate(atom_types, start=1):
-        sites_str = " ".join(str(idx + 1) for idx in site_inds)
-        s += f"  {i:2d}  {Z:3d}  {label:<8} {len(site_inds):3d} 1.000  {sites_str}\n"
+
+    for i, equiv in enumerate(symmetrized, start=1):
+        label = equiv[0].type
+        Z = equiv[0].specie.Z
+        sites_str = " ".join([str(j + 1) for j in symmetrized_idx[i - 1]])
+        s += f"  {i:2d}  {Z:3d}  {label:<8} {len(equiv):3d} 1.000  {sites_str}\n"
+
     return s
 
 
@@ -137,17 +138,30 @@ def generate_sys_from_data(data: Dict) -> str:
 # Пример использования
 # ============================================================
 if __name__ == "__main__":
-    from pymatgen.io.vasp import Poscar
+    from pymatgen.io.vasp import Poscar, Outcar
 
-    pos = Poscar.from_file(Path("for_spr/Ti4Fe8Cu4/119/FiM/POSCAR"))
-    # pos = Poscar.from_file(Path("for_spr/Mn8Cr4Pt4/139/FiM/POSCAR"))
+
+    path = Path("SPR_KKR/Al/Tsharp/CONTCAR")
+    pos = Poscar.from_file(path)
+    out = Outcar(path.parent / 'OUTCAR')
+    magmoms = [mag['tot'] for mag in out.magnetization]
     structure = pos.structure
-    magmoms = [-0.534, 1.755, 2.137, -0.035]  # при необходимости
-    # magmoms = [3.178, 3.178, -2.593, 0.157]
 
-    # pos = Poscar.from_file(Path("for_spr/Mn8Cr4Pt4/139/FiM/POSCAR"))
-    # structure = pos.structure
-    # magmoms = [3.178, 3.178, -2.593, 0.157]
+    for i, _ in enumerate(structure.sites):
+        structure.sites[i].spin = magmoms[i]
+
+    sga = SpacegroupAnalyzer(structure)
+    prim = sga.get_primitive_standard_structure(keep_site_properties=True)
+    for d in prim.sites[0].__dict__:
+        print(d)
+
+    print(prim.sites[0].__dict__)
+
+    if hasattr(prim.sites[0], 'spin'):
+        print('Spin saved')
+        print(prim.sites[0].spin)
+    exit()
+
 
     data = generate_sys_data(structure, magmoms)
     sys_text = generate_sys_from_data(data)

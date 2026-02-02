@@ -40,11 +40,191 @@ def get_valence(structure: Structure):
         for level in element.get_electron_configuration():
             valence += level[2]
         valences.append(valence)
-    # print({el.symbol.split('_')[0]: val for el, val in zip(potcar, valences)})
     return {el.symbol.split('_')[0]: val for el, val in zip(potcar, valences)}
 
 
-def generate_pot_file(
+def pot_header_section(system_name: str) -> str:
+    now = datetime.datetime.now().strftime("%a %d %b %H:%M:%S %Z %Y")
+
+    s = "*******************************************************************************\n"
+    s += f"HEADER    'SCF-start data created by sprkkr_potgen  {now}'\n"
+    s += "*******************************************************************************\n"
+    s += f"TITLE     'SPR-KKR calculation for {system_name}'\n"
+    s += f"SYSTEM    {system_name}\n"
+    s += "PACKAGE   SPRKKR\n"
+    s += "FORMAT    6  (21.05.2007)\n"
+    s += "*******************************************************************************\n"
+    return s
+
+
+def pot_global_section(data, relativity: int) -> str:
+    prim = data["prim_structure"]
+    # atom_types = data["atom_types"]
+    symmetrized = data['symmetrized']
+
+    NQ = len(prim.sites)
+    NT = len(symmetrized.equivalent_indices)
+    NM = NT
+
+    s = "GLOBAL SYSTEM PARAMETER\n"
+    s += f"NQ{NQ:>19}\n"
+    s += f"NT{NT:>19}\n"
+    s += f"NM{NM:>19}\n"
+    s += f"IREL{relativity:>17}\n"
+    s += "*******************************************************************************\n"
+    return s
+
+
+def pot_scf_section(xc_potential, scf_mix, scf_tol) -> str:
+    s = "SCF-INFO\n"
+    s += "INFO      NONE\n"
+    s += "SCFSTATUS START\n"
+    s += "FULLPOT   F\n"
+    s += "BREITINT  F\n"
+    s += "NONMAG    F\n"
+    s += "ORBPOL    NONE\n"
+    s += "EXTFIELD  F\n"
+    s += "BLCOUPL   F\n"
+    s += "BEXT          0.0000000000\n"
+    s += "SEMICORE  F\n"
+    s += "LLOYD     F\n"
+    s += "NE               30\n"
+    s += "IBZINT            2\n"
+    s += "NKTAB             0\n"
+    s += f"XC-POT    {xc_potential}\n"
+    s += "SCF-ALG   BROYDEN2\n"
+    s += "SCF-ITER           0\n"
+    s += f"SCF-MIX       {scf_mix:.10}\n"
+    s += f"SCF-TOL       {scf_tol:.10}\n"
+    s += "RMSAVV    999999.0000000000\n"
+    s += "RMSAVB    999999.0000000000\n"
+    s += "EF            0.0000000000\n"
+    s += "VMTZ          0.0000000000\n"
+    s += "*******************************************************************************\n"
+    return s
+
+
+def pot_lattice_section(data) -> str:
+    prim_matrix = data["prim_matrix"]
+    a_au = data["a_au"]
+    bravais = data["bravais"]
+
+    s = "LATTICE\n"
+    s += "SYSDIM       3D\n"
+    s += "SYSTYPE      BULK\n"
+    s += f"BRAVAIS{bravais}\n"
+    s += f"ALAT{a_au:>22.10}\n"
+
+    for i, v in enumerate(prim_matrix, start=1):
+        s += f"A({i}){v[0]:>22.10f}    {v[1]:>16.10f}    {v[2]:>16.10f}\n"
+
+    s += "*******************************************************************************\n"
+    return s
+
+
+def pot_sites_section(data) -> str:
+    prim = data["prim_structure"]
+    a_ang = data["a_ang"]
+
+    s = "SITES\n"
+    s += "CARTESIAN T\n"
+    s += "BASSCALE      1.0000000000    1.0000000000    1.0000000000\n"
+    s += "        IQ      QX              QY              QZ\n"
+
+    for i, site in enumerate(prim.sites, start=1):
+        x, y, z = site.coords / a_ang
+        s += f"{i:>10d}{x:>16.10f}{y:>16.10f}{z:>16.10f}\n"
+
+    s += "*******************************************************************************\n"
+    return s
+
+
+def pot_occupation_section(data) -> str:
+    # site2type = data["site2type"]
+    symmetrized = data["symmetrized"]
+    s = "OCCUPATION\n"
+    s += "        IQ     IREFQ       IMQ       NOQ  ITOQ  CONC\n"
+
+    for type_idx, sym_sites in enumerate(symmetrized.equivalent_sites, start=1):
+        for i, site in enumerate(sym_sites):
+            s += f"{i + 1:10d}{site.type_idx:10d}{site.type_idx:10d}{1:10d}{site.type_idx:6d} 1.000\n"
+
+    s += "*******************************************************************************\n"
+    return s
+
+
+def pot_reference_section(data) -> str:
+    NT = len(data["symmetrized"].equivalent_indices)
+
+    s = "REFERENCE SYSTEM\n"
+    s += f"NREF{NT:>16}\n"
+    s += "      IREF      VREF            RMTREF\n"
+
+    for i in range(1, NT + 1):
+        s += f"{i:10d}    4.0000000000    0.0000000000\n"
+
+    s += "*******************************************************************************\n"
+    return s
+
+
+def pot_magnetisation_section(data) -> str:
+    NQ = len(data["prim_structure"].sites)
+
+    s = "MAGNETISATION DIRECTION\n"
+    s += "KMROT              0\n"
+    s += "QMVEC         0.0000000000    0.0000000000    0.0000000000\n"
+    s += "        IQ      QMTET           QMPHI \n"
+
+    for i in range(1, NQ + 1):
+        s += f"{i:10d}    0.0000000000    0.0000000000\n"
+
+    s += "*******************************************************************************\n"
+    return s
+
+
+def pot_mesh_section(data, mesh_type="EXPONENTIAL") -> str:
+    symmetrized = data["symmetrized"].equivalent_sites
+    # symmetrized_idx = data["symmetrized"].equivalent_indices
+    rws_dict = data["rws_dict"]
+
+    s = "MESH INFORMATION\n"
+    s += f"MESH-TYPE {mesh_type} \n"
+    s += "   IM      R(1)            DX         JRMT      RMT        JRWS      RWS\n"
+
+    for i, equiv_set in enumerate(symmetrized, start=1):
+        rws = rws_dict.get(equiv_set[0].specie.symbol, 2.6)
+        R1 = 1e-6
+        JRWS = 721
+        DX = math.log(rws / R1) / (JRWS - 1)
+        RMT = rws * 0.85
+
+        s += f"{i:5d}    {R1:.10f}    {DX:.10f}    0   {RMT: .10f}  {JRWS}   {rws: .10f}\n"
+
+    s += "*******************************************************************************\n"
+    return s
+
+
+def pot_types_section(data, valence) -> str:
+    # symmetrized = data["symmetrized"].equivalent_sites
+    symmetrized_idx = data["symmetrized"].equivalent_indices
+    prim = data['prim_structure']
+    sites = prim.sites
+    s = "TYPES\n"
+    s += "   IT     TXTT        ZT     NCORT     NVALT    NSEMCORSHLT\n"
+
+    for i, sym_sites in enumerate(symmetrized_idx, start=1):
+        type = sites[sym_sites[0]].type
+        base = sites[sym_sites[0]].specie.symbol
+        nval = int(valence[base])
+        Z = sites[sym_sites[0]].specie.Z
+        ncore = int(Z - nval)
+
+        s += f"{i:5d}     {type:<4s}{Z:>14d}{ncore:10d}{nval:10d}{0:15d}\n"
+    s += "*******************************************************************************\n"
+    return s
+
+
+def generate_pot_from_data(
     data: dict,
     xc_potential="PBE",
     relativity=2,
@@ -53,137 +233,33 @@ def generate_pot_file(
     scf_mix=0.2,
 ):
 
-    bravais = data["bravais"]
-    system_name = data["system_name"]
-    prim = data["prim_structure"]
-    atom_types = data["atom_types"]
-    site2type = data["site2type"]
-    rws_dict = data["rws_dict"]
-    prim_matrix = data["prim_matrix"]
-    a_au = data["a_au"]
-    a_ang = data['a_ang']
+    valence = get_valence(data["prim_structure"])
 
-    valence = get_valence(prim)
+    pot = ""
+    pot += pot_header_section(data["system_name"])
+    pot += pot_global_section(data, relativity)
+    pot += pot_scf_section(xc_potential, scf_mix, scf_tol)
+    pot += pot_lattice_section(data)
+    pot += pot_sites_section(data)
+    pot += pot_occupation_section(data)
+    pot += pot_reference_section(data)
+    pot += pot_magnetisation_section(data)
+    pot += pot_mesh_section(data, mesh_type)
+    pot += pot_types_section(data, valence)
 
-    now = datetime.datetime.now().strftime("%a %d %b %H:%M:%S %Z %Y")
-
-    NQ = len(prim.sites)
-    NT = len(atom_types)
-    NM = NT
-
-    filestring = []
-    filestring.append("*******************************************************************************\n")
-    filestring.append(f"HEADER    'SCF-start data created by sprkkr_potgen  {now}'\n")
-    filestring.append("*******************************************************************************\n")
-    filestring.append(f"TITLE     'SPR-KKR calculation for {system_name}'\n")
-    filestring.append(f"SYSTEM    {system_name}\n")
-    filestring.append("PACKAGE   SPRKKR\n")
-    filestring.append("FORMAT    6  (21.05.2007)\n")
-    filestring.append("*******************************************************************************\n")
-
-    filestring.append("GLOBAL SYSTEM PARAMETER\n")
-    filestring.append(f"NQ{NQ:>19}\n")
-    filestring.append(f"NT{NT:>19}\n")
-    filestring.append(f"NM{NM:>19}\n")
-    filestring.append(f"IREL{relativity:>17}\n")
-    filestring.append("*******************************************************************************\n")
-
-    filestring.append("SCF-INFO\n")
-    filestring.append("INFO      NONE\n")
-    filestring.append("SCFSTATUS START\n")
-    filestring.append("FULLPOT   F\n")
-    filestring.append("BREITINT  F\n")
-    filestring.append("NONMAG    F\n")
-    filestring.append("ORBPOL    NONE\n")
-    filestring.append("EXTFIELD  F\n")
-    filestring.append("BLCOUPL   F\n")
-    filestring.append("BEXT          0.0000000000\n")
-    filestring.append("SEMICORE  F\n")
-    filestring.append("LLOYD     F\n")
-    filestring.append("NE               30\n")
-    filestring.append("IBZINT            2\n")
-    filestring.append("NKTAB             0\n")
-    filestring.append(f"XC-POT    {xc_potential}\n")
-    filestring.append("SCF-ALG   BROYDEN2\n")
-    filestring.append("SCF-ITER           0\n")
-    filestring.append(f"SCF-MIX       {scf_mix:.10}\n")
-    filestring.append(f"SCF-TOL       {scf_tol:.10}\n")
-    filestring.append("RMSAVV    999999.0000000000\n")
-    filestring.append("RMSAVB    999999.0000000000\n")
-    filestring.append("EF            0.0000000000\n")
-    filestring.append("VMTZ          0.0000000000\n")
-    filestring.append("*******************************************************************************\n")
-
-    filestring.append("LATTICE\n")
-    filestring.append("SYSDIM       3D\n")
-    filestring.append("SYSTYPE      BULK\n")
-    filestring.append(f"BRAVAIS{bravais}\n")
-    filestring.append(f"ALAT{a_au:>22.10}\n")
-    for i, v in enumerate(prim_matrix, start=1):
-        filestring.append(f"A({i}){v[0]:>22.10f}    {v[1]:>16.10f}    {v[2]:>16.10f}\n")
-
-    filestring.append("*******************************************************************************\n")
-
-    filestring.append("SITES\n")
-    filestring.append("CARTESIAN T\n")
-    filestring.append("BASSCALE      1.0000000000    1.0000000000    1.0000000000\n")
-    filestring.append("        IQ      QX              QY              QZ\n")
-    for i, site in enumerate(prim.sites, start=1):
-        x, y, z = site.coords / a_ang
-        filestring.append(f"{i:>10d}{x:>16.10f}{y:>16.10f}{z:>16.10f}\n")
-    filestring.append("*******************************************************************************\n")
-
-    filestring.append("OCCUPATION\n")
-    filestring.append("        IQ     IREFQ       IMQ       NOQ  ITOQ  CONC\n")
-    for i, tindex in enumerate(site2type, start=1):
-        filestring.append(f"{i:10d}{tindex:10d}{tindex:10d}{1:10d}{tindex:6d} 1.000\n")
-    filestring.append("*******************************************************************************\n")
-
-    filestring.append("REFERENCE SYSTEM\n")
-    filestring.append(f"NREF{NT:>16}\n")
-    filestring.append("      IREF      VREF            RMTREF\n")
-    for i in range(1, NT + 1):
-        filestring.append(f"{i:10d}    4.0000000000    0.0000000000\n")
-    filestring.append("*******************************************************************************\n")
-
-    filestring.append("MAGNETISATION DIRECTION\n")
-    filestring.append("KMROT              0\n")
-    filestring.append("QMVEC         0.0000000000    0.0000000000    0.0000000000\n")
-    filestring.append("        IQ      QMTET           QMPHI \n")
-    for i in range(1, NQ + 1):
-        filestring.append(f"{i:10d}    0.0000000000    0.0000000000\n")
-    filestring.append("*******************************************************************************\n")
-
-    filestring.append("MESH INFORMATION\n")
-    filestring.append(f"MESH-TYPE {mesh_type} \n")
-    filestring.append("   IM      R(1)            DX         JRMT      RMT        JRWS      RWS\n")
-    for i, (label, Z, avg_mag, inds) in enumerate(atom_types, start=1):
-        rws = rws_dict.get(label.split("_")[0], 2.6)
-        R1 = 1e-6
-        JRWS = 721
-        DX = math.log(rws / R1) / (JRWS - 1)
-        RMT = rws * 0.85
-        filestring.append(f"{i:5d}    {R1:.10f}    {DX:.10f}    0   {RMT: .10f}  {JRWS}   {rws: .10f}\n")
-    filestring.append("*******************************************************************************\n")
-
-    filestring.append("TYPES\n")
-    filestring.append("   IT     TXTT        ZT     NCORT     NVALT    NSEMCORSHLT\n")
-    for i, (label, Z, avg_mag, inds) in enumerate(atom_types, start=1):
-        # val = {26: 8, 29: 11, 22: 4, 25: 7, 24: 6, 78: 10}.get(Z, 8)
-        filestring.append(f"{i:5d}     {label:<4s}{Z:>14d}{int(Z - valence[label.split('_')[0]]):10d}{int(valence[label.split('_')[0]]):10d}{0:15d}\n")
-    filestring.append("*******************************************************************************\n")
-
-    return ''.join(filestring)
-    # print(f"✅ POT-файл успешно записан: {output_path}")
+    return pot
 
 
 if __name__ == '__main__':
     # pos = Poscar.from_file(Path("for_spr/Ti4Fe8Cu4/119/FiM/POSCAR"))
     # magmoms = [-0.534, 1.755, 2.137, -0.035]  # при необходимости
-    pos = Poscar.from_file(Path("for_spr/Mn8Cr4Pt4/139/FiM/POSCAR"))
+    pos = Poscar.from_file(Path("SPR_KKR/Al/Tsharp/CONTCAR"))
     magmoms = [3.178, 3.178, -2.593, 0.157]
+
     structure = pos.structure
-    pot_text = generate_pot_file(structure, magmoms)
+    data = generate_sys_data(structure)
+    # pot_text = generate_pot_file(structure, magmoms)
+    pot_text = generate_pot_from_data(data)
 
     # print(sys_text)
     print('#' * 100)

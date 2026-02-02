@@ -11,74 +11,40 @@ from Wigner_Seitz_radius import get_rws
 from brave_from_pearson import Pearson, international_numbers_to_AP
 
 
-def split_atom_types_by_magmom(prim: Structure,
-                               magmoms: Optional[List[float]],
-                               tol: float = 1e-3
-                               ):
-    """
-    Возвращает:
-      - types: [(label, Z, avg_mag, [site_indices])]
-      - site2type: mapping site_index -> type_index (1-based)
-    Нумерация с суффиксами делается per-element: Fe_1, Fe_2, ...
-    Если элемент не разбивается (только 1 кластер), label = 'Fe' (без _1).
-    """
-    n_sites = len(prim.sites)
-    n_magmoms = len(magmoms)
+def set_types_gpt(structure):
+    sga = SpacegroupAnalyzer(structure)
+    symm_struct = sga.get_symmetrized_structure()
 
-    # --- редукция магнитных моментов ---
-    if n_magmoms != n_sites:
-        if n_magmoms % n_sites != 0:
-            raise ValueError(
-                f"Нельзя редуцировать magmoms: {n_magmoms=} не кратно {n_sites=}"
-            )
-        block = n_magmoms // n_sites
-        magmoms = [np.mean(magmoms[i * block:(i + 1) * block]) for i in range(n_sites)]
+    equiv_indices = symm_struct.equivalent_indices
+    equiv_sites = symm_struct.equivalent_sites
 
-    # --- группировка по элементам ---
-    elem_groups = defaultdict(list)
-    for i, site in enumerate(prim.sites):
-        elem_groups[site.specie.symbol].append(i)
+    specie_counter = defaultdict(int)
+    specie_total = defaultdict(int)
 
-    types = []
-    site2type = [None] * n_sites
-    tindex = 1
-    elem_counter = defaultdict(int)
+    # --- сначала считаем сколько групп у каждого элемента ---
+    for sites in equiv_sites:
+        specie = sites[0].specie.symbol
+        specie_total[specie] += 1
 
-    # --- кластеризация по магнитным моментам ---
-    for elem, inds in elem_groups.items():
-        mm = [magmoms[i] for i in inds]
-        clusters = []
-        assigned = [False] * len(inds)
-        for j, val in enumerate(mm):
-            if assigned[j]:
-                continue
-            cluster = [j]
-            assigned[j] = True
-            for k in range(j + 1, len(mm)):
-                if abs(mm[k] - val) <= tol:
-                    cluster.append(k)
-                    assigned[k] = True
-            clusters.append(cluster)
+    # --- теперь идём строго по equiv_groups ---
+    for type_idx, (inds, sites) in enumerate(zip(equiv_indices, equiv_sites)):
 
-        # --- формирование атомных типов (Fe, Fe_1, Fe_2 и т.д.) ---
-        for ci, cluster in enumerate(clusters, start=1):
-            site_inds = [inds[idx] for idx in cluster]
-            avg_mag = float(np.mean([magmoms[idx] for idx in site_inds]))
-            Z = Element(elem).Z
-            if len(clusters) == 1:
-                label = elem
-            else:
-                elem_counter[elem] += 1
-                label = f"{elem}_{elem_counter[elem]}"
-            types.append((label, Z, avg_mag, site_inds.copy()))
-            for site_idx in site_inds:
-                site2type[site_idx] = tindex
-            tindex += 1
+        specie = sites[0].specie.symbol
+        specie_counter[specie] += 1
 
-    return types, site2type, magmoms
+        if specie_total[specie] == 1:
+            type = specie
+        else:
+            type = f"{specie}_{specie_counter[specie]}"
+
+        for idx in inds:
+            structure[idx].properties["type"] = type
+            structure[idx].properties["type_idx"] = type_idx + 1
+
+    return structure
 
 
-def generate_sys_data(structure, magmoms=None):
+def generate_sys_data(structure):
     """
     Анализирует структуру, возвращает все данные, необходимые
     для генерации .sys и .pot файлов в формате SPR-KKR/xband.
@@ -87,6 +53,7 @@ def generate_sys_data(structure, magmoms=None):
         bravais
         system_name
         prim_structure
+        symmetrized (from primitive)
         atom_types  [(label, Z, avg_mag, site_indices), ...]
         site2type   [int,...]  — сопоставление каждого сайта типу
         rws_dict    {elem: rws}
@@ -96,14 +63,16 @@ def generate_sys_data(structure, magmoms=None):
         spacegroup  (int)
         magmoms     reduced list of mags
     """
-    from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-    import numpy as np
 
     sga = SpacegroupAnalyzer(structure, symprec=1e-3)
-    prim = sga.get_primitive_standard_structure()
-    conv = sga.get_conventional_standard_structure()
+    prim = sga.get_primitive_standard_structure(keep_site_properties=True)
+    prim = set_types_gpt(prim)
+    conv = sga.get_conventional_standard_structure(keep_site_properties=True)
+    sga_prim = SpacegroupAnalyzer(prim)
+    symmetrized = sga_prim.get_symmetrized_structure()
 
     pearson = sga.get_pearson_symbol()[:2]
+
     br = [str(i) for i in Pearson.from_symbol(pearson)]
     brave = f'{br[1]:>13}        {br[2]:<12}{br[3]:<15}{br[4]:<7}{br[5]:<6}'
 
@@ -112,9 +81,6 @@ def generate_sys_data(structure, magmoms=None):
 
     nat = Poscar(prim).natoms
     system_name = "".join([f'{el.symbol}{n}' if n != 1 else f'{el.symbol}' for el, n in zip(prim.composition.elements, nat)])
-
-    # типы атомов
-    atom_types, site2type, magmom = split_atom_types_by_magmom(prim, magmoms)
 
     # решётка
     a_ang = conv.lattice.a
@@ -130,12 +96,10 @@ def generate_sys_data(structure, magmoms=None):
         "system_name": system_name,
         "prim_structure": prim,
         "conv_structure": conv,
-        "atom_types": atom_types,
-        "site2type": site2type,
+        "symmetrized": symmetrized,
         "rws_dict": rws_dict,
         "prim_matrix": prim_matrix,
         "a_au": a_au,
         "a_ang": a_ang,
         "spacegroup": sga.get_space_group_number(),
-        "magmoms": magmom
     }
