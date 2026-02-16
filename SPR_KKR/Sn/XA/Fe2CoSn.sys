@@ -1,4 +1,4 @@
-system data-file created by sprkkr_sysgen on Fri 12 Dec 14:02:14  2025
+system data-file created by sprkkr_sysgen on Fri 06 Feb 14:57:11  2026
 Fe2CoSn
 xband-version
 6.3
@@ -7,7 +7,7 @@ dimension
 Bravais lattice
            13        cubic       face-centered  m3m    O_h   
 space group number (ITXC and AP)
- 216  361
+ 216  481
 structure type
 UNKNOWN
 lattice parameter A  [a.u.]

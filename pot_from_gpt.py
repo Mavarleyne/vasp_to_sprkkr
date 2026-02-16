@@ -12,6 +12,7 @@ from pathlib import Path
 from pymatgen.core import Structure
 from pymatgen.io.vasp import Poscar, Potcar
 
+from Wigner_Seitz_radius import get_rws_physical
 from sys_from_gpt import generate_sys_data
 
 
@@ -204,6 +205,40 @@ def pot_mesh_section(data, mesh_type="EXPONENTIAL") -> str:
     return s
 
 
+def pot_mesh_section_physical(data):
+    import math
+
+    symmetrized = data["symmetrized"].equivalent_sites
+    structure = data["structure"]
+
+    rmt_class, rws_class = get_rws_physical(
+        structure,
+        symmetrized
+    )
+
+    s = "MESH INFORMATION\n"
+    s += "MESH-TYPE EXPONENTIAL\n"
+    s += "   IM      R(1)            DX         JRMT      RMT        JRWS      RWS\n"
+
+    R1 = 1e-6
+    JRMT = 714
+    JRWS = 721
+
+    for i, (rmt, rws) in enumerate(zip(rmt_class, rws_class), start=1):
+
+        # Mesh строим от RMT!
+        DX = math.log(rmt / R1) / (JRMT - 1)
+
+        s += (
+            f"{i:5d}    {R1:.10f}    {DX:.10f}    {JRMT}   "
+            f"{rmt: .10f}  {JRWS}   {rws: .10f}\n"
+        )
+
+    s += "*******************************************************************************\n"
+    return s
+
+
+
 def pot_types_section(data, valence) -> str:
     # symmetrized = data["symmetrized"].equivalent_sites
     symmetrized_idx = data["symmetrized"].equivalent_indices
@@ -244,7 +279,8 @@ def generate_pot_from_data(
     pot += pot_occupation_section(data)
     pot += pot_reference_section(data)
     pot += pot_magnetisation_section(data)
-    pot += pot_mesh_section(data, mesh_type)
+    # pot += pot_mesh_section(data, mesh_type)
+    pot += pot_mesh_section_physical(data)
     pot += pot_types_section(data, valence)
 
     return pot

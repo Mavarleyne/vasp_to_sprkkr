@@ -38,13 +38,13 @@ def header_section(system_name: str, xband_version: str = "6.3") -> str:
     )
 
 
-def bravais_section(spacegroup_number: int, bravais: str) -> str:
+def bravais_section(spacegroup_number: Tuple[int], bravais: str) -> str:
     """Формирует описание браavais и номер группы симметрии."""
     return (
         f"Bravais lattice\n"
         f"{bravais}\n"
         f"space group number (ITXC and AP)\n"
-        f"{spacegroup_number:4d}  361\n"
+        f"{spacegroup_number[0]:4d}  {spacegroup_number[1]}\n"
         f"structure type\nUNKNOWN\n"
     )
 
@@ -87,7 +87,7 @@ def sites_section(data: Dict) -> str:
         elem = site.specie.symbol
         rws = rws_dict.get(elem, 2.5)
         s += (
-            f"{i:3d}   {i:1d}   {_fmt_short(frac[0])}   {_fmt_short(frac[1])}   {_fmt_short(frac[2])}"
+            f"{i:3d}   {site.type_idx:1d}   {_fmt_short(frac[0])}   {_fmt_short(frac[1])}   {_fmt_short(frac[2])}"
             f"       {_fmt(rws, width=12, prec=12)}   3    1   {site.type_idx}\n"
         )
 

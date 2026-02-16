@@ -4,10 +4,10 @@ from pathlib import Path
 from pymatgen.core import Structure
 from pymatgen.io.vasp import Poscar, Outcar
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from utils import get_magmoms_str
-import Potential
-import System_new
-from Potential import generate_pot
+# from utils import get_magmoms_str
+# import Potential
+# import System_new
+# from Potential import generate_pot
 
 scf_inp_template = '''###############################################################################
 #  SPR-KKR input file    *SCF.inp 
@@ -79,7 +79,6 @@ def create_inp_file(type: str, tags_to_replace: dict, output_path: Path=None):
     inp = templates[type]
     for key, val in tags_to_replace.items():
         inp = inp.replace(key, val)
-
     with open(f'{output_path}/{type.upper()}.inp', 'w') as f:
         f.write(inp)
     return inp
@@ -103,13 +102,13 @@ def get_tags_jxc(tags_to_replace: dict, name):
     return tags_to_replace
 
 
-def generate_inps(name: str, magmoms: list):
+def generate_inps(name: str, magmoms: list, output_path: Path):
     mags = ' '.join([str(i) for i in magmoms])
     scf = get_tags_scf(replaces_scf, name, mags)
     jxc = get_tags_jxc(replaces_jxc, name)
     # create_inp_file('scf', scf)
     # create_inp_file('jxc', jxc)
-    return create_inp_file('scf', scf), create_inp_file('jxc', jxc)
+    return create_inp_file('scf', scf, output_path), create_inp_file('jxc', jxc, output_path)
 
 
 if __name__ == '__main__':

@@ -18,4 +18,4 @@ SCF      NITER=200 MIX=0.05 VXC=PBE
          TOL=0.00001  MIXOP=0.20  ISTBRY=1 
          QIONSCL=0.80 
          NOSSITER
-         MSPIN={1.368 2.674 1.007 -0.025} 
+         MSPIN={1.37 1.37 1.01 0} 

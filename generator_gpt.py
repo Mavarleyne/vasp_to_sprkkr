@@ -57,6 +57,35 @@ def set_magmoms(structure: Structure, out: Outcar):
 
 to_calc = []
 
+
+def parse_vasp2spr(path: Path):
+    pos = Poscar.from_file(Path(f"{path}/CONTCAR"))
+    out = Outcar(path / "OUTCAR")
+
+    structure = set_magmoms(pos.structure, out)
+
+    data = generate_sys_data(structure)
+    pot_text = generate_pot_from_data(data)
+    with open(f'{path}/{data["system_name"]}.pot', 'w') as f:
+        f.write(pot_text)
+    # print(pot_text)
+
+    sys_text = generate_sys_from_data(data)
+    with open(f'{path}/{data["system_name"]}.sys', 'w') as f:
+        f.write(sys_text)
+    # print(sys_text)
+
+    magmoms = [data['prim_structure'].sites[i[0]].spin for i in data['symmetrized'].equivalent_indices]
+    scf, jxc = generate_inps(data["system_name"], magmoms, path)
+
+
+    with open(f'{path}/SCF.inp', 'w') as f:
+        f.write(scf)
+
+    with open(f'{path}/JXC.inp', 'w') as f:
+        f.write(jxc)
+
+
 wd = Path('SPR_KKR')
 alloys = [i for i in os.listdir(wd) if i != 'tested']
 for alloy in alloys:
@@ -66,30 +95,8 @@ for alloy in alloys:
             continue
 
         path = wd / alloy / group
-        print(f'{alloy} - {group}')
+        print(f'{alloy} - {group}', end='')
 
-        pos = Poscar.from_file(Path(f"{path}/CONTCAR"))
-        out = Outcar(path / "OUTCAR")
+        parse_vasp2spr(path)
+        print(' - complete')
 
-        structure = set_magmoms(pos.structure, out)
-
-        data = generate_sys_data(structure)
-        pot_text = generate_pot_from_data(data)
-        with open(f'{path}/{data["system_name"]}.pot', 'w') as f:
-            f.write(pot_text)
-        # print(pot_text)
-
-        sys_text = generate_sys_from_data(data)
-        with open(f'{path}/{data["system_name"]}.sys', 'w') as f:
-            f.write(sys_text)
-        # print(sys_text)
-
-        magmoms = [data['prim_structure'].sites[i[0]].spin for i in data['symmetrized'].equivalent_indices]
-        scf, jxc = generate_inps(data["system_name"], magmoms)
-        print(scf)
-
-        with open(f'{path}/SCF.inp', 'w') as f:
-            f.write(scf)
-
-        with open(f'{path}/JXC.inp', 'w') as f:
-            f.write(jxc)

@@ -7,7 +7,7 @@ import datetime
 import numpy as np
 from collections import defaultdict
 from typing import List, Optional, Tuple, Dict
-from Wigner_Seitz_radius import get_rws
+from Wigner_Seitz_radius import get_rws, get_rws_physical
 from brave_from_pearson import Pearson, international_numbers_to_AP
 
 
@@ -80,8 +80,9 @@ def generate_sys_data(structure):
     # 'BRAVAIS           13        cubic       face-centered  m3m    O_h '
 
     nat = Poscar(prim).natoms
+    # print((prim.composition.elements, nat))
     system_name = "".join([f'{el.symbol}{n}' if n != 1 else f'{el.symbol}' for el, n in zip(prim.composition.elements, nat)])
-
+    # print(system_name)
     # решётка
     a_ang = conv.lattice.a
     ANG_TO_AU = 1.889726125
@@ -90,6 +91,11 @@ def generate_sys_data(structure):
 
     # радиусы Вигнера–Зейтца
     rws_dict = get_rws(prim)
+
+    rmt_class, rws_class = get_rws_physical(
+        prim,
+        symmetrized
+    )
 
     return {
         "bravais": brave,
@@ -101,5 +107,20 @@ def generate_sys_data(structure):
         "prim_matrix": prim_matrix,
         "a_au": a_au,
         "a_ang": a_ang,
-        "spacegroup": sga.get_space_group_number(),
+        "spacegroup": (sga.get_space_group_number(), international_numbers_to_AP[sga.get_space_group_number()]),
+        "rmt_class": rmt_class,
+        "rws_class": rws_class
     }
+
+
+if __name__ == '__main__':
+    p = Path('SPR_KKR/Al/Tsharp/CONTCAR')
+    s = Structure.from_file(p)
+
+    sga = SpacegroupAnalyzer(s)
+    new = sga.get_refined_structure()
+    print(f'Old:\n{s.frac_coords}')
+    print(f'Refined:\n{new.frac_coords}')
+
+    data = generate_sys_data(s)
+    print(data['rws_class'])
