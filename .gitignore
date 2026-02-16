@@ -1,0 +1,7 @@
+*.inp
+*.pot
+*.sys
+SPR_KKR
+__pycache__
+.idea
+for_spr
