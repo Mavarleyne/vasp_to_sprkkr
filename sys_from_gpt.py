@@ -147,8 +147,12 @@ if __name__ == "__main__":
     magmoms = [mag['tot'] for mag in out.magnetization]
     structure = pos.structure
 
-    for i, _ in enumerate(structure.sites):
-        structure.sites[i].spin = magmoms[i]
+    data = generate_sys_data(structure)
+    print(generate_sys_from_data(data))
+
+    exit()
+    # for i, _ in enumerate(structure.sites):
+    #     structure.sites[i].spin = magmoms[i]
 
     sga = SpacegroupAnalyzer(structure)
     prim = sga.get_primitive_standard_structure(keep_site_properties=True)

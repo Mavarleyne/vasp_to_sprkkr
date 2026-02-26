@@ -14,7 +14,7 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.io.vasp.inputs import Poscar
 
 
-da_max = 2.15
+da_max = 10  # lst val: 2.15
 macrocell_size = np.array([4, 4, 4])
 T_min = 0
 T_max = 1000
@@ -170,12 +170,14 @@ def read_cell(path='*JXC.out'):
 
 
 #### Считываем обменные интегралы ####
-def read_J(d_a, path='*JXC.out'):
-    f = open(path, "r")
-    lines = f.readlines()
-    f.close()
+def read_J(d_a, dr_max_count: int = 100, path='*JXC.out'):
+    with open(path, "r", encoding='utf-8') as f:
+        lines = f.read().split('\n')
 
     J = []
+    dr_count = 0
+    prev = 0
+    # curr = 0
     for i in range(len(lines)):
         inp = lines[i].split()
 
@@ -183,15 +185,26 @@ def read_J(d_a, path='*JXC.out'):
             continue
 
         if inp[0] == 'IQ' and inp[6] == 'JQ' and len(inp) == 12:
-            IQ = float(inp[5]);
+            IQ = float(inp[5])
             JQ = float(inp[11])
             inp_J = lines[i + 3].split()
             if float(inp_J[8]) < d_a and abs(float(inp_J[10]) * 1000) > 0.01:
-                J += [[IQ - 1, JQ - 1, float(inp_J[2]), float(inp_J[3]), float(inp_J[4]),
-                       float(inp_J[10]) * constants.e * 2]]
-                J += [[JQ - 1, IQ - 1, -float(inp_J[2]), -float(inp_J[3]), -float(inp_J[4]),
-                       float(inp_J[10]) * constants.e * 2]]
+                curr = float(inp_J[8])
+                if abs(prev - curr) > 0.001:
+                    # print(curr)
+                    dr_count += 1
 
+                if dr_count == dr_max_count + 1:
+                    break
+                    # pass
+
+                J.append([IQ - 1, JQ - 1, float(inp_J[2]), float(inp_J[3]), float(inp_J[4]),
+                       float(inp_J[10]) * constants.e * 2])
+                J.append([JQ - 1, IQ - 1, -float(inp_J[2]), -float(inp_J[3]), -float(inp_J[4]),
+                       float(inp_J[10]) * constants.e * 2])
+                prev = curr
+                # print(curr, float(inp_J[10]))
+    print(dr_count)
     J = np.array(J)
 
     sorted_idx = np.lexsort(J.T)
@@ -232,7 +245,7 @@ def read_magmom(num_atoms, composition: list, path='*SCF.out'):
     return magmom
 
 
-def write_ucf_and_input(path: str):
+def write_ucf_and_input(path: str, dr_max: int):
     with open(f'{path}/vampire.UCF', "w") as file:
         file.write('# Unit cell size (Angstrom):\n')
         file.write('1.0 1.0 1.0\n')
@@ -243,8 +256,8 @@ def write_ucf_and_input(path: str):
         for i in range(cell[1].shape[0]):
             file.write('{} {} {} {} {}\n'.format(i, cell[1][i, 0], cell[1][i, 1], cell[1][i, 2], i))
         file.write('# Interactions\n')
-
-        interactions = np.column_stack((np.arange(0, read_J(da_max, f'{path}/*JXC.out').shape[0]), read_J(da_max, f'{path}/*JXC.out')))
+        Jij = read_J(da_max, dr_max, f'{path}/*JXC.out')
+        interactions = np.column_stack((np.arange(0, Jij.shape[0]), Jij))
         file.write('{} isotropic\n'.format(interactions.shape[0]))
         np.savetxt(file, interactions, fmt='%d %d %d %d %d %d %.4e')
 
@@ -350,27 +363,31 @@ def generate_vampire_inputs(wd: str):
                 write_ucf_and_input(path)
 
 
-def generate_vampire_inputs_recursive(root_path: Path, depth: int):
+def generate_vampire_inputs_recursive(root_path: Path, depth: int, dr_max: int):
     # depth = 2
 
     for system_path in root_path.rglob('*JXC.out'):
-        if len(system_path.relative_to(wd).parts) != depth + 1:
+        if len(system_path.relative_to(root_path).parts) != depth + 1:
             continue
         print(system_path)
         path = system_path.parent
+        # if dr_max:
+        #     path = path / dr_max
 
         # if (path / 'vampire').exists():
         #     shutil.rmtree(f'{path}/vampire')
         #
         # continue
-        if not (path / 'vampire').exists():
-            (path / 'vampire').mkdir()
+        # vamp_dir_name = 'vampire'
+        vamp_dir_name = str(dr_max)
+        if not (path / vamp_dir_name).exists():
+            (path / vamp_dir_name).mkdir()
 
         for file in ['*JXC.out', '*SCF.out']:
             src = path / file
-            dst = path / 'vampire' / file
+            dst = path / vamp_dir_name / file
             shutil.copy2(src, dst)
-        path = path / 'vampire'
+        path = path / vamp_dir_name
         shutil.copy2('/home/buche/VaspTesting/Danil/magnetocaloric_nn/vampire/vampire.mat',
                      f'{path}/vampire.mat')
 
@@ -396,7 +413,7 @@ def generate_vampire_inputs_recursive(root_path: Path, depth: int):
                 f.write(mat)
         # for i in range(num):
         #     print(mat_sample.format(i+1, labels[i], mags[i], labels[i].split('_')[0]), end='')
-        write_ucf_and_input(path.as_posix())
+        write_ucf_and_input(path.as_posix(), dr_max)
 
 
 def generate_run(wd: str):
@@ -460,10 +477,19 @@ if __name__ == '__main__':
     # get_curve(wd)
 
     # exit()
+    # jij = read_J(da_max, 2, 'JXC.out')
+    # print(np.round(jij[:-1]), jij[-1])
+    # for i in jij:
+    #     print(np.round(i[:-1]), i[-1])
+    # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ')
+    # generate_vampire_inputs_recursive(Path('Fe'), 0)
+    # generate_run_recursively(wd)
+    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe/')
 
-    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ')
-    generate_vampire_inputs_recursive(wd, 2)
-    generate_run_recursively(wd)
+    for i in range(1, 46):
+        generate_vampire_inputs_recursive(wd, 0, i)
+
+
 
 
 

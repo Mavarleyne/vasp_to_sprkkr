@@ -44,6 +44,14 @@ def set_types_gpt(structure):
     return structure
 
 
+def snap_to_grid(structure: Structure, step=0.25) -> Structure:
+    for i, site in enumerate(structure.sites):
+        snapped = np.round(site.frac_coords / step) * step
+        structure[i] = site.specie.symbol, snapped
+
+    return structure
+
+
 def generate_sys_data(structure):
     """
     Анализирует структуру, возвращает все данные, необходимые
@@ -65,13 +73,15 @@ def generate_sys_data(structure):
     """
 
     sga = SpacegroupAnalyzer(structure, symprec=1e-3)
-    prim = sga.get_primitive_standard_structure(keep_site_properties=True)
+    prim = snap_to_grid(sga.get_primitive_standard_structure(keep_site_properties=True))
     prim = set_types_gpt(prim)
-    conv = sga.get_conventional_standard_structure(keep_site_properties=True)
+    conv = snap_to_grid(sga.get_conventional_standard_structure(keep_site_properties=True))
     sga_prim = SpacegroupAnalyzer(prim)
     symmetrized = sga_prim.get_symmetrized_structure()
+    # print(prim)
 
     pearson = sga.get_pearson_symbol()[:2]
+    # sga.get_
 
     br = [str(i) for i in Pearson.from_symbol(pearson)]
     brave = f'{br[1]:>13}        {br[2]:<12}{br[3]:<15}{br[4]:<7}{br[5]:<6}'
@@ -92,10 +102,10 @@ def generate_sys_data(structure):
     # радиусы Вигнера–Зейтца
     rws_dict = get_rws(prim)
 
-    rmt_class, rws_class = get_rws_physical(
-        prim,
-        symmetrized
-    )
+    # rmt_class, rws_class = get_rws_physical(
+    #     prim,
+    #     symmetrized
+    # )
 
     return {
         "bravais": brave,
@@ -108,8 +118,8 @@ def generate_sys_data(structure):
         "a_au": a_au,
         "a_ang": a_ang,
         "spacegroup": (sga.get_space_group_number(), international_numbers_to_AP[sga.get_space_group_number()]),
-        "rmt_class": rmt_class,
-        "rws_class": rws_class
+        # "rmt_class": rmt_class,
+        # "rws_class": rws_class
     }
 
 
@@ -117,10 +127,11 @@ if __name__ == '__main__':
     p = Path('SPR_KKR/Al/Tsharp/CONTCAR')
     s = Structure.from_file(p)
 
-    sga = SpacegroupAnalyzer(s)
-    new = sga.get_refined_structure()
-    print(f'Old:\n{s.frac_coords}')
-    print(f'Refined:\n{new.frac_coords}')
+    # sga = SpacegroupAnalyzer(s)
+    # new = sga.get_refined_structure()
+    # print(f'Old:\n{s.frac_coords}')
+    # print(f'Refined:\n{new.frac_coords}')
 
     data = generate_sys_data(s)
-    print(data['rws_class'])
+    # print(data['rws_class'])
+    print(data['prim_structure'])

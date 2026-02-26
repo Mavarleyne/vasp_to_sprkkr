@@ -86,17 +86,20 @@ def parse_vasp2spr(path: Path):
         f.write(jxc)
 
 
-wd = Path('SPR_KKR')
-alloys = [i for i in os.listdir(wd) if i != 'tested']
-for alloy in alloys:
-    groups = [i for i in os.listdir(f'{wd}/{alloy}') if os.path.isdir(f'{wd}/{alloy}/{i}')]
-    for group in groups:
-        if 'In' == alloy and 'XA' == group:
-            continue
-
-        path = wd / alloy / group
-        print(f'{alloy} - {group}', end='')
-
-        parse_vasp2spr(path)
-        print(' - complete')
-
+# wd = Path('SPR_KKR')
+wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/Tsharp_new_best_parser')
+parse_vasp2spr(wd)
+exit()
+# alloys = [i for i in os.listdir(wd) if i != 'tested']
+# for alloy in alloys:
+#     groups = [i for i in os.listdir(f'{wd}/{alloy}') if os.path.isdir(f'{wd}/{alloy}/{i}')]
+#     for group in groups:
+#         if 'In' == alloy and 'XA' == group:
+#             continue
+#
+#         path = wd / alloy / group
+#         print(f'{alloy} - {group}', end='')
+#
+#         parse_vasp2spr(path)
+#         print(' - complete')
+#
