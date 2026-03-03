@@ -17,9 +17,9 @@ from pymatgen.io.vasp.inputs import Poscar
 da_max = 10  # lst val: 2.15
 macrocell_size = np.array([4, 4, 4])
 T_min = 0
-T_max = 1000
+T_max = 1400
 T_step = 10
-MC_step = 1000
+MC_step = 50000
 
 vampire_run = '''#!/bin/bash
 #PBS -d .
@@ -295,7 +295,7 @@ def write_ucf_and_input(path: str, dr_max: int):
         file.write('sim:temperature-increment = {}\n'.format(T_step))
 
         file.write('sim:equilibration-time-steps = {}\n'.format(MC_step))
-        file.write('sim:loop-time-steps = {}\n'.format(MC_step))
+        file.write('sim:loop-time-steps = {}\n'.format(MC_step * 2))
         file.write('sim:time-steps-increment = 1\n')
         file.write('#------------------------------------------\n')
         file.write('# Program and integrator details\n')
@@ -443,7 +443,7 @@ def generate_run_recursively(root_path: Path):
     (root_path / 'vampire_qsub').write_text(vampire_run.replace('COMMANDS', commands))
 
 
-def get_curve(wd):
+def get_curve(wd: Path):
     alloys = [i for i in os.listdir(f'{wd}') if os.path.isdir(f'{wd}/{i}')]
     for alloy in alloys:
         groups = [i for i in os.listdir(f'{wd}/{alloy}') if os.path.isdir(f'{wd}/{alloy}/{i}')]
@@ -469,6 +469,174 @@ def get_curve(wd):
                     print(curve)
 
 
+def get_curve_recursively(root: Path):
+    curves = {}
+    for path in root.rglob('output'):
+        out = path.read_text().split('\n')
+        flag = False
+        curve = []
+        for line in out[:-1]:
+            if line[0] == '0':
+                flag = True
+                curve.append([float(i) for i in line.split()[:2]])
+            if flag:
+                curve.append([float(i) for i in line.split()[:2]])
+        curves[path.parent.as_posix()] = np.array(curve)
+        # print(curve)
+    return curves
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+from scipy.signal import savgol_filter
+
+def critical_law_safe(T, A, Tc, beta):
+    """
+    Безопасная версия критического закона.
+    Возвращает 0 при T >= Tc.
+    """
+    result = np.zeros_like(T)
+    mask = T < Tc
+    result[mask] = A * (Tc - T[mask])**beta
+    return result
+
+
+def curie_critical_fit(data, save_path):
+
+    # --- Удаление дубликатов ---
+    T_unique, indices = np.unique(data[:,0], return_index=True)
+    M_unique = data[:,1][indices]
+
+    sort_idx = np.argsort(T_unique)
+    T = T_unique[sort_idx]
+    M = M_unique[sort_idx]
+
+    # --- Сглаживание ---
+    window = 21 if len(M) > 21 else len(M)-1
+    if window % 2 == 0:
+        window -= 1
+
+    M_smooth = savgol_filter(M, window_length=window, polyorder=3)
+
+    # --- Первичная оценка Tc по производной ---
+    dM_dT = np.gradient(M_smooth) / np.gradient(T)
+    Tc_est = T[np.argmax(np.abs(dM_dT))]
+
+    # --- Выбираем область только ниже Tc_est ---
+    mask = (T < Tc_est) & (M_smooth > 0.05)
+
+    T_fit = T[mask]
+    M_fit = M_smooth[mask]
+
+    if len(T_fit) < 10:
+        raise ValueError("Недостаточно точек для критического фита.")
+
+    # --- Начальные параметры ---
+    A0 = np.max(M_fit)
+    Tc0 = Tc_est + 50      # немного выше оценочного Tc
+    beta0 = 0.33
+
+    # --- Границы ---
+    lower_bounds = [0, Tc_est, 0.1]
+    upper_bounds = [10, Tc_est + 500, 0.6]
+
+    popt, _ = curve_fit(
+        critical_law_safe,
+        T_fit,
+        M_fit,
+        p0=[A0, Tc0, beta0],
+        bounds=(lower_bounds, upper_bounds),
+        maxfev=30000
+    )
+
+    A, Tc, beta = popt
+
+    print(f"Tc (critical fit) = {Tc:.2f} K")
+    print(f"beta = {beta:.3f}")
+
+    # --- Построение ---
+    plt.figure(figsize=(8,6))
+    plt.plot(T, M, label="Исходные данные")
+    plt.plot(T, M_smooth, '--', label="Сглаженные данные")
+
+    T_model = np.linspace(min(T_fit), Tc, 400)
+    M_model = critical_law_safe(T_model, A, Tc, beta)
+
+    plt.plot(T_model, M_model, label="Критический фит")
+
+    plt.scatter(Tc, 0, color='red', zorder=5)
+    plt.annotate(f"Tc = {Tc:.1f} K",
+                 (Tc, 0),
+                 xytext=(15,10),
+                 textcoords="offset points")
+
+    plt.xlabel("Температура (K)")
+    plt.ylabel("Намагниченность")
+    plt.title("Температура Кюри (критическая аппроксимация)")
+    plt.legend()
+    plt.grid(True)
+
+    plt.show()
+    plt.savefig(save_path, dpi=300)
+    plt.close()
+
+    return Tc, beta
+
+
+def curie_max_derivative(data, save_path):
+
+    # Удаляем дубликаты температур
+    T_unique, indices = np.unique(data[:,0], return_index=True)
+    M_unique = data[:,1][indices]
+
+    # Сортировка
+    sort_idx = np.argsort(T_unique)
+    T = T_unique[sort_idx]
+    M = M_unique[sort_idx]
+
+    # Сглаживание (увеличенное окно для шумных данных)
+    window = 21 if len(M) > 21 else len(M)-1
+    if window % 2 == 0:
+        window -= 1
+
+    M_smooth = savgol_filter(M, window_length=window, polyorder=3)
+
+    # Производная
+    dM_dT = np.gradient(M_smooth) / np.gradient(T)
+
+    # Игнорируем крайние 5% точек
+    cut = int(0.05 * len(T))
+    idx_tc = np.argmax(np.abs(dM_dT[cut:-cut])) + cut
+
+    Tc = T[idx_tc]
+
+    print(f"Tc (max |dM/dT|) = {Tc:.2f} K")
+
+    # График
+    plt.figure(figsize=(8,6))
+    plt.plot(T, M, label="Исходные данные")
+    plt.plot(T, M_smooth, '--', label="Сглаженные данные")
+
+    plt.scatter(Tc, M_smooth[idx_tc], color='red', zorder=5)
+    plt.annotate(f"Tc = {Tc:.1f} K",
+                 (Tc, M_smooth[idx_tc]),
+                 xytext=(15,10),
+                 textcoords="offset points")
+
+    plt.xlabel("Температура (K)")
+    plt.ylabel("Намагниченность")
+    plt.title("Температура Кюри (максимум |dM/dT|)")
+    plt.legend()
+    plt.grid(True)
+
+    plt.show()
+    plt.savefig(save_path, dpi=300)
+    plt.close()
+
+    return Tc
+
+
 if __name__ == '__main__':
     wd = '/home/buche/VaspTesting/Danil/magnetocaloric_nn/new_parser/'
     # generate_vampire_inputs(wd)
@@ -483,10 +651,17 @@ if __name__ == '__main__':
     #     print(np.round(i[:-1]), i[-1])
     # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ')
     # generate_vampire_inputs_recursive(Path('Fe'), 0)
+
     # generate_run_recursively(wd)
     wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe/')
-
-    for i in range(1, 46):
+    #
+    # curves = get_curve_recursively(wd)
+    # # print(list(curves.values())[0])
+    # # exit()
+    # for path, curve in curves.items():
+    #     # curie_critical_fit(curve, f'{path}/curve.png')
+    #     curie_max_derivative(curve, f'{path}/curve.png')
+    for i in range(1, 45):
         generate_vampire_inputs_recursive(wd, 0, i)
 
 

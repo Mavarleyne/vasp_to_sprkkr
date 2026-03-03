@@ -86,8 +86,8 @@ def parse_vasp2spr(path: Path):
         f.write(jxc)
 
 
-# wd = Path('SPR_KKR')
-wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/Tsharp_new_best_parser')
+wd = Path('SPR_KKR/Al/Tsharp')
+# wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/Tsharp_new_best_parser')
 parse_vasp2spr(wd)
 exit()
 # alloys = [i for i in os.listdir(wd) if i != 'tested']

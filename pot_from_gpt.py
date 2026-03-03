@@ -145,10 +145,11 @@ def pot_occupation_section(data) -> str:
     symmetrized = data["symmetrized"]
     s = "OCCUPATION\n"
     s += "        IQ     IREFQ       IMQ       NOQ  ITOQ  CONC\n"
-
+    IQ = 0
     for type_idx, sym_sites in enumerate(symmetrized.equivalent_sites, start=1):
         for i, site in enumerate(sym_sites):
-            s += f"{i + 1:10d}{site.type_idx:10d}{site.type_idx:10d}{1:10d}{site.type_idx:6d} 1.000\n"
+            IQ += 1
+            s += f"{IQ:10d}{site.type_idx:10d}{site.type_idx:10d}{1:10d}{site.type_idx:6d} 1.000\n"
 
     s += "*******************************************************************************\n"
     return s
@@ -209,7 +210,7 @@ def pot_mesh_section_physical(data):
     import math
 
     symmetrized = data["symmetrized"].equivalent_sites
-    structure = data["structure"]
+    structure = data["prim_structure"]
 
     rmt_class, rws_class = get_rws_physical(
         structure,
@@ -279,8 +280,8 @@ def generate_pot_from_data(
     pot += pot_occupation_section(data)
     pot += pot_reference_section(data)
     pot += pot_magnetisation_section(data)
-    # pot += pot_mesh_section(data, mesh_type)
-    pot += pot_mesh_section_physical(data)
+    pot += pot_mesh_section(data, mesh_type)
+    # pot += pot_mesh_section_physical(data)
     pot += pot_types_section(data, valence)
 
     return pot

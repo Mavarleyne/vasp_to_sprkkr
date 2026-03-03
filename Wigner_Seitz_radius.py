@@ -1,6 +1,6 @@
 import os
+import numpy as np
 from pathlib import Path
-
 from pymatgen.core import Structure
 
 
@@ -135,12 +135,14 @@ def get_rws_physical(structure, symmetrized, volume=None):
     return rmt_class_scaled, rws_class
 
 
-def get_rws(structure: Structure, rws_file_path='rws.vst', base_radii=None, volume_override=None):
+def get_rws(structure: Structure, RBAS: np.ndarray, ALAT: float, rws_file_path='rws.vst', base_radii=None, volume_override=None):
     """
     Масштабирует радиусы Вигнера-Зейтца для 3D-систем, чтобы суммарный объём сфер соответствовал объёму ячейки.
 
     Args:
         structure (Structure): Объект структуры из pymatgen
+        RBAS: Базис как в .sys файле
+        ALAT: Постоянная решётки, заданная в .sys
         rws_file_path (str, optional): Путь к файлу rws.vst
         base_radii (dict, optional): Словарь базовых радиусов {элемент: радиус в Å}
         volume_override (float, optional): Переопределение объёма ячейки в Å³
@@ -158,9 +160,12 @@ def get_rws(structure: Structure, rws_file_path='rws.vst', base_radii=None, volu
     # Получение объёма ячейки
     if volume_override is not None:
         volume = volume_override
+    elif RBAS and ALAT:
+        volume = abs(np.linalg.det(RBAS)) * ALAT**3
     else:
         # Вычисление объёма через векторы решётки: |a · (b × c)|
         volume = structure.volume
+
 
     # Получение состава и числа атомов
     composition = structure.composition
