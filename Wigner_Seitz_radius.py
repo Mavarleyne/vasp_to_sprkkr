@@ -197,4 +197,134 @@ def get_rws(structure: Structure, RBAS: np.ndarray, ALAT: float, rws_file_path='
 
     # Масштабированные радиусы
     ws_radii = {element: radius * scale_rws / 0.529177 for element, (radius, _) in atomic_radii.items()}
+
     return ws_radii
+
+
+import math
+from pymatgen.core import Structure
+
+
+# Экспериментальные значения Skriver из rws.vst (колонка 1, по Z)
+# 0 означает "нет эксп. значения" → используется rws.vst колонка 3
+TABRWS_EXPERIMENTAL = {
+    19: 4.862, 20: 4.122, 21: 3.427, 22: 3.052, 23: 2.818,
+    24: 2.684, 25: 2.699, 26: 2.662, 27: 2.621, 28: 2.602, 29: 2.669,
+    37: 5.197, 38: 4.494, 39: 3.761, 40: 3.347, 41: 3.071,
+    42: 2.922, 43: 2.840, 44: 2.791, 45: 2.809, 46: 2.873, 47: 3.005,
+    55: 5.656, 56: 4.652,
+    57: 3.920, 58: 3.800, 59: 3.818, 60: 3.804, 61: 3.783,
+    62: 3.768, 63: 4.263, 64: 3.764, 65: 3.720, 66: 3.704,
+    67: 3.687, 68: 3.668, 69: 3.649, 70: 4.052, 71: 3.624,
+    72: 3.301, 73: 3.069, 74: 2.945, 75: 2.872, 76: 2.825,
+    77: 2.835, 78: 2.897, 79: 3.002,
+    87: 5.900, 88: 4.790, 89: 3.900,
+    90: 3.756, 91: 3.430, 92: 3.221, 93: 3.140, 94: 3.181,
+    95: 3.614, 96: 3.641, 97: 3.550,
+}
+
+
+def get_rws_xband(
+    structure: Structure,
+    rws_vst_path: str = "rws.vst",
+) -> dict[str, float]:
+    """
+    Вычисляет RWS по алгоритму xband "adjust R_WS by scaling":
+
+    1. Начальный RWS каждого сайта = TABRWS[Z]:
+       - сначала ищем экспериментальное значение (колонка 1 rws.vst / TABRWS_EXPERIMENTAL)
+       - если 0 или отсутствует — берём колонка 3 (rws.vst fallback)
+    2. scale = (V_cell / Σ(4π/3·rws³))^(1/3)  — итерация по всем сайтам
+    3. RWS_final = rws_initial · scale
+
+    Возвращает dict {element: rws_au} — одинаковый RWS для всех сайтов
+    одного элемента, что гарантирует единый mesh в SPR-KKR.
+
+    Args:
+        structure:    примитивная структура pymatgen
+        rws_vst_path: путь к файлу rws.vst
+
+    Returns:
+        dict {element_symbol: rws_scaled_au}
+    """
+    ANG_TO_AU = 1.889726125
+    PI = math.pi
+
+    # --- Шаг 1: загрузить rws.vst (колонки 1 и 3) ---
+    rws_vst_exp = {}    # колонка 1: экспериментальные (по Z)
+    rws_vst_calc = {}   # колонка 3: расчётные (по Z)
+
+    try:
+        with open(rws_vst_path, "r") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                parts = line.split()
+                if len(parts) < 2:
+                    continue
+                try:
+                    z = int(parts[0])
+                except ValueError:
+                    continue
+
+                # колонка 1: экспериментальная (может отсутствовать)
+                # колонка 3 (последняя перед символом элемента): расчётная
+                # формат: Z  [exp_val]  calc_val  Symbol
+                if len(parts) == 3:
+                    # нет экспериментального значения: Z  calc_val  Symbol
+                    try:
+                        rws_vst_calc[z] = float(parts[1])
+                    except ValueError:
+                        pass
+                elif len(parts) >= 4:
+                    # есть экспериментальное: Z  exp_val  calc_val  Symbol
+                    try:
+                        exp_val = float(parts[1])
+                        if exp_val > 0:
+                            rws_vst_exp[z] = exp_val
+                        rws_vst_calc[z] = float(parts[2])
+                    except ValueError:
+                        pass
+    except FileNotFoundError:
+        print(f"Файл {rws_vst_path} не найден. Используются встроенные значения.")
+
+    # --- Шаг 2: назначить начальный RWS каждому элементу ---
+    # Приоритет: rws.vst колонка 1 > TABRWS_EXPERIMENTAL > rws.vst колонка 3
+    def get_initial_rws(z: int) -> float:
+        # 1. экспериментальное из rws.vst
+        if z in rws_vst_exp and rws_vst_exp[z] > 0:
+            return rws_vst_exp[z]
+        # 2. встроенное экспериментальное
+        if z in TABRWS_EXPERIMENTAL and TABRWS_EXPERIMENTAL[z] > 0:
+            return TABRWS_EXPERIMENTAL[z]
+        # 3. расчётное из rws.vst (колонка 3)
+        if z in rws_vst_calc and rws_vst_calc[z] > 0:
+            return rws_vst_calc[z]
+        # 4. запасное значение
+        return 2.5
+
+    elem_initial_rws = {
+        el.symbol: get_initial_rws(el.Z)
+        for el in structure.composition.elements
+    }
+
+    # --- Шаг 3: масштабирование (итерация по сайтам, как в xband) ---
+    # V_RWS = Σ по всем сайтам rws_initial(site)³ · 4π/3
+    v_rws = sum(
+        elem_initial_rws[site.specie.symbol] ** 3
+        for site in structure.sites
+    ) * (4.0 * PI / 3.0)
+
+    # Объём ячейки в а.е.³
+    v_cell_au = structure.volume * ANG_TO_AU ** 3
+
+    scale = (v_cell_au / v_rws) ** (1.0 / 3.0)
+
+    # --- Шаг 4: итоговые значения ---
+    rws_scaled = {
+        elem: rws_init * scale
+        for elem, rws_init in elem_initial_rws.items()
+    }
+
+    return rws_scaled

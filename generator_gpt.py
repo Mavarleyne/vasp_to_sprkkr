@@ -47,6 +47,7 @@ def set_types_gpt(structure):
 
 def set_magmoms(structure: Structure, out: Outcar):
     magmoms = [mag['tot'] for mag in out.magnetization]
+    print(f'sites: {len(structure.sites)}, mags: {len(magmoms)}\n{structure.formula}')
 
     for i, _ in enumerate(structure.sites):
         if abs(magmoms[i]) < 0.1:
@@ -78,7 +79,6 @@ def parse_vasp2spr(path: Path):
     magmoms = [data['prim_structure'].sites[i[0]].spin for i in data['symmetrized'].equivalent_indices]
     scf, jxc = generate_inps(data["system_name"], magmoms, path)
 
-
     with open(f'{path}/SCF.inp', 'w') as f:
         f.write(scf)
 
@@ -86,10 +86,10 @@ def parse_vasp2spr(path: Path):
         f.write(jxc)
 
 
-wd = Path('SPR_KKR/Al/Tsharp')
+# wd = Path('SPR_KKR/Al/Tsharp')
 # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/Tsharp_new_best_parser')
-parse_vasp2spr(wd)
-exit()
+# parse_vasp2spr(wd)
+# exit()
 # alloys = [i for i in os.listdir(wd) if i != 'tested']
 # for alloy in alloys:
 #     groups = [i for i in os.listdir(f'{wd}/{alloy}') if os.path.isdir(f'{wd}/{alloy}/{i}')]
@@ -102,4 +102,16 @@ exit()
 #
 #         parse_vasp2spr(path)
 #         print(' - complete')
-#
+
+# wd = Path('SPR_KKR')
+# for path in wd.rglob('CONTCAR'):
+#     if 'In' in path.as_posix() or 'Sn' in path.as_posix():
+#         continue
+#     parse_vasp2spr(path.parent)
+
+wd = '/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ'
+for i in ['Al', 'Ga', 'Si', 'Ge']:
+    for j in ['L21', 'XA', 'TC', 'TP', 'Tsharp']:
+        print(f'{wd}/{i}/{j}')
+
+

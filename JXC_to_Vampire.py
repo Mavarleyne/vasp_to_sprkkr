@@ -490,6 +490,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from scipy.signal import savgol_filter
+from scipy.interpolate import make_interp_spline
 
 def critical_law_safe(T, A, Tc, beta):
     """
@@ -551,6 +552,7 @@ def curie_critical_fit(data, save_path):
     )
 
     A, Tc, beta = popt
+    return Tc
 
     print(f"Tc (critical fit) = {Tc:.2f} K")
     print(f"beta = {beta:.3f}")
@@ -584,8 +586,7 @@ def curie_critical_fit(data, save_path):
     return Tc, beta
 
 
-def curie_max_derivative(data, save_path):
-
+def curie_max_derivative(data, save_path, plot: bool):
     # Удаляем дубликаты температур
     T_unique, indices = np.unique(data[:,0], return_index=True)
     M_unique = data[:,1][indices]
@@ -595,8 +596,8 @@ def curie_max_derivative(data, save_path):
     T = T_unique[sort_idx]
     M = M_unique[sort_idx]
 
-    # Сглаживание (увеличенное окно для шумных данных)
-    window = 21 if len(M) > 21 else len(M)-1
+    # Сглаживание
+    window = 21 if len(M) > 21 else len(M) - 1
     if window % 2 == 0:
         window -= 1
 
@@ -608,31 +609,37 @@ def curie_max_derivative(data, save_path):
     # Игнорируем крайние 5% точек
     cut = int(0.05 * len(T))
     idx_tc = np.argmax(np.abs(dM_dT[cut:-cut])) + cut
-
     Tc = T[idx_tc]
 
+    if not plot:
+        return Tc
     print(f"Tc (max |dM/dT|) = {Tc:.2f} K")
 
-    # График
-    plt.figure(figsize=(8,6))
-    plt.plot(T, M, label="Исходные данные")
-    plt.plot(T, M_smooth, '--', label="Сглаженные данные")
+    # График — используем явные объекты fig и ax
+    fig, ax = plt.subplots(figsize=(8, 6))
 
-    plt.scatter(Tc, M_smooth[idx_tc], color='red', zorder=5)
-    plt.annotate(f"Tc = {Tc:.1f} K",
-                 (Tc, M_smooth[idx_tc]),
-                 xytext=(15,10),
-                 textcoords="offset points")
+    ax.plot(T, M, label="Исходные данные")
+    ax.plot(T, M_smooth, '--', label="Сглаженные данные")
+    ax.scatter(Tc, M_smooth[idx_tc], color='red', zorder=5)
+    ax.annotate(
+        f"Tc = {Tc:.1f} K",
+        (Tc, M_smooth[idx_tc]),
+        xytext=(15, 10),
+        textcoords="offset points"
+    )
 
-    plt.xlabel("Температура (K)")
-    plt.ylabel("Намагниченность")
-    plt.title("Температура Кюри (максимум |dM/dT|)")
-    plt.legend()
-    plt.grid(True)
+    ax.set_xlabel("Температура (K)")
+    ax.set_ylabel("Намагниченность")
+    ax.set_title(f"Температура Кюри (максимум |dM/dT|), {save_path.split('/')[-2]}")
+    ax.legend()
+    ax.grid(True)
 
+    fig.tight_layout()
+
+    # Сначала сохраняем, потом показываем
+    fig.savefig(save_path, dpi=300)
     plt.show()
-    plt.savefig(save_path, dpi=300)
-    plt.close()
+    plt.close(fig)
 
     return Tc
 
@@ -655,14 +662,42 @@ if __name__ == '__main__':
     # generate_run_recursively(wd)
     wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe/')
     #
-    # curves = get_curve_recursively(wd)
+    curves = get_curve_recursively(wd)
     # # print(list(curves.values())[0])
     # # exit()
-    # for path, curve in curves.items():
-    #     # curie_critical_fit(curve, f'{path}/curve.png')
-    #     curie_max_derivative(curve, f'{path}/curve.png')
-    for i in range(1, 45):
-        generate_vampire_inputs_recursive(wd, 0, i)
+    tc = []
+    for i, (path, curve) in enumerate(curves.items(), start=1):
+        # curie_critical_fit(curve, f'{path}/curve.png')
+        tc.append([i, curie_max_derivative(curve, f'{path}/curve.png', plot=False)])
+        # tc.append([i, curie_critical_fit(curve, f'{path}/curve.png')])
+
+    tc = np.array(tc)
+    print(tc)
+
+    X_Y_Spline = make_interp_spline(tc[:-1, 0], tc[:-1, 1])
+    x_smooth = np.linspace(tc[:-1, 0].min(), tc[:-1, 0].max(), 500)
+    y_smooth = X_Y_Spline(x_smooth)
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+
+    # ax.plot(tc[:-1, 0], tc[:-1, 1], marker='o', linewidth=2, markersize=6)
+    plt.plot(x_smooth, y_smooth, linewidth=2, zorder=1)
+    plt.scatter(tc[:-1, 0], tc[:-1, 1], color='red', linewidth=2, marker='o', zorder=10)
+
+    ax.set_xlabel("Количество координационных сфер", fontsize=13)
+    ax.set_ylabel("Температура Кюри, $T_C$ (K)", fontsize=13)
+    ax.set_title("Зависимость температуры Кюри от числа координационных сфер", fontsize=14)
+
+    ax.set_xticks(np.arange(0, 50, 5))
+    ax.grid(True, linestyle='--', alpha=0.6)
+    ax.tick_params(labelsize=11)
+
+    fig.tight_layout()
+    fig.savefig(f"{wd}/tc_vs_coordination_spheres.png", dpi=300)
+    plt.show()
+    # plt.close(fig)
+    # for i in range(1, 45):
+    #     generate_vampire_inputs_recursive(wd, 0, i)
 
 
 

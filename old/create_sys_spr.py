@@ -3,6 +3,8 @@ from ase import Atoms
 from ase2sprkkr.potentials.potentials import Potential
 import numpy as np
 from pathlib import Path
+
+from pymatgen.core import Structure
 from pymatgen.io.vasp.inputs import Poscar
 from pymatgen.io.vasp.outputs import Outcar
 from sysfile_cont import sysfile_content
@@ -93,21 +95,25 @@ def create_spr_inputs(path: Path, out_path: Path):
     :param out_path: Pathlib-obj to save-folder
     :return: None
     """
-    if os.path.isfile(f'{path}\\CONTCAR') and os.path.getsize(f'{path}\\CONTCAR') > 10:
-        pos = Poscar.from_file(f'{path}\\CONTCAR')
-    else:
-        pos = Poscar.from_file(f'{path}\\POSCAR')
-    space = SpacegroupAnalyzer(pos.structure)
-    print(space.get_space_group_number())
-    print(Poscar(space.get_conventional_standard_structure()))
-    space = SpacegroupAnalyzer(space.get_conventional_standard_structure()).get_primitive_standard_structure()
-    pos_2 = Poscar(space)
-    print(SpacegroupAnalyzer(pos_2.structure).get_space_group_number())
-    pos_2.write_file(f'{path}\\POSCAR_prim')
+    # if os.path.isfile(f'{path}\\CONTCAR') and os.path.getsize(f'{path}\\CONTCAR') > 10:
+    #     pos = Poscar.from_file(f'{path}\\CONTCAR')
+    # else:
+    #     pos = Poscar.from_file(f'{path}\\POSCAR')
+
+    # pos = Poscar.from_file(path / 'CONTCAR')
+    s = Structure.from_file(path / 'CONTCAR')
+    # space = SpacegroupAnalyzer(s)
+    space = s
+    # print(space.get_space_group_number())
+    # print(Poscar(space.get_conventional_standard_structure()))
+    # space = SpacegroupAnalyzer(space.get_conventional_standard_structure()).get_primitive_standard_structure()
+    # pos_2 = Poscar(space)
+    # print(SpacegroupAnalyzer(pos_2.structure).get_space_group_number())
+    # pos_2.write_file(f'{path}\\POSCAR_prim')
     # print(space.get_space_group_number())
     # print(space.cart_coords)
-    from System import struc
-    space = Poscar.from_str(struc).structure
+    # from System import struc
+    # space = Poscar.from_str(struc).structure
     sites = np.array(space.frac_coords)
     matrix = space.lattice.matrix
     # print(space.composition.to_pretty_string())
@@ -116,20 +122,20 @@ def create_spr_inputs(path: Path, out_path: Path):
     # name = ''.join([f'{pos.site_symbols[i]}{pos.natoms[i]}' for i in range(len(pos.natoms))])
     name = space.composition.to_pretty_string()
 
-    with open(f'{path}\\magmoms') as f:
-        atoms_mag = list(map(float, f.read().split()))
+    # with open(f'{path}\\magmoms') as f:
+    #     atoms_mag = list(map(float, f.read().split()))
 
-    if pos.structure.num_sites == 8:
-        mspin = [atoms_mag[i] for i in range(0, len(atoms_mag), 2)]
-    elif pos.structure.num_sites == 4:
-        mspin = [atoms_mag[i] for i in range(0, len(atoms_mag), 1)]
-    else:
-        mspin = None
-        print('num of sites not 4 and 8')
+    # if pos.structure.num_sites == 8:
+    #     mspin = [atoms_mag[i] for i in range(0, len(atoms_mag), 2)]
+    # elif pos.structure.num_sites == 4:
+    #     mspin = [atoms_mag[i] for i in range(0, len(atoms_mag), 1)]
+    # else:
+    #     mspin = None
+    #     print('num of sites not 4 and 8')
     # print(mspin)
 
-    print(out_path)
-    print(space)
+    # print(out_path)
+    # print(space)
     atoms = Atoms(symbols=name,
                   cell=matrix,
                   positions=sites,
@@ -140,43 +146,44 @@ def create_spr_inputs(path: Path, out_path: Path):
     # print(atoms.cell.get_bravais_lattice().pearson_symbol)
     # exit()
     inp = sysfile_content(atoms)
-    # with open(f'{out_path}/{name}.sys', 'w') as f:
-        # f.write(inp)
+    with open(out_path / f'{name}.sys', 'w') as f:
+        f.write(inp)
     print(inp)
 
     pot = Potential.from_atoms(atoms)
-    # pot.save_to_file(f'{out_path}\\{name}.pot')
-
+    pot.save_to_file(f'{out_path}\\{name}.pot')
 
     with open(Path(f'{out_path}/SCF.inp'), 'w') as f:
         global scf_inp
 
-        temp = scf_inp.replace('NAME', name).replace('MAGMOMS', ','.join([str(i) for i in mspin]))
+        temp = scf_inp.replace('NAME', name) #.replace('MAGMOMS', ','.join([str(i) for i in mspin]))
         f.write(temp)
 
 
 
 if __name__ == '__main__':
-    wd = Path(f'for_spr')
+    # wd = Path(f'for_spr')
     # TODO: fix problem with Zr4Mn4Co4W4 mart
-    total = counter(wd)
-    current = 0
-    alloys = [i for i in os.listdir(f'{wd}') if os.path.isdir(f'{wd}/{i}')]
-    for alloy in alloys:
-        groups = [i for i in os.listdir(f'{wd}/{alloy}') if os.path.isdir(f'{wd}/{alloy}/{i}')]
-        for group in groups:
-            orders = [i for i in os.listdir(f'{wd}/{alloy}/{group}') if os.path.isdir(f'{wd}/{alloy}/{group}/{i}')]
-            min_e = 0
-            for order in orders:
-                path = f'{wd}/{alloy}/{group}/{order}'
-                current += 1
-                # print_progress(current, total, 80)
-
-                # pos = Poscar.from_file(Path(f'for_spr/{i}/{j}/{k}/0/POSCAR'))
-                # print(pos)
-                # print('#'*100)
-                create_spr_inputs(Path(f'{wd}/{alloy}/{group}/{order}'), Path(f'{wd}/{alloy}/{group}/{order}'))
+    # total = counter(wd)
+    # current = 0
+    # alloys = [i for i in os.listdir(f'{wd}') if os.path.isdir(f'{wd}/{i}')]
+    # for alloy in alloys:
+    #     groups = [i for i in os.listdir(f'{wd}/{alloy}') if os.path.isdir(f'{wd}/{alloy}/{i}')]
+    #     for group in groups:
+    #         orders = [i for i in os.listdir(f'{wd}/{alloy}/{group}') if os.path.isdir(f'{wd}/{alloy}/{group}/{i}')]
+    #         min_e = 0
+    #         for order in orders:
+    #             path = f'{wd}/{alloy}/{group}/{order}'
+    #             current += 1
+    #             # print_progress(current, total, 80)
+    #
+    #             # pos = Poscar.from_file(Path(f'for_spr/{i}/{j}/{k}/0/POSCAR'))
+    #             # print(pos)
+    #             # print('#'*100)
+    #             create_spr_inputs(Path(f'{wd}/{alloy}/{group}/{order}'), Path(f'{wd}/{alloy}/{group}/{order}'))
                 # exit()
+    wd = Path('C:/Users/Mavarleyne/PycharmProjects/VASP_to_SPRKKR/SPR_KKR/Al/Tsharp')
+    create_spr_inputs(wd, wd)
 
 
 

@@ -143,13 +143,17 @@ def pot_sites_section(data) -> str:
 def pot_occupation_section(data) -> str:
     # site2type = data["site2type"]
     symmetrized = data["symmetrized"]
+    prim = data["prim_structure"]
     s = "OCCUPATION\n"
     s += "        IQ     IREFQ       IMQ       NOQ  ITOQ  CONC\n"
     IQ = 0
-    for type_idx, sym_sites in enumerate(symmetrized.equivalent_sites, start=1):
-        for i, site in enumerate(sym_sites):
-            IQ += 1
-            s += f"{IQ:10d}{site.type_idx:10d}{site.type_idx:10d}{1:10d}{site.type_idx:6d} 1.000\n"
+
+    for IQ, site in enumerate(prim.sites, start=1):
+        s += f"{IQ:10d}{site.type_idx:10d}{site.type_idx:10d}{1:10d}{site.type_idx:6d} 1.000\n"
+    # for type_idx, sym_sites in enumerate(symmetrized.equivalent_sites, start=1):
+    #     for i, site in enumerate(sym_sites):
+    #         IQ += 1
+    #         s += f"{IQ:10d}{site.type_idx:10d}{site.type_idx:10d}{1:10d}{site.type_idx:6d} 1.000\n"
 
     s += "*******************************************************************************\n"
     return s
@@ -199,8 +203,11 @@ def pot_mesh_section(data, mesh_type="EXPONENTIAL") -> str:
         JRWS = 721
         DX = math.log(rws / R1) / (JRWS - 1)
         RMT = rws * 0.85
-
-        s += f"{i:5d}    {R1:.10f}    {DX:.10f}    0   {RMT: .10f}  {JRWS}   {rws: .10f}\n"
+        if hasattr(equiv_set[0], 'type_idx'):
+            IM = equiv_set[0].type_idx
+        else:
+            raise AttributeError('Site doesn\'t have attribute "type_idx"')
+        s += f"{IM:5d}    {R1:.10f}    {DX:.10f}    0   {RMT: .10f}  {JRWS}   {rws: .10f}\n"
 
     s += "*******************************************************************************\n"
     return s
@@ -237,7 +244,6 @@ def pot_mesh_section_physical(data):
 
     s += "*******************************************************************************\n"
     return s
-
 
 
 def pot_types_section(data, valence) -> str:

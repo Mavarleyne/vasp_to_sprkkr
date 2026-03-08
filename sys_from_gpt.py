@@ -91,12 +91,13 @@ def sites_section(data: Dict) -> str:
             f"       {_fmt(rws, width=12, prec=12)}   3    1   {site.type_idx}\n"
         )
 
-    s += "number of sites classes NCL\n"
-    s += f"  {n_sites}\n"
-    s += "ICL WYCK NQCL IQECL (equivalent sites)\n"
-
     symmetrized = data["symmetrized"].equivalent_sites
     symmetrized_idx = data["symmetrized"].equivalent_indices
+
+    s += "number of sites classes NCL\n"
+    s += f"  {len(symmetrized_idx)}\n"
+    s += "ICL WYCK NQCL IQECL (equivalent sites)\n"
+
     for i, _ in enumerate(symmetrized, start=1):
         sites_str = " ".join([str(j + 1) for j in symmetrized_idx[i - 1]])
         s += f"  {i:1d}   -    {len(sites_str.split())}  {sites_str}\n"

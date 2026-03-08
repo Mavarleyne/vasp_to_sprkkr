@@ -7,7 +7,7 @@ import datetime
 import numpy as np
 from collections import defaultdict
 from typing import List, Optional, Tuple, Dict
-from Wigner_Seitz_radius import get_rws, get_rws_physical
+from Wigner_Seitz_radius import get_rws, get_rws_physical, get_rws_xband
 from brave_from_pearson import Pearson, international_numbers_to_AP
 
 
@@ -100,7 +100,8 @@ def generate_sys_data(structure):
     prim_matrix = prim.lattice.matrix / a_ang
 
     # радиусы Вигнера–Зейтца
-    rws_dict = get_rws(prim)
+    # rws_dict = get_rws(prim)
+    rws_dict = get_rws_xband(prim)
 
     # rmt_class, rws_class = get_rws_physical(
     #     prim,
