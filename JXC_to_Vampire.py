@@ -15,7 +15,7 @@ from pymatgen.io.vasp.inputs import Poscar
 
 
 da_max = 10  # lst val: 2.15
-macrocell_size = np.array([4, 4, 4])
+macrocell_size = np.array([50, 50, 50])
 T_min = 0
 T_max = 1400
 T_step = 10
@@ -364,6 +364,13 @@ def generate_vampire_inputs(wd: str):
 
 
 def generate_vampire_inputs_recursive(root_path: Path, depth: int, dr_max: int):
+    '''
+
+    :param root_path:
+    :param depth: different between length of root and target path
+    :param dr_max: count of coordination spheres
+    :return:
+    '''
     # depth = 2
 
     for system_path in root_path.rglob('*JXC.out'):
@@ -643,9 +650,26 @@ def curie_max_derivative(data, save_path, plot: bool):
 
     return Tc
 
+def get_mean_field_Tc(wd: Path):
+    # нерабочий код, тк везде jxc.ou один и Tc одинакова
+    Tc = []
+    for i in wd.rglob('*JXC.out'):
+        text = i.read_text().split('\n')[-1::-1]
+        for line in text:
+            if 'Curie temperature within mean field approximation' in line:
+                Tc.append([int(i.as_posix().split('/')[-1]),
+                           float(line.strip().split()[-2])])
+                break
+
+    Tc = np.array(Tc).sort(axis=0)
+    return Tc
+
 
 if __name__ == '__main__':
-    wd = '/home/buche/VaspTesting/Danil/magnetocaloric_nn/new_parser/'
+    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/new_parser/')
+    # print(len(wd.relative_to(wd.parent).parts))
+    #
+    # exit()
     # generate_vampire_inputs(wd)
     # read_cell('/home/buche/VaspTesting/Danil/magnetocaloric_nn/new_parser/Ti4Fe8Cu4/119/FiM/*JXC.out')
     # generate_run(wd)
@@ -657,9 +681,17 @@ if __name__ == '__main__':
     # for i in jij:
     #     print(np.round(i[:-1]), i[-1])
     # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ')
-    # generate_vampire_inputs_recursive(Path('Fe'), 0)
 
-    # generate_run_recursively(wd)
+    # for i in range(1, 46):
+    #     (wd / str(i)).mkdir()
+
+    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe/')
+
+    # generate_vampire_inputs_recursive(wd, 0, 45)
+    for i in range(1, 46):
+        generate_vampire_inputs_recursive(wd, 0, i)
+    generate_run_recursively(wd)
+    exit()
     wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe/')
     #
     curves = get_curve_recursively(wd)
@@ -672,6 +704,7 @@ if __name__ == '__main__':
         # tc.append([i, curie_critical_fit(curve, f'{path}/curve.png')])
 
     tc = np.array(tc)
+    # tc = get_mean_field_Tc(wd)
     print(tc)
 
     X_Y_Spline = make_interp_spline(tc[:-1, 0], tc[:-1, 1])
@@ -686,14 +719,14 @@ if __name__ == '__main__':
 
     ax.set_xlabel("Количество координационных сфер", fontsize=13)
     ax.set_ylabel("Температура Кюри, $T_C$ (K)", fontsize=13)
-    ax.set_title("Зависимость температуры Кюри от числа координационных сфер", fontsize=14)
+    ax.set_title("Mean_field", fontsize=14)
 
     ax.set_xticks(np.arange(0, 50, 5))
     ax.grid(True, linestyle='--', alpha=0.6)
     ax.tick_params(labelsize=11)
 
     fig.tight_layout()
-    fig.savefig(f"{wd}/tc_vs_coordination_spheres.png", dpi=300)
+    fig.savefig(f"{wd}/Mean_field_tc.png", dpi=300)
     plt.show()
     # plt.close(fig)
     # for i in range(1, 45):
