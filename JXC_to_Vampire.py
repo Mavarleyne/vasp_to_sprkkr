@@ -6,6 +6,7 @@ import os
 import shutil
 import warnings
 from pathlib import Path
+from typing import Dict
 
 import numpy as np
 import scipy.constants as constants
@@ -499,6 +500,11 @@ def get_curve(wd: Path):
 def get_curve_recursively(root: Path):
     curves = {}
     for path in root.rglob('output'):
+        if not check_status_vampire(path.parent):
+            continue
+
+        if 'test' in path.as_posix():
+            continue
         out = path.read_text().split('\n')
         flag = False
         curve = []
@@ -510,14 +516,14 @@ def get_curve_recursively(root: Path):
                 curve.append([float(i) for i in line.split()[:2]])
         curves[path.parent.as_posix()] = np.array(curve)
         # print(curve)
-    return curves
+    return dict(sorted(curves.items(), key=lambda item: int(item[0].split('/')[-1])))
 
 
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from scipy.signal import savgol_filter
-from scipy.interpolate import make_interp_spline
+from scipy.interpolate import make_interp_spline, PchipInterpolator
 
 
 # ---------------------------------------------------------------------------
@@ -710,10 +716,13 @@ def curie_critical_fit(data: np.ndarray, save_path: str):
     except Exception:
         Tc_err = beta_err = float("nan")
 
+    tc_mfa = get_tc_mfa(data)
+
     # -----------------------------------------------------------------------
     # 8. Вывод результатов
     # -----------------------------------------------------------------------
     print(f"Tc   (критический фит) = {Tc:.2f} ± {Tc_err:.2f} K")
+    print(f"Tc_MFA                 = {tc_mfa:.2f} K")
     print(f"beta                   = {beta:.4f} ± {beta_err:.4f}")
     print(f"A                      = {A:.4f}")
     print(f"(Гейзенберг 3D теория: beta ≈ 0.365)")
@@ -744,6 +753,8 @@ def curie_critical_fit(data: np.ndarray, save_path: str):
         color="crimson",
         arrowprops=dict(arrowstyle="->", color="crimson", lw=1.2),
     )
+
+    fig.text(0.65, 0.7, r'$T_C^{MFA}$ = ' + f'{tc_mfa:.2f}' + ' K', backgroundcolor='#C8C8C8')
 
     ax.set_xlabel("Температура (K)", fontsize=12)
     ax.set_ylabel("Намагниченность (норм.)", fontsize=12)
@@ -839,8 +850,155 @@ def get_mean_field_Tc(wd: Path):
     return Tc
 
 
+def check_status_vampire(p: Path):
+    temp = (p / 'log').read_text()
+    if 'Simulation ended gracefully.' in temp:
+        return True
+    else:
+        return False
+
+
+def plot_exchange_from_jxc(path: Path):
+    path = path / '*JXC.out'
+    temp = path.read_text().split('\n')
+    jxc = []
+    prev_dr = 0
+    flag = False
+    for line in temp:
+        if flag and len(line.split()) == 11:
+            # print(line.split())
+            dr = float(line.split()[8])
+            Jij = float(line.split()[10]) * 1000 # meV
+
+            if dr == prev_dr:
+                continue
+            else:
+                prev_dr = dr
+
+            jxc.append([dr, Jij])
+            flag = False
+
+        if 'ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]' in line:
+            flag = True
+    jxc = np.array(jxc)
+    # print(jxc)
+
+    f = plt.figure(figsize=(6, 4.5))
+    ax = f.add_subplot(111)
+    plt.tick_params(axis='both',  # Применяем параметры к обеим осям
+                    which='major',  # Применяем параметры к вспомогательным делениям
+                    direction='in',  # Рисуем деления внутри и снаружи графика
+                    # length = 10,    #  Длина делений
+                    # width = 2,     #  Ширина делений
+                    # color = 'm',    #  Цвет делений
+                    pad=10,  # Расстояние между черточкой и ее подписью
+                    labelsize=12,  # Размер подписи
+                    labelcolor='k',  # Цвет подписи
+                    bottom=True,  # Рисуем метки снизу
+                    top=True,  # сверху
+                    left=True,  # слева
+                    right=True)  # и справа
+
+    ax.set_xlabel(r'$d/a$')
+    ax.set_ylabel(r'$J_{ij}$, мэВ')
+
+    ax.plot(jxc[:, 0], jxc[:, 1], '-',
+            linewidth=1,
+            label='Fe-Fe',
+            marker='o',
+            mec='k',
+            mew=0.5,
+            markersize=7)
+
+    jxc = path
+    jxc = reversed(jxc.read_text().split('\n'))
+    for line in jxc:
+        if 'Curie temperature within mean field approximation  T_C' in line:
+            T_curie = line.split()[-2]
+
+    f.text(0.70, 0.5, r'$T_C^{MFA}$ = ' + T_curie.replace('.', ',') + ' K', backgroundcolor='#C8C8C8')
+    ax.legend(loc='best')
+    ax.grid()
+    plt.show()
+    # if float(T_curie) == 0:
+    #     continue
+    # ax.set_xlim(0, 7)
+    f.savefig(path.parent ,
+              transparent=False,
+              bbox_inches='tight',
+              dpi=300,
+              pad_inches=0.01)
+
+
+def plot_all_mags(curves: Dict[str, np.ndarray], save_path: Path):
+    fig, ax = plt.subplots(figsize=(9, 6))
+
+    for path, curve in curves.items():
+        T = curve[1:, 0]
+        M = curve[1:, 1]
+
+        T_smooth = np.linspace(T.min(), T.max(), 500)
+        # y_smooth = X_Y_Spline(x_smooth)
+        print(T)
+        pchip = PchipInterpolator(T, M)
+        M_smooth = pchip(T_smooth)
+
+        label = path.split('/')[-1]
+        ax.plot(T_smooth, M_smooth, lw=1, label=label)
+
+    ax.set_xlabel("Температура (K)", fontsize=12)
+    ax.set_ylabel("Намагниченность (норм.)", fontsize=12)
+    # ax.set_title(rf"Температура Кюри — критическая аппроксимация"
+    #              "\n" rf"$M = A\,(1 - T/T_C)^{{\beta}}$", fontsize=13)
+    ax.legend(fontsize=6)
+    ax.grid(True, alpha=0.4)
+    ax.set_ylim(bottom=-0.02)
+    fig.tight_layout()
+    fig.savefig(save_path, dpi=300)
+    plt.close(fig)
+    print(f"График сохранён: {save_path}")
+
+
+def get_tc_mfa(path_to_jxc: Path, spheres: int):
+#     T_C = 2/3*sum_J_AA [Joul] /kB [Joul/K]
+
+    path = path_to_jxc / '*JXC.out'
+    temp = path.read_text().split('\n')
+    jxc = []
+    flag = False
+    count_spheres = 0
+    prev_dr = 0
+    for line in temp:
+        if flag and len(line.split()) == 11:
+            # print(line.split())
+            dr = float(line.split()[8])
+            Jij = float(line.split()[10]) # meV
+
+            if dr != prev_dr:
+                count_spheres += 1
+                prev_dr = dr
+
+            if count_spheres > spheres:
+                break
+
+            jxc.append([dr, Jij])
+            flag = False
+
+        if 'ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]' in line:
+            flag = True
+    jxc = np.array(jxc)
+
+    k = 8.617333262e-5
+    # print(np.sum(jxc[:, 1]))
+    # exit()
+    Tc = 2/3 * np.sum(jxc[:, 1]) / k
+    return Tc
+
+
 if __name__ == '__main__':
-    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/new_parser/')
+    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe/')
+    # plot_exchange_from_jxc(wd)
+    # exit()
     # print(len(wd.relative_to(wd.parent).parts))
     #
     # exit()
@@ -859,50 +1017,93 @@ if __name__ == '__main__':
     # for i in range(1, 46):
     #     (wd / str(i)).mkdir()
 
-    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe_new_parser/')
-    #
+    # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe_new_parser/')
+    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe/')
+    beta_type = 'fixed'
+    # beta_type = 'free'
     # # generate_vampire_inputs_recursive(wd, 0, 45)
     # for i in range(1, 46):
     #     generate_vampire_inputs_recursive(wd, 0, i)
     # generate_run_recursively(wd)
     # exit()
-    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe/')
-    #
+
     curves = get_curve_recursively(wd)
+    curves = dict(sorted(curves.items(), key=lambda item: int(item[0].split('/')[-1])))
+
+    plot_all_mags(curves, (wd / 'All_mags.png'))
+
+    test_curve = list(curves.values())[0]
+    test_curve[:, 1] = test_curve[:, 1]**(1/0.365)
+    for i in test_curve:
+        if i[1] < 0.01:
+            print(i)
+            break
+    # exit()
+    f, ax = plt.subplots()
+    ax.plot(test_curve[:, 0], test_curve[:, 1], 'or-')
+    plt.grid()
+    plt.show()
+
+
+    # exit()
+    # for i in curves.keys():
+    #     print(i)
+    # exit()
     # # print(list(curves.values())[0])
-    # # exit()
+    # print(dict(sorted(curves.items(), key=lambda item: int(item[0].split('/')[-1]))))
+    # exit()
     tc = []
+    from Critical_fit_TC import curie_fit_fixed_beta, curie_fit_free_beta
     for i, (path, curve) in enumerate(curves.items(), start=1):
         # curie_critical_fit(curve, f'{path}/curve.png')
         # tc.append([i, curie_max_derivative(curve, f'{path}/curve.png', plot=False)])
-        tc.append([i, curie_critical_fit(curve, f'{path}/curve.png')])
+        print(f'{"":#^100}')
+        tc_mfa = get_tc_mfa(Path(path), i)
+        if beta_type == 'fixed':
+            tc_fit = curie_fit_fixed_beta(curve, tc_mfa, f'{path}/curve.png')
+        elif beta_type == 'free':
+            tc_fit = curie_fit_free_beta(curve, tc_mfa, f'{path}/curve.png')
+        # if tc_fit[1] > 0.4:
+        #     continue
+        tc.append([i, tc_fit[0]])
 
     tc = np.array(tc)
     # tc = get_mean_field_Tc(wd)
     print(tc)
-    exit()
+    # exit()
 
-    X_Y_Spline = make_interp_spline(tc[:-1, 0], tc[:-1, 1])
-    x_smooth = np.linspace(tc[:-1, 0].min(), tc[:-1, 0].max(), 500)
-    y_smooth = X_Y_Spline(x_smooth)
+    # X_Y_Spline = make_interp_spline(tc[:-1, 0], tc[:-1, 1], k=len(tc)-1)
+    x_smooth = np.linspace(tc[:, 0].min(), tc[:, 0].max(), 500)
+    # y_smooth = X_Y_Spline(x_smooth)
+
+    pchip = PchipInterpolator(tc[:, 0], tc[:, 1])
+    y_smooth = pchip(x_smooth)
 
     fig, ax = plt.subplots(figsize=(8, 6))
 
     # ax.plot(tc[:-1, 0], tc[:-1, 1], marker='o', linewidth=2, markersize=6)
-    plt.plot(x_smooth, y_smooth, linewidth=2, zorder=1)
-    plt.scatter(tc[:-1, 0], tc[:-1, 1], color='red', linewidth=2, marker='o', zorder=10)
+    plt.plot(x_smooth, y_smooth, linewidth=2, zorder=5)
+    # plt.plot(tc[:-1, 0], tc[:-1, 1], '-', linewidth=2, zorder=5)
+    plt.scatter(tc[:, 0], tc[:, 1], color='red', linewidth=2, marker='o', zorder=10)
 
     ax.set_xlabel("Количество координационных сфер", fontsize=13)
     ax.set_ylabel("Температура Кюри, $T_C$ (K)", fontsize=13)
-    ax.set_title("Mean_field", fontsize=14)
+    ax.set_title("Monte-Carlo", fontsize=14)
 
     ax.set_xticks(np.arange(0, 50, 5))
-    ax.grid(True, linestyle='--', alpha=0.6)
+    ax.grid(True, linestyle='--', alpha=0.6, zorder=1)
     ax.tick_params(labelsize=11)
 
     fig.tight_layout()
-    fig.savefig(f"{wd}/Mean_field_tc.png", dpi=300)
+    fig.savefig(f"{wd}/Monte_Carlo_tc_beta_{beta_type}.png", dpi=300)
     plt.show()
+
+    dst = wd / f'curves_{beta_type}'
+    dst.mkdir(exist_ok=True)
+    for i in wd.rglob('curve.png'):
+        shutil.copy2(i, dst / f'{i.parent.stem}_mag.png')
+
+    print('end')
     # plt.close(fig)
     # for i in range(1, 45):
     #     generate_vampire_inputs_recursive(wd, 0, i)
