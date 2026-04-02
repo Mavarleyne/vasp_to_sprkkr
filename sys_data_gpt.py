@@ -7,7 +7,7 @@ import datetime
 import numpy as np
 from collections import defaultdict
 from typing import List, Optional, Tuple, Dict
-from Wigner_Seitz_radius import get_rws, get_rws_physical, get_rws_xband
+# from Wigner_Seitz_radius import get_rws, get_rws_physical, get_rws_xband
 from brave_from_pearson import Pearson, international_numbers_to_AP
 
 
@@ -52,6 +52,47 @@ def snap_to_grid(structure: Structure, step=0.25) -> Structure:
     return structure
 
 
+def get_pearson_symbol(structure, symprec=1e-3):
+    """
+    Analog of SpacegroupAnalyzer.get_pearson_symbol()
+    compatible with old pymatgen versions.
+
+    Args:
+        structure (Structure): pymatgen Structure
+        symprec (float): symmetry tolerance
+
+    Returns:
+        str: Pearson symbol (e.g. cF8, tI4, oP16)
+    """
+
+    sga = SpacegroupAnalyzer(structure, symprec=symprec)
+
+    # crystal system -> lattice letter
+    crystal_system = sga.get_crystal_system()
+
+    lattice_map = {
+        "triclinic": "a",
+        "monoclinic": "m",
+        "orthorhombic": "o",
+        "tetragonal": "t",
+        "trigonal": "h",
+        "hexagonal": "h",
+        "cubic": "c",
+    }
+
+    lattice_letter = lattice_map[crystal_system]
+
+    # centering symbol from space group symbol
+    spg_symbol = sga.get_space_group_symbol()
+    centering = spg_symbol[0]
+
+    # number of atoms in conventional cell
+    conv = sga.get_conventional_standard_structure()
+    n_atoms = len(conv)
+
+    return f"{lattice_letter}{centering}{n_atoms}"
+
+
 def generate_sys_data(structure):
     """
     Анализирует структуру, возвращает все данные, необходимые
@@ -80,8 +121,10 @@ def generate_sys_data(structure):
     symmetrized = sga_prim.get_symmetrized_structure()
     # print(prim)
 
-    pearson = sga.get_pearson_symbol()[:2]
-    # sga.get_
+    if hasattr(sga, 'get_pearson_symbol'):
+        pearson = sga.get_pearson_symbol()[:2]
+    else:
+        pearson = get_pearson_symbol(structure)[:2]
 
     br = [str(i) for i in Pearson.from_symbol(pearson)]
     brave = f'{br[1]:>13}        {br[2]:<12}{br[3]:<15}{br[4]:<7}{br[5]:<6}'
@@ -125,14 +168,22 @@ def generate_sys_data(structure):
 
 
 if __name__ == '__main__':
-    p = Path('SPR_KKR/Al/Tsharp/CONTCAR')
+    p = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/Tsharp/CONTCAR')
     s = Structure.from_file(p)
+    sga = SpacegroupAnalyzer(s)
+    if hasattr(sga, 'get_pearson_symbol'):
+        pearson = sga.get_pearson_symbol()[:2]
+        print('SGA')
+    else:
+        pearson = get_pearson_symbol(s)[:2]
+        print(f'manual: {pearson}')
+
 
     # sga = SpacegroupAnalyzer(s)
     # new = sga.get_refined_structure()
     # print(f'Old:\n{s.frac_coords}')
     # print(f'Refined:\n{new.frac_coords}')
 
-    data = generate_sys_data(s)
+    # data = generate_sys_data(s)
     # print(data['rws_class'])
-    print(data['prim_structure'])
+    # print(data['prim_structure'])

@@ -141,19 +141,13 @@ def pot_sites_section(data) -> str:
 
 
 def pot_occupation_section(data) -> str:
-    # site2type = data["site2type"]
     symmetrized = data["symmetrized"]
     prim = data["prim_structure"]
     s = "OCCUPATION\n"
     s += "        IQ     IREFQ       IMQ       NOQ  ITOQ  CONC\n"
-    IQ = 0
 
     for IQ, site in enumerate(prim.sites, start=1):
         s += f"{IQ:10d}{site.type_idx:10d}{site.type_idx:10d}{1:10d}{site.type_idx:6d} 1.000\n"
-    # for type_idx, sym_sites in enumerate(symmetrized.equivalent_sites, start=1):
-    #     for i, site in enumerate(sym_sites):
-    #         IQ += 1
-    #         s += f"{IQ:10d}{site.type_idx:10d}{site.type_idx:10d}{1:10d}{site.type_idx:6d} 1.000\n"
 
     s += "*******************************************************************************\n"
     return s
@@ -208,39 +202,6 @@ def pot_mesh_section(data, mesh_type="EXPONENTIAL") -> str:
         else:
             raise AttributeError('Site doesn\'t have attribute "type_idx"')
         s += f"{IM:5d}    {R1:.10f}    {DX:.10f}    0   {RMT: .10f}  {JRWS}   {rws: .10f}\n"
-
-    s += "*******************************************************************************\n"
-    return s
-
-
-def pot_mesh_section_physical(data):
-    import math
-
-    symmetrized = data["symmetrized"].equivalent_sites
-    structure = data["prim_structure"]
-
-    rmt_class, rws_class = get_rws_physical(
-        structure,
-        symmetrized
-    )
-
-    s = "MESH INFORMATION\n"
-    s += "MESH-TYPE EXPONENTIAL\n"
-    s += "   IM      R(1)            DX         JRMT      RMT        JRWS      RWS\n"
-
-    R1 = 1e-6
-    JRMT = 714
-    JRWS = 721
-
-    for i, (rmt, rws) in enumerate(zip(rmt_class, rws_class), start=1):
-
-        # Mesh строим от RMT!
-        DX = math.log(rmt / R1) / (JRMT - 1)
-
-        s += (
-            f"{i:5d}    {R1:.10f}    {DX:.10f}    {JRMT}   "
-            f"{rmt: .10f}  {JRWS}   {rws: .10f}\n"
-        )
 
     s += "*******************************************************************************\n"
     return s
