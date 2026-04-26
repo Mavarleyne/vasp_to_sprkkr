@@ -5,32 +5,19 @@ from matplotlib import pyplot as plt
 
 
 def main():
-    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Ga/XA/*JXC.out')
-    jij = parse_sprkkr_jxc(wd)
-    # print(jij['Fe_2-Fe_1'])
-    print(jij['Fe_1-Fe_2'])
-    # print(np.equal(jij['Fe_2-Fe_1'], jij['Fe_1-Fe_2']))
-    # atom = AtomType(1, 'Fe_1', [1, 2, 3])
-    # print(atom)
-    fig, ax = plt.subplots(figsize=(9, 6))
+    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/TC/*JXC.out')
+    # fig, ax = plot_exchanges_from_jxc(wd)
+    # plt.show()
 
-    for pair, curve in jij.items():
-        x = curve[:, 0]
-        y = curve[:, 1]
-        if np.allclose(y, np.zeros(y.shape), atol=0.2):
-            continue
+    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ')
+    (wd / 'pics').mkdir(exist_ok=True)
+    for p in wd.rglob('output'):
+        path = p.parent
+        fig, ax = plot_exchanges_from_jxc(path / '*JXC.out')
 
-        ax.plot(x, y, label=pair, linestyle='-', marker='s')
-    ax.set_xlim(0.4, 1.5)
-    ax.grid(True)
-    handles, labels = plt.gca().get_legend_handles_labels()
-
-    sorted_labels_handles = sorted(zip(labels, handles), key=lambda t: t[0])
-    labels, handles = zip(*sorted_labels_handles)
-
-    ax.legend(handles, labels, ncol=3, fontsize=12)
-    ax.legend(ncol=3, fontsize=12)
-    plt.show()
+        name = f'{path.parts[-3]}_{path.parts[-2]}'
+        fig.savefig(wd / 'pics' / name, dpi=300)
+        plt.show()
 
 
 class AtomType:
@@ -109,6 +96,7 @@ def parse_sprkkr_jxc(file_path: Path) -> Dict[str, np.ndarray]:
 
                         if key not in raw_data:
                             raw_data[key] = []
+
                         raw_data[key].append([dr, jij])
                     except ValueError:
                         continue
@@ -119,11 +107,12 @@ def parse_sprkkr_jxc(file_path: Path) -> Dict[str, np.ndarray]:
         arr = np.array(values, dtype=np.float64)
 
         # Округляем расстояния до 4 знака
-        rounded_dr = np.round(arr[:, 0], decimals=4)
+        # rounded_dr = np.round(arr[:, 0], decimals=4)
+        dr = arr[:, 0]
 
         # Находим уникальные расстояния
         unique_dr, inverse_indices = np.unique(
-            rounded_dr, return_inverse=True
+            dr, return_inverse=True
         )
 
         # Суммируем и усредняем
@@ -136,6 +125,36 @@ def parse_sprkkr_jxc(file_path: Path) -> Dict[str, np.ndarray]:
 
     return result
 
+
+def plot_exchanges_from_jxc(path_to_jxc: Path):
+    '''
+
+    :param path_to_jxc: Full path to *JXC.out
+    :return: Figure
+    '''
+    jij = parse_sprkkr_jxc(path_to_jxc)
+    fig, ax = plt.subplots(figsize=(9, 6))
+
+    for pair, curve in jij.items():
+        x = curve[:, 0]
+        y = curve[:, 1]
+        if np.allclose(y, np.zeros(y.shape), atol=0.2):
+            continue
+
+        ax.plot(x, y, label=pair, linestyle='-', marker='s')
+    ax.set_xlim(0.4, 1.5)
+    ax.set_xlabel('d/a')
+    ax.set_ylabel(r'$J_{ij}$, meV')
+    ax.grid(True)
+    handles, labels = plt.gca().get_legend_handles_labels()
+
+    sorted_labels_handles = sorted(zip(labels, handles), key=lambda t: t[0])
+    labels, handles = zip(*sorted_labels_handles)
+
+    ax.legend(handles, labels, ncol=3, fontsize=12)
+    ax.legend(ncol=3, fontsize=12)
+    # plt.show()
+    return fig, ax
 
 if __name__ == '__main__':
     main()
