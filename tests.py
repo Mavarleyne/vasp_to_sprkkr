@@ -1,200 +1,194 @@
-from collections import namedtuple, Counter
-from pathlib import Path
-from datetime import datetime
-from pymatgen.core import Structure, Element
-from pymatgen.io.vasp import Outcar
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer as SgA
-from pymatgen.io.vasp.inputs import Poscar
+# -*- coding: utf-8 -*-
+# !/usr/bin/env python
+
+import random
+import os
 import numpy as np
-from spglib import spglib
+import scipy.constants as constants
 
-import utils
-from Wigner_Seitz_radius import get_rws
-from brave_from_pearson import Pearson, international_numbers_to_AP
-
-
-from pymatgen.core import Structure, Lattice
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-
-# Пример структуры (замените на вашу)
-struct = Structure.from_file(Path('SPR_KKR/Al/Tsharp/CONTCAR'))
-# print(struct)
-prim = SpacegroupAnalyzer(struct).get_primitive_standard_structure()
-
-# Создайте анализатор
-analyzer = SpacegroupAnalyzer(prim, symprec=0.01)  # symprec для стабильности
-
-# Получите симметризованную структуру
-# sym_struct = analyzer.get_symmetrized_structure()
-sym_struct = analyzer.get_symmetrized_structure()
+da_max = 2.5
+macrocell_size = np.array([4, 4, 4])
+T_min = 0
+T_max = 1500
+T_step = 10
+MC_step = 1000
 
 
-# Теперь доступны Wyckoff-данные:
-print(prim)
-print(sym_struct)
-print("Буквы Вайкоффа (symbols):", sym_struct.wyckoff_symbols)  # Например: ['4a', '4b']
-print("Метки с мультипликативностью (labels):\n", sym_struct.frac_coords)
-print("Эквивалентные сайты:", sym_struct.equivalent_indices)
+#### Считывание файла JXC.out ####
+def read_cell(path='JXC.out'):
+    f = open(path, "r")
+    lines = f.readlines()
+    f.close()
 
-# Если нужно полный SpaceGroup объект:
-# sg = analyzer.get_symmetry_dataset()
-# print("Пространственная группа:", sg.symbol)  # Например: 'Fm-3m'
-exit()
-sites = {'IQ': [],
-         'QX': [],
-         'Qy': [],
-         'QZ': []}
+    #### Считываем вектора трансляций, базис ####
+    Data_lattice = []
+    flag = False
+    for line in lines:
+        inp = line.split()
+        if len(inp) == 0:
+            continue
+        if flag == True and len(inp) == 5 and inp[0] == '(':
+            Data_lattice += [float(inp[1].replace(',', '')), float(inp[2].replace(',', '')), float(inp[3])]
+        if inp[0] == '<INIT_MOD_LATTICE>' and len(inp) >= 1:
+            flag = True
+        if inp[len(inp) - 1] == '2*pi/a' and len(inp) > 1:
+            flag = False
+        if inp[0] == 'lattice' and inp[1] == 'constant' and inp[2] == 'ALAT' and len(inp) >= 1:
+            a_lat = float(inp[3])
 
-occupation = {'IQ': [], # Индекс атома
-              'IREFQ': [], # Какому референс-потенциалу принадлежит
-              'IMQ': [], # Магнитная подрешетка
-              'NOQ': [], # Число состояний в данной позиции
-              'ITOQ': [], # Тип атома (ссылается на блок TYPES)
-              'CONC': []} # Концентрация (1.0 — чистый элемент)
+    primitive_vectors = np.array(Data_lattice[:9])
+    primitive_vectors.shape = (3, 3)
 
-reference_system = {'IREF': [],
-                    'VREF': [], # Усредненный потенциал (для старта)
-                    'RMTREF': []} # Радиус сферы МТ (может быть 0 на старте)
+    basis = np.array(Data_lattice[9:len(Data_lattice)])
+    basis.shape = (int(len(basis) / 3), 3)
 
-mag_direction = {'IQ': [],
-                 'QMTET': [], # Угол θ (в радианах или градусах — зависит от настроек)
-                 'QMPHI': []} # Угол φ (азимут)
-
-mesh_info = {'IM': [], # Индекс сетки (по атомам)
-             'R(1)': [], # 	Начальный радиус сетки
-             'DX': [], # Шаг сетки
-             'JRMT': [], # Индекс точки, соответствующей RMT
-             'RMT': [], # Радиус МТ-сферы
-             'JRWS': [], # Индекс для границы Wigner-Seitz
-             'RWS': []} # Радиус WS-сферы
-
-types = {'IT': [], # Номер типа атома
-         'TXTT': [], # Химическое обозначение
-         'ZT': [], # Заряд ядра
-         'NCORT': [], # Кол-во электронов в core
-         'NVALT': [], # Кол-во валентных
-         'NSEMCORSHLT': []} # Полусердечные состояния (0 — игнорируются)
-
-path = Path('for_spr/Ti4Fe8Cu4/119/FiM')
-
-output_filename = "structure.sys"
-structure = Structure.from_file(f'{path}/POSCAR')  # или .vasp, POSCAR и т.д.
-# structure = Structure.from_str(struc, 'Poscar')
-sga = SgA(structure)
-pearson = sga.get_pearson_symbol()[:2]
-rwss = get_rws(structure)  # Радиус Вигнера-Сейца по умолчанию (в а.е.)
-
-structure = sga.get_conventional_standard_structure()
-sga = SgA(structure)
-
-# --- Преобразование ---
-bohr = 1.889726125  # 1 Å = 1.8897 Bohr
-
-a, b, c = structure.lattice.abc
-alpha, beta, gamma = structure.lattice.angles
-
-lattice_param_a = a * bohr
-b_over_a = b / a
-c_over_a = c / a
-
-structure_prim = SgA(structure).get_primitive_standard_structure()
-primitive_vectors = structure_prim.lattice.matrix / structure.lattice.a
-
-print(SgA(structure).get_space_group_number())
-print(SgA(structure_prim).get_space_group_number())
-# print(primitive_vectors)
+    return primitive_vectors * a_lat * 0.52917721090, basis
 
 
-for i, site in enumerate(structure_prim.sites):
-    pos = site.coords / structure.lattice.a
-    print(site.specie.symbol)
-    print(pos)
+#### Считываем тип атомов ####
+def read_atoms(path='JXC.out'):
+    f = open(path, "r")
+    lines = f.readlines()
+    f.close()
 
-exit()
+    IQ = []
+    conc = []
+    flag = False
+    for line in lines:
+        inp = line.split()
+        if flag == True and len(inp) >= 9:
+            for i in range(int(inp[len(inp) - 1]) - int(inp[8]) + 1):
+                IQ += [inp[1]]
+                conc += [float(inp[7])]
+        if len(inp) > 3:
+            if inp[0] == 'type' and inp[1] == 'TXTT' and inp[2] == 'NL':
+                flag = True
+        if len(inp) == 1:
+            if inp[0] == 'mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm':
+                break
+    conc = np.array(conc)
+    return IQ, conc
 
-# Получаем список уникальных элементов
-unique_elements = list({site.specie for site in structure_prim})
 
-# Подсчитываем количество атомов каждого элемента
-# element_counts = Counter(site.specie for site in structure_prim)
+#### Считываем обменные интегралы ####
+def read_J(d_a, path='JXC.out'):
+    f = open(path, "r")
+    lines = f.readlines()
+    f.close()
 
-# Сортируем по убыванию количества атомов
-# unique_elements.sort(key=lambda e: element_counts[e], reverse=True)
-# print(unique_elements)
-# labels = utils.get_labels_for_sites(path)
-# elements = list(map(Element, list(labels.values())))
-# labels = list(labels.keys())
-# if len(labels) == len(unique_elements):
-#     element_to_it = {el.symbol: i + 1 for i, el in enumerate(unique_elements)}
-# else:
-#     element_to_it = {el: i + 1 for i, el in enumerate(labels)}
-labels, elements, unique_indexes = utils.get_labels_for_sites(path)
-num_sites = {i: labels.count(i) for i in labels}
+    J = []
+    for i in range(len(lines)):
+        inp = lines[i].split()
 
-s_inf = utils.get_sites_info(path)
-
-# --- Запись .sys файла ---
-with open(output_filename, "w") as f:
-    print('#' * 100)
-    filestring = ''
-    filestring += f"system data-file created by pymatgen2sprkkr\n"
-    filestring += f"<generated-system>\n"
-    filestring += f"xband-version\n5.0\n"
-    filestring += f"dimension\n3D\n"
-    filestring += f"{' '.join([str(i) for i in Pearson.from_symbol(pearson)][1:])}\n"
-    filestring += f"space group number (ITXC and AP)\n" \
-                  f"{sga.get_space_group_number()} {international_numbers_to_AP[sga.get_space_group_number()]}\n"
-    filestring += f"structure type\nUNKNOWN\n"
-
-    filestring += f"lattice parameter A  [a.u.]\n" \
-                  f"{lattice_param_a:.12f}\n"
-    filestring += f"ratio of lattice parameters  b/a  c/a\n" \
-                  f"{b_over_a:.12f} {c_over_a:.12f}\n"
-    filestring += f"lattice parameters  a b c  [a.u.]\n" \
-                  f"{(a * bohr):.12f} {(b * bohr):.12f} {(c * bohr):.12f}\n"
-    filestring += f"lattice angles  alpha beta gamma  [deg]\n" \
-                  f"{alpha:.12f} {beta:.12f} {gamma:.12f}\n"
-
-    filestring += f"primitive vectors     (cart. coord.) [A]\n"
-    for vec in primitive_vectors:
-        filestring += f"  {vec[0]:.12f}  {vec[1]:.12f}  {vec[2]:.12f}\n"
-
-    filestring += f"number of sites NQ\n  {len(structure_prim)}\n"
-    filestring += f" IQ ICL     basis vectors     (cart. coord.) [A]                      RWS [a.u.]  NLQ  NOQ ITOQ\n"
-    for i, site in enumerate(structure_prim.sites):
-        pos = site.coords / structure.lattice.a
-        element = site.specie.symbol
-        ito = unique_indexes[i]
-        rws = rwss[site.specie.symbol]
-        filestring += f"{s_inf[i]['site_index']:3d} {s_inf[i]['type_index']:3d} {pos[0]:16.12f} {pos[1]:16.12f} {pos[2]:16.12f} {rws:20.12f}   3    1  {s_inf[i]['type_index']:2d}\n"
-
-    filestring += f"number of sites classes NCL \n  {s_inf[-1]['type_index']}\n"
-    filestring += f"ICL WYCK NQCL IQECL (equivalent sites)\n"
-    for i in range(len(labels)):
-        filestring += f"  {i + 1}   -    1  {i + 1}\n"
-
-    filestring += f"number of atom types NT\n  {s_inf[-1]['type_index']}\n"
-    filestring += f" IT  ZT  TXTT  NAT  CONC  IQAT (sites occupied)\n"
-
-    ind = 1
-    cont = False
-    for i, site in enumerate(s_inf):
-        if cont:
-            cont = False
+        if len(inp) == 0:
             continue
 
-        IT = ind
-        ZT = Element(site['element']).Z
-        TXTT = site['type']
-        NAT = 1
-        IQAT = site['site_index']
+        if inp[0] == 'IQ' and inp[6] == 'JQ' and len(inp) == 12:
+            IQ = float(inp[5]);
+            JQ = float(inp[11])
+            inp_J = lines[i + 3].split()
+            if float(inp_J[8]) < d_a and abs(float(inp_J[10]) * 1000) > 0.01:
+                J += [[IQ - 1, JQ - 1, float(inp_J[2]), float(inp_J[3]), float(inp_J[4]),
+                       float(inp_J[10]) * constants.e * 2]]
+                J += [[JQ - 1, IQ - 1, -float(inp_J[2]), -float(inp_J[3]), -float(inp_J[4]),
+                       float(inp_J[10]) * constants.e * 2]]
 
-        if i != len(s_inf)-1 and site['magmom'] == s_inf[i + 1]['magmom']:
-            IQAT = f"{site['site_index']} {s_inf[i + 1]['site_index']}"
-            NAT = 2
-            cont = True
+    J = np.array(J)
 
-        filestring += f' {IT:2}  {ZT:2}  {TXTT:4}  {NAT:3}  1     {IQAT}\n'
-        ind += 1
+    sorted_idx = np.lexsort(J.T)
+    sorted_data = J[sorted_idx, :]
+    row_mask = np.append([True], np.any(np.diff(sorted_data, axis=0), 1))
+    out = sorted_data[row_mask]
+    out = sorted(out, key=lambda x: (x[0], x[1]))
+    J = np.array(out)
 
-    # print(filestring)
+    return J
+
+
+#### Считывание магнитных моментов из SCF.out ####
+def read_magmom(num_atoms, path='SCF.out'):
+    f = open(path, "r")
+    lines = f.readlines()
+    f.close()
+
+    magmom = np.zeros(num_atoms)
+    flag = False
+    n = 0
+    for i in range(num_atoms):
+        for line in lines:
+            inp = line.split()
+            if len(inp) > 5 and inp[1] == 'E=' and inp[4] == 'IT=' and int(inp[5]) == i + 1:
+                flag = True
+            if len(inp) > 9 and flag == True and inp[0] == 'sum':
+                magmom[n] = float(inp[4])
+                flag = False
+        n = n + 1
+    return magmom
+
+
+file = open('vampire.UCF', "w")
+file.write('# Unit cell size (Angstrom):\n')
+file.write('1.0 1.0 1.0\n')
+cell = read_cell()
+np.savetxt(file, cell[0], fmt='%6f', header='Unit cell lattice vectors:')
+file.write('# Atoms\n')
+file.write('{} {}\n'.format(cell[1].shape[0], cell[1].shape[0]))  # Число атомов в элементарной ячейке, число материалов
+for i in range(cell[1].shape[0]):
+    file.write('{} {} {} {} {}\n'.format(i, cell[1][i, 0], cell[1][i, 1], cell[1][i, 2], i))
+file.write('# Interactions\n')
+
+interactions = np.column_stack((np.arange(0, read_J(da_max).shape[0]), read_J(da_max)))
+file.write('{} isotropic\n'.format(interactions.shape[0]))
+np.savetxt(file, interactions, fmt='%d %d %d %d %d %d %.4e')
+file.close()
+
+file = open('input', "w")
+file.write('#------------------------------------------\n')
+file.write('# Creation attributes:\n')
+file.write('#------------------------------------------\n')
+file.write('create:full\n')
+file.write('create:periodic-boundaries-x\n')
+file.write('create:periodic-boundaries-y\n')
+file.write('create:periodic-boundaries-z\n')
+file.write('#------------------------------------------\n')
+file.write('material:file=vampire.mat\n')
+file.write('material:unit-cell-file = "vampire.UCF"\n')
+file.write('#------------------------------------------\n')
+file.write('# System Dimensions:\n')
+file.write('#------------------------------------------\n')
+
+x_size = (cell[0][0, 0] ** 2 + cell[0][0, 1] ** 2 + cell[0][0, 2] ** 2) ** 0.5
+y_size = (cell[0][1, 0] ** 2 + cell[0][1, 1] ** 2 + cell[0][1, 2] ** 2) ** 0.5
+z_size = (cell[0][2, 0] ** 2 + cell[0][2, 1] ** 2 + cell[0][2, 2] ** 2) ** 0.5
+
+file.write('dimensions:unit-cell-size-x = {} !A\n'.format(x_size))
+file.write('dimensions:unit-cell-size-y = {} !A\n'.format(y_size))
+file.write('dimensions:unit-cell-size-z = {} !A\n'.format(z_size))
+
+file.write('dimensions:system-size-x = {} !nm\n'.format(0.1 * x_size * macrocell_size[0]))
+file.write('dimensions:system-size-y = {} !nm\n'.format(0.1 * y_size * macrocell_size[1]))
+file.write('dimensions:system-size-z = {} !nm\n'.format(0.1 * z_size * macrocell_size[2]))
+file.write('#------------------------------------------\n')
+file.write('# Simulation attributes:\n')
+file.write('#------------------------------------------\n')
+file.write('sim:minimum-temperature = {}\n'.format(T_min))
+file.write('sim:maximum-temperature = {}\n'.format(T_max))
+file.write('sim:temperature-increment = {}\n'.format(T_step))
+
+file.write('sim:equilibration-time-steps = {}\n'.format(MC_step))
+file.write('sim:loop-time-steps = {}\n'.format(MC_step))
+file.write('sim:time-steps-increment = 1\n')
+file.write('#------------------------------------------\n')
+file.write('# Program and integrator details\n')
+file.write('#------------------------------------------\n')
+file.write('sim:program=curie-temperature\n')
+file.write('sim:integrator = monte-carlo\n')
+file.write('#------------------------------------------\n')
+file.write('# Data output\n')
+file.write('#------------------------------------------\n')
+file.write('#output:real-time\n')
+file.write('output:temperature\n')
+file.write('#output:material-magnetisation\n')
+file.write('output:magnetisation-length\n')
+file.write('output:mean-total-energy\n')
+file.close()

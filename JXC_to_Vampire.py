@@ -456,12 +456,12 @@ def write_ucf_and_input(path: str, dr_max: int, materials: Materials):
 
         file.write(f'{x_size} {y_size} {z_size}\n')
         print(f"{path.split('/')[-3]}_{path.split('/')[-2]}: {x_size} {y_size} {z_size}")
-
         np.savetxt(file, cell[0], fmt='%6f', header='Unit cell lattice vectors:')
         file.write('# Atoms\n')
         file.write(f'{cell[1].shape[0]} {len(materials)}\n')  # Число атомов в элементарной ячейке, число материалов
         for i in range(cell[1].shape[0]):
             for mat in materials:
+                print(mat)
                 if i+1 in mat.sites:
                     num_material = mat.idx - 1
             file.write(f'{i} {cell[1][i, 0]} {cell[1][i, 1]} {cell[1][i, 2]} {num_material}\n')
@@ -564,9 +564,9 @@ def generate_vampire_inputs_recursive(root_path: Path, depth: int, dr_max: int):
     '''
     # depth = 2
 
-    for system_path in root_path.rglob('*JXC.out'):
-        if 'Al/L21' not in system_path.as_posix():
-            continue
+    for system_path in root_path.rglob('*JXC_auto.out'):
+        # if 'Al/L21' not in system_path.as_posix():
+        #     continue
         if len(system_path.relative_to(root_path).parts) != depth + 1:
             continue
         # print(system_path)
@@ -578,7 +578,7 @@ def generate_vampire_inputs_recursive(root_path: Path, depth: int, dr_max: int):
         #     shutil.rmtree(f'{path}/vampire')
         #
         # continue
-        vamp_dir_name = 'vampire'
+        vamp_dir_name = 'vampire_new'
         # vamp_dir_name = str(dr_max)
         if not (path / vamp_dir_name).exists():
             (path / vamp_dir_name).mkdir()
@@ -831,7 +831,7 @@ if __name__ == '__main__':
 
     # curves = dict(sorted(curves.items(), key=lambda item: item[0].split('/')[-3]))
     # plot_all_mags(curves, (wd / 'All_mags.png'))
-    # generate_vampire_inputs_recursive(wd, 2, -1)
+    generate_vampire_inputs_recursive(wd, 2, 1)
     # J = read_J(da_max, path=wd / 'Al' / 'L21' / '*JXC.out')
     # for line in J:
     #     if line[0] == 0 and line[1] == 0:
@@ -839,7 +839,7 @@ if __name__ == '__main__':
     # print(J)
     # finds = sorted([i.parent.as_posix() for i in wd.rglob('*.UCF')])
     # (wd / 'vampire_work_paths').write_text('\n'.join(finds))
-    # exit()
+    exit()
     # plot_exchange_from_jxc(wd)
     # exit()
     # print(len(wd.relative_to(wd.parent).parts))
@@ -859,32 +859,32 @@ if __name__ == '__main__':
     # exit()
 
     # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe_new_parser/')
-    # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe/')
-    # # beta_type = 'fixed'
-    # # beta_type = 'free'
-    # # # generate_vampire_inputs_recursive(wd, 0, 45)
-    # n_t = []
-    # for i in range(1, 24):
-    #     # generate_vampire_inputs_recursive(wd, 0, i)
-    #     # print((wd / str(i)).as_posix())
-    #     path = wd / str(i) / 'log'
-    #     log = path.read_text().split('\n')
-    #
-    #     for line in log:
-    #         if 'Simulation run time' in line:
-    #             n_t.append([i, float(line.split()[-1])])
-    #             break
-    # print(n_t)
-    # t_n = np.array(n_t)
-    # print(t_n)
-    # exit()
-    # fig, ax = plt.subplots()
-    # ax.grid(True)
-    # ax.plot(t_n[:, 0], t_n[:, 1])
-    # ax.set_xticks(np.arange(0, 45, 1))
-    # ax.set_xlim(0, 45)
-    # plt.show()
-    # exit()
+    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe/')
+    # beta_type = 'fixed'
+    # beta_type = 'free'
+    # # generate_vampire_inputs_recursive(wd, 0, 45)
+    n_t = []
+    for i in range(1, 24):
+        # generate_vampire_inputs_recursive(wd, 0, i)
+        # print((wd / str(i)).as_posix())
+        path = wd / str(i) / 'log'
+        log = path.read_text().split('\n')
+
+        for line in log:
+            if 'Simulation run time' in line:
+                n_t.append([i, float(line.split()[-1])])
+                break
+    print(n_t)
+    t_n = np.array(n_t)
+    print(t_n)
+    exit()
+    fig, ax = plt.subplots()
+    ax.grid(True)
+    ax.plot(t_n[:, 0], t_n[:, 1])
+    ax.set_xticks(np.arange(0, 45, 1))
+    ax.set_xlim(0, 45)
+    plt.show()
+    exit()
     # generate_run_recursively(wd)
     # exit()
     wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/')
@@ -921,7 +921,7 @@ if __name__ == '__main__':
     # plt.grid()
     # plt.show()
 
-    exit()
+    # exit()
     # for i in curves.keys():
     #     print(i)
     # exit()

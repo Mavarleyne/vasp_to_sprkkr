@@ -402,7 +402,7 @@ def generate_vampire_inputs(
     scf_data = read_scf(scf_path)
 
     version  = jxc_data['version']
-    lattice  = scf_data['lattice']   # берём решётку из JXC (там всегда есть)
+    lattice  = jxc_data['lattice']   # берём решётку из JXC (там всегда есть)
     jij      = jxc_data['jij']
     tc_mfa   = jxc_data['tc_mfa']
 
@@ -532,5 +532,5 @@ if __name__ == '__main__':
     wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/L21/vampire_manual')
     generate_vampire_inputs(
         wd,
-        dr_max=-1
+        dr_max=2
     )

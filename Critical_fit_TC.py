@@ -173,9 +173,12 @@ def curie_fit_fixed_beta(data: np.ndarray, Tc_mfa: float, save_path: str, beta: 
     (Tc, beta) | (None, None)
     """
 
+    if np.allclose(data[:, 1], np.ones(data.shape[0]), atol=0.8):
+        return None
+
     T, M, M_smooth = _prepare_data(data)
     if T is None:
-        return None, None
+        return None
 
     Tc_est = _estimate_Tc(T, M_smooth)
     T_fit, M_fit, lower_bounds, upper_bounds, trials = \

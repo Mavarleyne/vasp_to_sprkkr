@@ -466,9 +466,9 @@ def parse_jij(
                 continue
 
             # Фильтр шумовых J
-            if abs(j_ev * 1000) < 1e-2:   # |J| < 0.01 meV
-                i += 1
-                continue
+            # if abs(j_ev * 1000) < 1e-2:   # |J| < 0.01 meV
+            #     i += 1
+            #     continue
 
             n1 = float(data_parts[n1_pos])
             n2 = float(data_parts[n1_pos + 1])
@@ -484,7 +484,7 @@ def parse_jij(
             j_mev = j_ev * 1000
             j_si = j_ev * 2 * constants.e
 
-            raw.append([IT - 1, JT - 1,  n1,  n2,  n3, j_si, dr])
+            raw.append([IT - 1, JT - 1,  n1,  n2,  n3, j_mev, dr])
             raw.append([JT - 1, IT - 1, -n1, -n2, -n3, j_mev, dr])
 
         i += 1
@@ -502,7 +502,7 @@ def parse_jij(
         unique_drs = np.unique(np.round(raw_arr[:, 6], 4))
         dr_to_sphere = {dr: idx + 1 for idx, dr in enumerate(unique_drs)}
         sphere_nums = np.array([dr_to_sphere[round(dr, 4)] for dr in raw_arr[:, 6]])
-        mask = sphere_nums <= dr_max_count
+        mask = sphere_nums < dr_max_count
         raw_arr = raw_arr[mask]
 
     if raw_arr.size == 0:
@@ -510,7 +510,7 @@ def parse_jij(
 
     # Возвращаем только первые 6 столбцов (без DR)
     J_arr = np.array(raw_arr[:, :])
-    # # Сортировка и удаление дублей
+    # Сортировка и удаление дублей
     # idx = np.lexsort(J_arr.T)
     # J_arr = J_arr[idx]
     # mask = np.concatenate(([True], np.any(np.diff(J_arr, axis=0) != 0, axis=1)))
