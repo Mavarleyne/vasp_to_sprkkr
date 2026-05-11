@@ -71,11 +71,15 @@ class Material:
         self.sites = sites
 
     def to_mat_block(self):
+        if abs(self.spin) < 0.15:
+            spin_str = 'non-magnetic=keep'
+        else:
+            spin_str = f'spin-moment = {self.spin: .6f}'
         return (
             f"material[{self.idx}]\n"
             f"material-name = {self.label}\n"
             f"element = {self.element}\n"
-            f"spin-moment = {self.spin: .6f}\n"
+            f"{spin_str}\n"
             f"number-of-sites = {self.sites}\n"
         )
 
@@ -360,8 +364,11 @@ def read_J(d_a, dr_max_count: int = 100, path: Path = '*JXC.out'):
         if inp[0] == 'IQ' and inp[6] == 'JQ' and len(inp) == 12:
             IT = float(inp[5])
             JT = float(inp[11])
+
+            if IT == 1 and JT == 1:
+                print('exchange 0-0 exist')
             inp_J = temp[i + 3].split()
-            if float(inp_J[dr_pos]) < d_a and abs(float(inp_J[jij_pos]) * 1000) > 0.01:
+            if float(inp_J[dr_pos]) < d_a and abs(float(inp_J[jij_pos]) * 1000) > 1e-2:
                 curr = float(inp_J[dr_pos])
                 if abs(prev - curr) > 0.001:
                     # print(curr)
@@ -389,9 +396,10 @@ def read_J(d_a, dr_max_count: int = 100, path: Path = '*JXC.out'):
 
     sorted_idx = np.lexsort(J.T)
     sorted_data = J[sorted_idx, :]
+    # sorted_data = J
     row_mask = np.append([True], np.any(np.diff(sorted_data, axis=0), 1))
     out = sorted_data[row_mask]
-    out = sorted(out, key=lambda x: (x[0], x[1]))
+    # out = sorted(out, key=lambda x: (x[0], x[1]))
     J = np.array(out)
 
     return J
@@ -448,12 +456,12 @@ def write_ucf_and_input(path: str, dr_max: int, materials: Materials):
 
         file.write(f'{x_size} {y_size} {z_size}\n')
         print(f"{path.split('/')[-3]}_{path.split('/')[-2]}: {x_size} {y_size} {z_size}")
-
         np.savetxt(file, cell[0], fmt='%6f', header='Unit cell lattice vectors:')
         file.write('# Atoms\n')
         file.write(f'{cell[1].shape[0]} {len(materials)}\n')  # Число атомов в элементарной ячейке, число материалов
         for i in range(cell[1].shape[0]):
             for mat in materials:
+                print(mat)
                 if i+1 in mat.sites:
                     num_material = mat.idx - 1
             file.write(f'{i} {cell[1][i, 0]} {cell[1][i, 1]} {cell[1][i, 2]} {num_material}\n')
@@ -534,7 +542,10 @@ def write_materials(materials: Materials):
         mat_file.append(f'#---------------------------------------------------')
         mat_file.append(f'material[{mat.idx}]:material-name={mat.label}')
         mat_file.append(f'material[{mat.idx}]:damping-constant=1.0')
-        mat_file.append(f'material[{mat.idx}]:atomic-spin-moment={mat.spin} !muB')
+        if abs(mat.spin) < 0.15:
+            mat_file.append(f'material[{mat.idx}]:non-magnetic=keep')
+        else:
+            mat_file.append(f'material[{mat.idx}]:atomic-spin-moment={mat.spin} !muB')
         mat_file.append(f'material[{mat.idx}]:uniaxial-anisotropy-constant=0.0')
         mat_file.append(f'material[{mat.idx}]:material-element={mat.element}')
         mat_file.append(f'material[{mat.idx}]:initial-spin-direction = 0.0,0.0,1.0')
@@ -553,7 +564,9 @@ def generate_vampire_inputs_recursive(root_path: Path, depth: int, dr_max: int):
     '''
     # depth = 2
 
-    for system_path in root_path.rglob('*JXC.out'):
+    for system_path in root_path.rglob('*JXC_auto.out'):
+        # if 'Al/L21' not in system_path.as_posix():
+        #     continue
         if len(system_path.relative_to(root_path).parts) != depth + 1:
             continue
         # print(system_path)
@@ -565,7 +578,7 @@ def generate_vampire_inputs_recursive(root_path: Path, depth: int, dr_max: int):
         #     shutil.rmtree(f'{path}/vampire')
         #
         # continue
-        vamp_dir_name = 'vampire'
+        vamp_dir_name = 'vampire_new'
         # vamp_dir_name = str(dr_max)
         if not (path / vamp_dir_name).exists():
             (path / vamp_dir_name).mkdir()
@@ -611,6 +624,8 @@ def get_curve_recursively(root: Path):
         flag = False
         curve = []
         for line in out[:-1]:
+            if len(line.split()) <= 2:
+                continue
             if line[0] == '0':
                 flag = True
                 curve.append([float(i) for i in line.split()[:2]])
@@ -718,7 +733,6 @@ def plot_all_mags(curves: Dict[str, np.ndarray], save_path: Path):
     for path, curve in curves.items():
         T = curve[1:, 0]
         M = curve[1:, 1]
-
         T_smooth = np.linspace(T.min(), T.max(), 500)
         # y_smooth = X_Y_Spline(x_smooth)
         print(T)
@@ -814,9 +828,15 @@ if __name__ == '__main__':
     wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ')
 
     # curves = get_curve_recursively(wd)
+
     # curves = dict(sorted(curves.items(), key=lambda item: item[0].split('/')[-3]))
     # plot_all_mags(curves, (wd / 'All_mags.png'))
-    generate_vampire_inputs_recursive(wd, 2, -1)
+    generate_vampire_inputs_recursive(wd, 2, 1)
+    # J = read_J(da_max, path=wd / 'Al' / 'L21' / '*JXC.out')
+    # for line in J:
+    #     if line[0] == 0 and line[1] == 0:
+    #         print('good exchanfe')
+    # print(J)
     # finds = sorted([i.parent.as_posix() for i in wd.rglob('*.UCF')])
     # (wd / 'vampire_work_paths').write_text('\n'.join(finds))
     exit()

@@ -5,9 +5,14 @@ from matplotlib import pyplot as plt
 
 
 def main():
-    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/TC/*JXC.out')
+    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/L21/vampire_new/*JXC.out')
+    fig, ax = plot_exchanges_from_jxc(wd)
+    plt.show()
+
+    # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/L21/vampire_manual/JXC.out')
     # fig, ax = plot_exchanges_from_jxc(wd)
     # plt.show()
+    return
 
     wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ')
     (wd / 'pics').mkdir(exist_ok=True)
@@ -48,58 +53,84 @@ def parse_sprkkr_jxc(file_path: Path) -> Dict[str, np.ndarray]:
     types = {}
     jxc_out = file_path.read_text(encoding="utf-8").split("\n")
 
+    if 'VERSION' in jxc_out[13]:
+        kkr_ver = jxc_out[13].split()[3]
+
+    if kkr_ver == '8.6.0':
+        line_length = 13
+        dr_pos = 10
+        jij_pos = 12
+        flag_line = 'IT   IQ   JT   JQ    N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [meV]  J_ij [eV]'
+        table_head = 'type TXTT   NL VAL COR mesh    RMT     RWS   NAT  CONC  on sites'
+        sites_start = 10
+        table_len = 11
+    elif kkr_ver == '7.7.2':
+        line_length = 11
+        dr_pos = 8
+        jij_pos = 10
+        flag_line = 'ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]'
+        table_head = 'type TXTT     NL mesh    RMT     RWS   NAT  CONC   on sites'
+        sites_start = 8
+        table_len = 9
+    elif kkr_ver == '6.3.1':
+        line_length = 11
+        dr_pos = 8
+        jij_pos = 10
+        flag_line = 'ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]'
+    else:
+        raise RuntimeError('Unsupportable version of SPR-KKR, try to set other version')
+
+
     # --- ШАГ 1: Поиск таблицы с типами атомов ---
     flag = False
     for i, line in enumerate(jxc_out):
-        aim = 'type TXTT   NL VAL COR mesh    RMT     RWS   NAT  CONC  on sites'
+        aim = table_head
 
-        if flag and len(line.split()) < 11:
+        if flag and len(line.split()) < table_len:
             break
 
         if flag:
             l = line.split()
             type_idx = int(l[0])
             label = l[1]
-            sites = [int(i) for i in l[10:]]
+            sites = [int(i) for i in l[sites_start:]]
             types[type_idx] = AtomType(type_idx, label, sites)
 
         if aim in line:
             flag = True
 
-    # print(types)
+    print(types)
     # exit()
 
     # --- ШАГ 2: Сбор данных J_ij (ваша исходная структура) ---
     for i in range(len(jxc_out)):
         # Ищем строку заголовка по ее началу
-        if jxc_out[i].strip().startswith("IT   IQ   JT   JQ"):
+        if flag_line in jxc_out[i]:
             # Проверяем, есть ли следующая строка с данными
-            if i + 1 < len(jxc_out):
-                data_line = jxc_out[i + 1].strip().split()
+            data_line = jxc_out[i + 1].strip().split()
+        # Проверяем, что строка содержит данные (минимум 13 колонок)
+            try:
+                it = int(jxc_out[i - 2].split()[5])  # IT
+                jt = int(jxc_out[i - 2].split()[11])  # JT
+                dr = float(data_line[dr_pos])  # DR
+                jij = float(data_line[jij_pos]) * 1000  # J_ij [meV]
 
-                # Проверяем, что строка содержит данные (минимум 13 колонок)
-                if len(data_line) >= 13:
-                    try:
-                        it = int(data_line[0])  # IT
-                        jt = int(data_line[2])  # JT
-                        dr = float(data_line[10])  # DR
-                        jij = float(data_line[11])  # J_ij [meV]
+                # Переводим индексы в имена (например, '1' -> 'Fe_1')
+                # print(types)
+                atom1 = types[it].label
+                atom2 = types[jt].label
+                key = f"{atom1}-{atom2}"
+                reverse_key = f'{atom2}-{atom1}'
 
-                        # Переводим индексы в имена (например, '1' -> 'Fe_1')
-                        atom1 = types[it].label
-                        atom2 = types[jt].label
-                        key = f"{atom1}-{atom2}"
-                        reverse_key = f'{atom2}-{atom1}'
+                if reverse_key in raw_data.keys() and key != reverse_key:
+                    continue
 
-                        if reverse_key in raw_data.keys() and key != reverse_key:
-                            continue
+                if key not in raw_data:
+                    raw_data[key] = []
 
-                        if key not in raw_data:
-                            raw_data[key] = []
-
-                        raw_data[key].append([dr, jij])
-                    except ValueError:
-                        continue
+                raw_data[key].append([dr, jij])
+            except ValueError:
+                continue
 
     # --- ШАГ 3: Усреднение данных ---
     result = {}
@@ -153,7 +184,7 @@ def plot_exchanges_from_jxc(path_to_jxc: Path):
 
     ax.legend(handles, labels, ncol=3, fontsize=12)
     ax.legend(ncol=3, fontsize=12)
-    # plt.show()
+    plt.show()
     return fig, ax
 
 if __name__ == '__main__':
