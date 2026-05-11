@@ -1,0 +1,61 @@
+17-04-2026 [15:34:27] Logfile opened
+17-04-2026 [15:34:27] Executable : vampire-serial-intel
+17-04-2026 [15:34:27] Host name  : node24:
+17-04-2026 [15:34:27] Directory  : /home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/L21/vampire
+17-04-2026 [15:34:27] Process ID : 24101
+17-04-2026 [15:34:27] Version    : 5.0.1
+17-04-2026 [15:34:27] Githash    : c0cb858d7dcdcdfc6474938324e363599e728b30
+17-04-2026 [15:34:27] Opening main input file "input".
+17-04-2026 [15:34:27] Parsing system parameters from main input file.
+17-04-2026 [15:34:27] Opening material file "vampire.mat".
+17-04-2026 [15:34:27] Parsing material file for parameters.
+17-04-2026 [15:34:27] Reading in unit cell data from disk...
+17-04-2026 [15:34:27] Reading data completed. Processing unit cell data...
+17-04-2026 [15:34:27] 	Processing data for 4 unit cell atoms...
+17-04-2026 [15:34:27] 	Processing unit cell atoms completed
+17-04-2026 [15:34:27] 	Processing data from 1561 unit cell interactions...
+17-04-2026 [15:34:27] 	Processing unit cell interactions completed
+17-04-2026 [15:34:27] 	Verifying unit cell exchange interactions...
+17-04-2026 [15:34:27] Verifying unit cell exchange interactions completed
+17-04-2026 [15:34:27] 	Number of atoms read-in: 4
+17-04-2026 [15:34:27] 	Number of interactions read-in: 1561
+17-04-2026 [15:34:27] 	Exchange type: isotropic
+17-04-2026 [15:34:27] 	Calculated interaction range: 4 Unit Cells
+17-04-2026 [15:34:27] Calculating alloy properties of system
+17-04-2026 [15:34:27] Determining atomic composition
+17-04-2026 [15:34:27] Material 1 Al makes up 25% of all atoms.
+17-04-2026 [15:34:27] Material 2 Fe makes up 50% of all atoms.
+17-04-2026 [15:34:27] Material 3 Co makes up 25% of all atoms.
+17-04-2026 [15:34:27] Memory required for neighbourlist calculation:0.157216 MB
+17-04-2026 [15:34:27] Allocating memory for supercell array in neighbourlist calculation...
+17-04-2026 [15:34:27] 	Done
+17-04-2026 [15:34:27] Populating supercell array for neighbourlist calculation...
+17-04-2026 [15:34:27] 	Done
+17-04-2026 [15:34:27] Memory required for neighbour list:61.3535 MB
+17-04-2026 [15:34:27] Generating neighbour list...
+17-04-2026 [15:34:27] 	Done
+17-04-2026 [15:34:27] Deallocating supercell array for neighbour list calculation
+17-04-2026 [15:34:27] 	Done
+17-04-2026 [15:34:27] Copying system data to optimised data structures.
+17-04-2026 [15:34:27] Number of atoms generated on rank 0: 19652
+17-04-2026 [15:34:27] Memory required for copying to performance array on rank 0: 2.9871 MB RAM
+17-04-2026 [15:34:27] Identifying surface atoms using global threshold value of 0
+17-04-2026 [15:34:27] 0 surface atoms found.
+17-04-2026 [15:34:27] Memory required for creation of 1D neighbour list on rank 0: 0.314432 MB RAM
+17-04-2026 [15:34:27] Initialising data structures for exchange calculation.
+17-04-2026 [15:34:28] Unrolled exchange template requires 0.012488MB RAM
+17-04-2026 [15:34:28] Macrocell size = 10 Angstroms
+17-04-2026 [15:34:28] Macrocells in x,y,z: 7	7	7
+17-04-2026 [15:34:28] Total number of macrocells: 343
+17-04-2026 [15:34:28] Memory required for macrocell arrays: 0.02744 MB
+17-04-2026 [15:34:28] Number of local macrocells on rank 0: 343
+17-04-2026 [15:34:28] Number of atoms generated: 19652
+17-04-2026 [15:34:28] Initialising data structures for anisotropy calculation.
+17-04-2026 [15:34:28] Initialising statistics module
+17-04-2026 [15:34:28] Starting Simulation with Program Curie-Temperature...
+17-04-2026 [18:31:59] Simulation run time [s]: 10651.7
+17-04-2026 [18:31:59] Monte Carlo statistics:
+17-04-2026 [18:31:59] 	Total moves: 3.91271e+09
+17-04-2026 [18:31:59] 	68.8043% Accepted
+17-04-2026 [18:31:59] 	31.1957% Rejected
+17-04-2026 [18:31:59] Simulation ended gracefully.

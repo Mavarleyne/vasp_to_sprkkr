@@ -1,0 +1,2441 @@
+ 
+
+          **************************************************************
+          *                                                            *
+          *        ****   *****   *****   *    *  *    *  *****        *
+          *       *    *  *    *  *    *  *   *   *   *   *    *       *
+          *       *       *    *  *    *  *  *    *  *    *    *       *
+          *        ****   *****   *****   * *     * *     *****        *
+          *            *  *       *  *    ** *    ** *    *  *         *
+          *       *    *  *       *   *   *   *   *   *   *   *        *
+          *        ****   *       *    *  *    *  *    *  *    *       *
+          *                                                            *
+          *------------------------------------------------------------*
+          *       KKRGEN  VERSION  6.3.1          (C) 2012  H. Ebert   *
+          **************************************************************
+
+
+          programm execution  on    16/03/2017    at   20:11:20
+
+          Compiled on      : Linux
+          Compilation time : Птн Июл
+          Compiler settings: -O2 -axSSE4.2
+
+
+ *******************************************************************************
+                                 <GETLRECREAL>
+ *******************************************************************************
+
+          record length parameter for REAL's   LRECREAL8 =  8
+          a double precission real*8 is stored in 8 Bytes             
+
+
+
+ *******************************************************************************
+                                    <POTRD2>
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                 <POTIO_SWSRMT>
+ *******************************************************************************
+
+
+          system dimension: 3D        
+          system type:      BULK      
+          SCF status:       CONVERGED 
+
+
+
+ *******************************************************************************
+                               <INIT_MOD_LATTICE>
+ *******************************************************************************
+
+          initialize the module <MOD_LATTICE> according to SYSDIM = 3D
+
+          set up basis vectors for reciprocal space 
+
+
+          real space Bravais lattice: cubic       body-centered  m3m    O_h 
+
+          primitive vectors for real space Bravais lattice
+
+            (  -0.50000,   0.50000,   0.50000 )
+            (   0.50000,  -0.50000,   0.50000 )
+            (   0.50000,   0.50000,  -0.50000 )
+
+          basis vectors in units of a
+
+            (   0.00000,   0.00000,   0.00000 )
+
+          primitive vectors of reciprocal space Bravais lattice
+                 in units of 2*pi/a
+
+            (   0.00000,   1.00000,   1.00000 )
+            (   1.00000,   0.00000,   1.00000 )
+            (   1.00000,   1.00000,   0.00000 )
+
+
+ *******************************************************************************
+                                   <SYMINIT>
+ *******************************************************************************
+
+          set up possible symmetry operations for the 
+          real space Bravais lattice: cubic       body-centered  m3m    O_h 
+
+          crystal system   7     CUB
+
+          symmetry operations to scan       NSYM  48
+          maximum possible symmetry operations    48
+
+           T T T T T T T T T T T T T T T T T T T T T T T T
+           T T T T T T T T T T T T T T T T T T T T T T T T
+
+
+ *******************************************************************************
+                                  <SYMLATTICE>
+ *******************************************************************************
+
+          find out symmetry properties of the lattice 
+
+
+          crystal system accepted symmetry operations      48
+          accepted symmetry operations                     48
+
+
+       I    Euler angles  INV SYMBOL TIM     shift  ->DQ     Q' 
+       1     0    0    0       E           0.00  0.00  0.00   1
+       2     0  180  180       C2x         0.00  0.00  0.00   1
+       3     0  180    0       C2y         0.00  0.00  0.00   1
+       4     0    0  180       C2z         0.00  0.00  0.00   1
+       5     0   90   90       C+31        0.00  0.00  0.00   1
+       6   180   90  270       C+32        0.00  0.00  0.00   1
+       7   180   90   90       C+33        0.00  0.00  0.00   1
+       8     0   90  270       C+34        0.00  0.00  0.00   1
+       9    90   90  180       C-31        0.00  0.00  0.00   1
+      10   270   90    0       C-32        0.00  0.00  0.00   1
+      11    90   90    0       C-33        0.00  0.00  0.00   1
+      12   270   90  180       C-34        0.00  0.00  0.00   1
+      13   270   90   90       C+4x        0.00  0.00  0.00   1
+      14     0   90    0       C+4y        0.00  0.00  0.00   1
+      15     0    0   90       C+4z        0.00  0.00  0.00   1
+      16    90   90  270       C-4x        0.00  0.00  0.00   1
+      17   180   90  180       C-4y        0.00  0.00  0.00   1
+      18     0    0  270       C-4z        0.00  0.00  0.00   1
+      19     0  180   90       C2a         0.00  0.00  0.00   1
+      20     0  180  270       C2b         0.00  0.00  0.00   1
+      21     0   90  180       C2c         0.00  0.00  0.00   1
+      22    90   90   90       C2d         0.00  0.00  0.00   1
+      23   180   90    0       C2e         0.00  0.00  0.00   1
+      24   270   90  270       C2f         0.00  0.00  0.00   1
+      25     0    0    0   I   I           0.00  0.00  0.00   1
+      26     0  180  180   I   sx          0.00  0.00  0.00   1
+      27     0  180    0   I   sy          0.00  0.00  0.00   1
+      28     0    0  180   I   sz          0.00  0.00  0.00   1
+      29     0   90   90   I   S-61        0.00  0.00  0.00   1
+      30   180   90  270   I   S-62        0.00  0.00  0.00   1
+      31   180   90   90   I   S-63        0.00  0.00  0.00   1
+      32     0   90  270   I   S-64        0.00  0.00  0.00   1
+      33    90   90  180   I   S+61        0.00  0.00  0.00   1
+      34   270   90    0   I   S+62        0.00  0.00  0.00   1
+      35    90   90    0   I   S+63        0.00  0.00  0.00   1
+      36   270   90  180   I   S+64        0.00  0.00  0.00   1
+      37   270   90   90   I   S-4x        0.00  0.00  0.00   1
+      38     0   90    0   I   S-4y        0.00  0.00  0.00   1
+      39     0    0   90   I   S-4z        0.00  0.00  0.00   1
+      40    90   90  270   I   S+4x        0.00  0.00  0.00   1
+      41   180   90  180   I   S+4y        0.00  0.00  0.00   1
+      42     0    0  270   I   S+4z        0.00  0.00  0.00   1
+      43     0  180   90   I   sda         0.00  0.00  0.00   1
+      44     0  180  270   I   sdb         0.00  0.00  0.00   1
+      45     0   90  180   I   sdc         0.00  0.00  0.00   1
+      46    90   90   90   I   sdd         0.00  0.00  0.00   1
+      47   180   90    0   I   sde         0.00  0.00  0.00   1
+      48   270   90  270   I   sdf         0.00  0.00  0.00   1
+
+          the detected  48 symmetry operations form a group
+
+
+          BZ-wedges to be treated  NWEDGE   1
+          created by operations  
+           1  E   
+
+
+ *******************************************************************************
+                                    <SYMROT>
+ *******************************************************************************
+
+          set up of rotation matrices  DROT  for IREL = 2
+
+          CHECK of rotation matrices   DROT  for COMPLEX spherical harmonics
+          comparison of analytical and numerical results
+          out of  1944 elements     0 deviate more than TOL =   1.0E-08
+          maximum deviation found:    2.6E-14
+
+
+
+ *******************************************************************************
+                                 <POTRDSPR>
+ *******************************************************************************
+
+          POTFMTINP =  7
+
+ SPR-KKR dataset created by KKRSCF                                              
+  
+
+
+ *******************************************************************************
+                                 <POTIO_SWSRMT>
+ *******************************************************************************
+
+
+          radial mesh parameters:
+
+          IM    JRMT   R(JRMT)    RMT      JRWS    RWS       DX
+           1    714   2.28550   2.32069    721   2.63883   0.020535897
+
+          Bravais lattice:                cubic       body-centered
+          lattice constant  ALAT               5.35941
+          number of sites   NQ                       1
+          average Wigner-Seitz radius          2.63883
+
+
+
+          potential data for IT =  1 ..   1
+          =================================
+
+    1    0.000001  -51.999858    0.000000
+   31    0.000002  -51.999738    0.000000
+   61    0.000003  -51.999528    0.000000
+   91    0.000006  -51.999217    0.000000
+  121    0.000012  -51.999105    0.000000
+  151    0.000022  -52.001372    0.000000
+  181    0.000040  -52.015749    0.000001
+  211    0.000075  -52.060849    0.000002
+  241    0.000138  -52.109210    0.000001
+  271    0.000256  -52.089238   -0.000001
+  301    0.000474  -52.020547   -0.000001
+  331    0.000877  -51.923800   -0.000000
+  361    0.001624  -51.770500    0.000000
+  391    0.003008  -51.499623    0.000001
+  421    0.005570  -51.002311    0.000003
+  451    0.010313  -50.085439    0.000005
+  481    0.019096  -48.433936    0.000009
+  511    0.035359  -45.624223    0.000014
+  541    0.065472  -41.195047    0.000038
+  571    0.121232  -34.861459    0.000077
+  601    0.224479  -26.896701   -0.004107
+  631    0.415657  -17.742524   -0.050705
+  661    0.769650   -9.131199   -0.080881
+  691    1.425123   -2.583336   -0.098005
+  721    2.638828    0.071581    0.073710
+  721    2.638828    0.071581    0.073710
+  
+
+                   spin-polarized calculation
+
+                   SELFENERGY applied:NONE      
+
+
+   number of lattice sites (NQ):   1
+
+   site NL mesh MTET MPHI   RWS  CPA NOQ IT ELMT VAL CONC QREP SYMG equi. sites
+     1   3   1     0    0 2.6388  0   1                     1    1   1
+                                          1 Fe     8 1.00
+   average                2.6388          total    8.00
+
+   KMROT:     0   no M-rotation       
+   QMVEC:   0.000  0.000  0.000
+
+
+
+   number of atomic types  (NT):   1
+
+   type TXTT     NL mesh    RMT     RWS   NAT  CONC   on sites
+     1  Fe        3   1   2.3207  2.6388   1  1.000     1
+
+
+
+
+ mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+
+          spin polarized SCALAR-relativistic calculation 
+
+          the  BREIT interaction  will be ignored
+
+          the  ORBITAL POLARISATION  will be ignored
+
+          solver for     spherical SREL  equation: BS           TOL = 2.0E-08
+          solver for NON-spherical SREL  equation: BORN         TOL = 1.0E-10
+                                                                LIM =      10
+
+
+          SWS =  2.638828     ALAT =  5.359414
+
+          NQ =  1     NL =  3     NLM =   9   NQ*NLM =   9
+                      NK =  5     NKM =  18     NKKR =   9     NLIN =  30
+
+          POTFMTINP = 7     POTFMTOUT = 7
+          RDTAU     = F     RDTAUMQ   = F
+          WRTAU     = F     WRTAUMQ   = F
+          PLOTPOT   = F     PLOTRHO   = F     PLOTSFN   = F
+          PLOT2DPOT = F     PLOT2DRHO = F
+          IPRINT    = 0     ITEST     = 0     WRMAT     = F
+          INITELOOP = T     RUNELOOP  = T     SPLITSS   = F
+          NO_SYM    = F     SYM MSS   = T     SYM RHO   = T
+          LLOYD     = F
+          GF_CONV_RH= F
+          NONMAG    = F
+          FULLPOT   = F
+          FULLCHARGE= F
+
+          TASK      = TL01000000
+
+          SYSDIM    = 3D        
+          SYSTYPE   = BULK      
+          SUBSYSTEM = BULK      
+          KKRMODE   = STANDARD  
+
+ eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+
+          energy path:  ARC IN COMPLEX PLANE                    
+          energies  :          30
+          E_min     :   -0.200000
+          E_max     :    0.801003
+          Im(E)     :    0.010000
+          E_Fermi   :    0.801003
+  
+
+ *******************************************************************************
+                                   <STRINIT>
+ *******************************************************************************
+
+          parameters for calculation of structure constants:
+
+          primitive vectors for Bravais lattice
+
+            (  -0.50000,   0.50000,   0.50000 )
+            (   0.50000,  -0.50000,   0.50000 )
+            (   0.50000,   0.50000,  -0.50000 )
+
+          basis vectors in units of a
+
+            (   0.00000,   0.00000,   0.00000 )
+
+          primitive vectors of reciprocal space
+                 in units of 2*pi/a
+
+            (   0.00000,   1.00000,   1.00000 )
+            (   1.00000,   0.00000,   1.00000 )
+            (   1.00000,   1.00000,   0.00000 )
+
+          number of inequivalent QQP-block-matrices  NQQP_STR     =       1
+          reduced number of inequiv. block-matrices  NQQP_STR_RED =       1
+
+
+
+          RMAX  =    3.0388          GMAX  =    3.6179
+          RMAX1 =    0.0000          GMAX1 =    1.4142
+          RA    =    3.0388          GA    =    3.6179
+
+          NUMR  =         9          NUMG  =         7
+          NRDL  =       259          NGRL  =       225
+
+          for LMAX = 2    96 non-zero GAUNTS tabulated
+
+
+ *******************************************************************************
+            array sizes for calculation of structure constants
+ *******************************************************************************
+                                          used              available
+          G-vectors table       NGRL       225        NGRLMAX     729
+          R-vectors table       NRDL       259        NRDLMAX    1331
+          R-vectors (max.)      SMAX       259        NSDL        259
+          R-vectors (min.)      SMAX       259
+          l-max + 1             NL           3        NLMAX         3
+          sites                 NQ_STR       1        NQMAX         1
+          q-q'-blocks           NQQP_STR     1        LIMIT         1
+          auxilary array        R123MAX      4
+          auxilary array        G123MAX      3
+          Davis eq. (13)        J13MAX      21        LIMIT       300
+          Davis eq. (22)        J22MAX      30        LIMIT       150
+          Gaunts                LRGNT12     45
+          Gaunts                LRGNT123    96
+          Ewald parameter       ETA       0.31
+ *******************************************************************************
+
+
+          <INIT_MOD_STR>: section 1 of module MOD_STR initialized
+          allocated         586  integers        101842  reals (incl. complex)
+          corresp. to         0  Mbytes               0  Mbytes
+
+
+ ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+
+          parameters for k-space integration:
+          NWEDGE:   1  wedges:  1
+          regular k-mesh used for point sampling
+
+          number of k-vectors to start               192000               185193
+          mesh parameters                          57   57   57
+          number of k-vectors created                  4495
+          array size (NKTABMAX)                        5760
+
+
+
+          ****************************
+          no CPA-iteration required !!
+          ****************************
+
+
+ fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+
+          FILES:
+
+          potential :  ( 4) Fe.pot
+  
+
+ *******************************************************************************
+                             <INIT_MOD_TAUIJ_STAR>
+ *******************************************************************************
+
+     number of TAU(I,J)'s to be calculated:  339
+
+
+ *******************************************************************************
+                             <INIT_MOD_TAUIJ_KMESH>
+ *******************************************************************************
+
+          NKTAB =    4495     NKTABTAUIJ =  185193
+                              WKSUM      =  185193
+
+ PROC            0  opening           10 
+ Fe_JXC.dos_0                                                                   
+  
+ PROC            0  opening           10 
+ Fe_JXC.dos_0                                                                   
+  
+
+   1 E=-0.2000 0.0024          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     0.043             0.002             0.000          224506.0
+ TOTAL   crystal     0.014             0.002             0.000              11.1
+ INT(DE) backscat.  -0.000             0.000             0.000              -0.3
+ TOTAL   backscat.  -0.000             0.000             0.000              -1.2
+ ===============================================================================
+
+   2 E=-0.1998 0.0128          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     0.141             0.008             0.000          744638.8
+ TOTAL   crystal     0.076             0.009             0.000              58.4
+ INT(DE) backscat.  -0.000             0.000             0.000              -1.1
+ TOTAL   backscat.  -0.002             0.001             0.000              -6.3
+ ===============================================================================
+
+   3 E=-0.1990 0.0314          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     0.295             0.016             0.000          ********
+ TOTAL   crystal     0.186             0.023             0.000             143.0
+ INT(DE) backscat.  -0.000             0.000             0.000              -2.2
+ TOTAL   backscat.  -0.004             0.001             0.000             -15.3
+ ===============================================================================
+
+   4 E=-0.1966 0.0579          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     0.503             0.028             0.000          ********
+ TOTAL   crystal     0.344             0.043             0.000             263.7
+ INT(DE) backscat.  -0.000             0.001             0.000              -3.6
+ TOTAL   backscat.  -0.007             0.002             0.000             -27.3
+ ===============================================================================
+
+   5 E=-0.1915 0.0918          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     0.761             0.042             0.000          ********
+ TOTAL   crystal     0.548             0.068             0.000             418.6
+ INT(DE) backscat.  -0.000             0.001             0.000              -5.2
+ TOTAL   backscat.  -0.010             0.004             0.000             -40.1
+ ===============================================================================
+
+   6 E=-0.1822 0.1324          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     1.066             0.060             0.000          ********
+ TOTAL   crystal     0.796             0.098             0.000             604.7
+ INT(DE) backscat.   0.000             0.001             0.000              -6.5
+ TOTAL   backscat.  -0.013             0.005             0.000             -50.5
+ ===============================================================================
+
+   7 E=-0.1671 0.1785          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     1.415             0.079             0.000          ********
+ TOTAL   crystal     1.085             0.134             0.000             818.2
+ INT(DE) backscat.   0.001             0.002             0.000              -7.2
+ TOTAL   backscat.  -0.012             0.007             0.000             -54.4
+ ===============================================================================
+
+   8 E=-0.1447 0.2287          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     1.802             0.102             0.000          ********
+ TOTAL   crystal     1.414             0.175             0.000            1053.6
+ INT(DE) backscat.   0.002             0.002             0.000              -6.9
+ TOTAL   backscat.  -0.009             0.009             0.000             -48.5
+ ===============================================================================
+
+   9 E=-0.1137 0.2810          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     2.220             0.127             0.000          ********
+ TOTAL   crystal     1.780             0.219             0.000            1304.7
+ INT(DE) backscat.   0.003             0.002             0.000              -5.3
+ TOTAL   backscat.  -0.001             0.011             0.000             -31.5
+ ===============================================================================
+
+  10 E=-0.0732 0.3330          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     2.663             0.154             0.000          ********
+ TOTAL   crystal     2.182             0.268             0.000            1564.7
+ INT(DE) backscat.   0.006             0.003             0.000              -2.0
+ TOTAL   backscat.   0.011             0.012             0.000              -4.7
+ ===============================================================================
+
+  11 E=-0.0228 0.3821          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     3.121             0.184             0.000          ********
+ TOTAL   crystal     2.619             0.320             0.000            1826.5
+ INT(DE) backscat.   0.009             0.003             0.000               2.9
+ TOTAL   backscat.   0.026             0.012             0.000              29.0
+ ===============================================================================
+
+  12 E= 0.0372 0.4256          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     3.585             0.217             0.000          ********
+ TOTAL   crystal     3.090             0.375             0.000            2083.7
+ INT(DE) backscat.   0.013             0.003             0.000               9.5
+ TOTAL   backscat.   0.044             0.010             0.000              65.4
+ ===============================================================================
+
+  13 E= 0.1056 0.4610          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     4.045             0.253             0.000          ********
+ TOTAL   crystal     3.598             0.432             0.000            2330.2
+ INT(DE) backscat.   0.018             0.003             0.000              17.6
+ TOTAL   backscat.   0.062             0.007             0.000              99.7
+ ===============================================================================
+
+  14 E= 0.1807 0.4860          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     4.492             0.293             0.000          ********
+ TOTAL   crystal     4.145             0.490             0.000            2560.5
+ INT(DE) backscat.   0.025             0.003             0.000              27.3
+ TOTAL   backscat.   0.078             0.001             0.000             127.1
+ ===============================================================================
+
+  15 E= 0.2601 0.4989          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     4.915             0.337             0.000          ********
+ TOTAL   crystal     4.735             0.547             0.000            2769.7
+ INT(DE) backscat.   0.032             0.002             0.000              38.3
+ TOTAL   backscat.   0.091            -0.008             0.000             142.5
+ ===============================================================================
+
+  16 E= 0.3409 0.4989          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     5.307             0.386             0.000          ********
+ TOTAL   crystal     5.375             0.601             0.000            2952.6
+ INT(DE) backscat.   0.040             0.001             0.000              50.6
+ TOTAL   backscat.   0.098            -0.022             0.000             140.2
+ ===============================================================================
+
+  17 E= 0.4203 0.4860          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     5.663             0.442             0.000          ********
+ TOTAL   crystal     6.071             0.647             0.000            3103.6
+ INT(DE) backscat.   0.049            -0.002             0.000              63.9
+ TOTAL   backscat.   0.094            -0.040             0.000             113.9
+ ===============================================================================
+
+  18 E= 0.4954 0.4610          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     5.977             0.505             0.000          ********
+ TOTAL   crystal     6.833             0.681             0.000            3216.1
+ INT(DE) backscat.   0.059            -0.006             0.000              78.3
+ TOTAL   backscat.   0.075            -0.061             0.000              56.7
+ ===============================================================================
+
+  19 E= 0.5638 0.4256          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     6.251             0.578             0.000          ********
+ TOTAL   crystal     7.669             0.695             0.000            3282.3
+ INT(DE) backscat.   0.070            -0.012             0.000              93.7
+ TOTAL   backscat.   0.038            -0.083             0.000             -39.6
+ ===============================================================================
+
+  20 E= 0.6238 0.3821          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     6.485             0.663             0.000          ********
+ TOTAL   crystal     8.593             0.678             0.000            3293.7
+ INT(DE) backscat.   0.080            -0.021             0.000             110.3
+ TOTAL   backscat.  -0.022            -0.092             0.000            -183.2
+ ===============================================================================
+
+  21 E= 0.6742 0.3330          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     6.685             0.762             0.000          ********
+ TOTAL   crystal     9.617             0.620             0.000            3242.3
+ INT(DE) backscat.   0.090            -0.034             0.000             128.5
+ TOTAL   backscat.  -0.106            -0.067             0.000            -381.7
+ ===============================================================================
+
+  22 E= 0.7147 0.2810          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     6.857             0.880             0.000          ********
+ TOTAL   crystal    10.755             0.507             0.000            3122.9
+ INT(DE) backscat.   0.097            -0.050             0.000             149.0
+ TOTAL   backscat.  -0.209             0.046             0.000            -639.4
+ ===============================================================================
+
+  23 E= 0.7457 0.2287          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     7.009             1.019             0.000          ********
+ TOTAL   crystal    12.015             0.340             0.000            2935.9
+ INT(DE) backscat.   0.100            -0.067             0.000             172.2
+ TOTAL   backscat.  -0.322             0.343             0.000            -954.7
+ ===============================================================================
+
+  24 E= 0.7681 0.1785          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     7.148             1.184             0.000          ********
+ TOTAL   crystal    13.385             0.141             0.000            2690.9
+ INT(DE) backscat.   0.101            -0.082             0.000             198.1
+ TOTAL   backscat.  -0.446             0.995             0.000           -1316.9
+ ===============================================================================
+
+  25 E= 0.7832 0.1324          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     7.282             1.380             0.000          ********
+ TOTAL   crystal    14.784            -0.012             0.000            2407.2
+ INT(DE) backscat.   0.103            -0.086             0.000             226.0
+ TOTAL   backscat.  -0.662             2.260             0.000           -1705.2
+ ===============================================================================
+
+  26 E= 0.7925 0.0918          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     7.422             1.606             0.000          ********
+ TOTAL   crystal    15.955             0.026             0.000            2110.1
+ INT(DE) backscat.   0.119            -0.067             0.000             254.3
+ TOTAL   backscat.  -1.269             4.455             0.000           -2092.8
+ ===============================================================================
+
+  27 E= 0.7976 0.0579          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     7.577             1.849             0.000          ********
+ TOTAL   crystal    16.389             0.400             0.000            1821.4
+ INT(DE) backscat.   0.166            -0.022             0.000             280.9
+ TOTAL   backscat.  -2.880             7.797             0.000           -2456.7
+ ===============================================================================
+
+  28 E= 0.8000 0.0314          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     7.746             2.076             0.000          747655.7
+ TOTAL   crystal    15.602             1.169             0.000            1550.4
+ INT(DE) backscat.   0.252             0.038             0.000             303.7
+ TOTAL   backscat.  -6.072            12.186             0.000           -2786.4
+ ===============================================================================
+
+  29 E= 0.8008 0.0128          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     7.906             2.247             0.000          227542.7
+ TOTAL   crystal    13.889             2.522             0.000            1305.6
+ INT(DE) backscat.   0.358             0.091             0.000             320.2
+ TOTAL   backscat. -10.361            17.257             0.000           -3072.4
+ ===============================================================================
+
+  30 E= 0.8010 0.0024   L= 0   IT= 1  Fe        CRYSTAL TERMS       
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE)     0.530   0.637     0.011  -0.013     0.000   0.00035874539.8  3044.4
+ SUM(ML)     0.048   0.212     0.147   0.144     0.000   0.000   35837.1     1.2
+ ML=  0      0.048   0.212     0.147   0.144     0.000   0.000   35837.1     1.2
+
+  30 E= 0.8010 0.0024   L= 1   IT= 1  Fe        CRYSTAL TERMS       
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE)     1.409   0.813    -0.020  -0.074     0.000   0.000       0.0     0.0
+ SUM(ML)    -0.200   0.873     1.061  -0.095     0.000   0.000       0.0     0.0
+ ML= -1     -0.067   0.291     0.354  -0.032     0.000   0.000       0.0     0.0
+ ML=  0     -0.067   0.291     0.354  -0.032     0.000   0.000       0.0     0.0
+ ML=  1     -0.067   0.291     0.354  -0.032     0.000   0.000       0.0     0.0
+
+  30 E= 0.8010 0.0024   L= 2   IT= 1  Fe        CRYSTAL TERMS       
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE)     8.767   6.547    -0.286   2.418     0.000   0.000       0.0     0.0
+ SUM(ML)   -14.389  11.257   -14.563   4.941     0.000   0.000       0.0     0.0
+ ML= -2     -3.735   3.298    -2.258   1.339     0.000   0.000       0.0     0.0
+ ML= -1     -3.735   3.298    -2.258   1.339     0.000   0.000       0.0     0.0
+ ML=  0     -1.592   0.682    -3.894   0.462     0.000   0.000       0.0     0.0
+ ML=  1     -3.735   3.298    -2.258   1.339     0.000   0.000       0.0     0.0
+ ML=  2     -1.592   0.682    -3.894   0.462     0.000   0.000       0.0     0.0
+
+  30 E= 0.8010 0.0024          IT= 1  Fe      
+               DOS  [1/Ry]  |  m_spin  [m_B]  |  m_orb   [m_B]  |   B_tot   [kG]
+ INT(DE) crystal     7.997             2.331             0.000            3044.4
+ TOTAL   crystal    12.342             4.989             0.000            1227.1
+ INT(DE) backscat.   0.426             0.121             0.000             327.1
+ TOTAL   backscat. -13.929            22.491             0.000           -3174.1
+ -------------------------------------------------------------------------------
+ TOT  12.3418   7.9973             2.3312            0.00000
+ ===============================================================================
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: Fe
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT      -0.00274950 els.
+ E_F CORRECTION      0.00022278
+ NEW FERMI ENERGY    0.80122624
+
+ parameters for k-space integration:  NWEDGE:  1  wedges:  1
+ regular k-mesh point sampling  NKTAB: 4495
+ number of energies CPA failed     0
+
+  31 E= 0.8012 0.0000          IT= 1  Fe      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2117   0.6371    0.1437  -0.0132   0.00000  0.00000 3044.71 s      0.00
+  p    0.8729   0.8131   -0.0952  -0.0740   0.00000  0.00000    0.00 ns     0.00
+  d   11.2572   6.5498    4.9409   2.4195   0.00000  0.00000    0.00 cor    0.00
+ sum  12.3418   8.0000    4.9893   2.3324   0.00000  0.00000 1227.14 v+c 1227.14
+                          P(T_z)   T_z   
+  s                       0.0000   0.0000
+  p                       0.0000   0.0000
+  d                       0.0000   0.0000
+ sum                      0.0000   0.0000
+ -------------------------------------------------------------------------------
+ TOT  12.3418   8.0000             2.3324            0.00000
+ E_band         5.02661978 [Ry]
+ ===============================================================================
+
+ *******************************************************************************
+                                    <XCPLJ0>
+                            XC-coupling constants J_0
+ *******************************************************************************
+
+     IT =   1  Fe        J0 =   0.013853 Ry    0.188486 eV
+ 
+     IQ =   1        J0 =   0.013853 Ry    0.188486 eV
+     occupation     IT =   1
+     equiv. sites   IQ =   1
+
+     Curie temperature within mean field approximation  T_C =   1458.2 K
+
+ 
+
+ *******************************************************************************
+                                   <XCPLJIJ>
+                            XC-coupling constants J_ij
+ *******************************************************************************
+
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         113    227   -1 -1 -1  -0.500 -0.500 -0.500   0.866    0.001431   0.019466
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         122    218   -1  0  0   0.500 -0.500 -0.500   0.866    0.001431   0.019466
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         162    178    0 -1  0  -0.500  0.500 -0.500   0.866    0.001431   0.019466
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         171    169    0  0  1   0.500  0.500 -0.500   0.866    0.001431   0.019466
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         169    171    0  0 -1  -0.500 -0.500  0.500   0.866    0.001431   0.019466
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         178    162    0  1  0   0.500 -0.500  0.500   0.866    0.001431   0.019466
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         218    122    1  0  0  -0.500  0.500  0.500   0.866    0.001431   0.019466
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         227    113    1  1  1   0.500  0.500  0.500   0.866    0.001431   0.019466
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         114    226   -1 -1  0   0.000  0.000 -1.000   1.000    0.000859   0.011689
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         121    219   -1  0 -1   0.000 -1.000  0.000   1.000    0.000859   0.011689
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         161    179    0 -1 -1  -1.000  0.000  0.000   1.000    0.000859   0.011689
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         179    161    0  1  1   1.000  0.000  0.000   1.000    0.000859   0.011689
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         219    121    1  0  1   0.000  1.000  0.000   1.000    0.000859   0.011689
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         226    114    1  1  0   0.000  0.000  1.000   1.000    0.000859   0.011689
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          71    269   -2 -1 -1   0.000 -1.000 -1.000   1.414   -0.000083  -0.001123
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         106    234   -1 -2 -1  -1.000  0.000 -1.000   1.414   -0.000083  -0.001123
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         123    217   -1  0  1   1.000  0.000 -1.000   1.414   -0.000083  -0.001123
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         163    177    0 -1  1   0.000  1.000 -1.000   1.414   -0.000083  -0.001123
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         112    228   -1 -1 -2  -1.000 -1.000  0.000   1.414   -0.000083  -0.001123
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         129    211   -1  1  0   1.000 -1.000  0.000   1.414   -0.000083  -0.001123
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         211    129    1 -1  0  -1.000  1.000  0.000   1.414   -0.000083  -0.001123
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         228    112    1  1  2   1.000  1.000  0.000   1.414   -0.000083  -0.001123
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         177    163    0  1 -1   0.000 -1.000  1.000   1.414   -0.000083  -0.001123
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         217    123    1  0 -1  -1.000  0.000  1.000   1.414   -0.000083  -0.001123
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         234    106    1  2  1   1.000  0.000  1.000   1.414   -0.000083  -0.001123
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         269     71    2  1  1   0.000  1.000  1.000   1.414   -0.000083  -0.001123
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          64    276   -2 -2 -1  -0.500 -0.500 -1.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          72    268   -2 -1  0   0.500 -0.500 -1.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         107    233   -1 -2  0  -0.500  0.500 -1.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         115    225   -1 -1  1   0.500  0.500 -1.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          70    270   -2 -1 -2  -0.500 -1.500 -0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          78    262   -2  0 -1   0.500 -1.500 -0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         105    235   -1 -2 -2  -1.500 -0.500 -0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         130    210   -1  1  1   1.500 -0.500 -0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         154    186    0 -2 -1  -1.500  0.500 -0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         180    160    0  1  2   1.500  0.500 -0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         212    128    1 -1  1  -0.500  1.500 -0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         220    120    1  0  2   0.500  1.500 -0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         120    220   -1  0 -2  -0.500 -1.500  0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         128    212   -1  1 -1   0.500 -1.500  0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         160    180    0 -1 -2  -1.500 -0.500  0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         186    154    0  2  1   1.500 -0.500  0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         210    130    1 -1 -1  -1.500  0.500  0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         235    105    1  2  2   1.500  0.500  0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         262     78    2  0  1  -0.500  1.500  0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         270     70    2  1  2   0.500  1.500  0.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         225    115    1  1 -1  -0.500 -0.500  1.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         233    107    1  2  0   0.500 -0.500  1.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         268     72    2  1  0  -0.500  0.500  1.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         276     64    2  2  1   0.500  0.500  1.500   1.658   -0.000090  -0.001223
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          63    277   -2 -2 -2  -1.000 -1.000 -1.000   1.732   -0.000073  -0.000999
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          79    261   -2  0  0   1.000 -1.000 -1.000   1.732   -0.000073  -0.000999
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         155    185    0 -2  0  -1.000  1.000 -1.000   1.732   -0.000073  -0.000999
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         172    168    0  0  2   1.000  1.000 -1.000   1.732   -0.000073  -0.000999
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         168    172    0  0 -2  -1.000 -1.000  1.000   1.732   -0.000073  -0.000999
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         185    155    0  2  0   1.000 -1.000  1.000   1.732   -0.000073  -0.000999
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         261     79    2  0  0  -1.000  1.000  1.000   1.732   -0.000073  -0.000999
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         277     63    2  2  2   1.000  1.000  1.000   1.732   -0.000073  -0.000999
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          65    275   -2 -2  0   0.000  0.000 -2.000   2.000    0.000037   0.000500
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          77    263   -2  0 -2   0.000 -2.000  0.000   2.000    0.000037   0.000500
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         153    187    0 -2 -2  -2.000  0.000  0.000   2.000    0.000037   0.000500
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         187    153    0  2  2   2.000  0.000  0.000   2.000    0.000037   0.000500
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         263     77    2  0  2   0.000  2.000  0.000   2.000    0.000037   0.000500
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         275     65    2  2  0   0.000  0.000  2.000   2.000    0.000037   0.000500
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          31    309   -3 -2 -2  -0.500 -1.500 -1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          38    302   -3 -1 -1   0.500 -1.500 -1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          57    283   -2 -3 -2  -1.500 -0.500 -1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          80    260   -2  0  1   1.500 -0.500 -1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         100    240   -1 -3 -1  -1.500  0.500 -1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         124    216   -1  0  2   1.500  0.500 -1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         156    184    0 -2  1  -0.500  1.500 -1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         164    176    0 -1  2   0.500  1.500 -1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          62    278   -2 -2 -3  -1.500 -1.500 -0.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          85    255   -2  1  0   1.500 -1.500 -0.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         205    135    1 -2  0  -1.500  1.500 -0.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         229    111    1  1  3   1.500  1.500 -0.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         111    229   -1 -1 -3  -1.500 -1.500  0.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         135    205   -1  2  0   1.500 -1.500  0.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         255     85    2 -1  0  -1.500  1.500  0.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         278     62    2  2  3   1.500  1.500  0.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         176    164    0  1 -2  -0.500 -1.500  1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         184    156    0  2 -1   0.500 -1.500  1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         216    124    1  0 -2  -1.500 -0.500  1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         240    100    1  3  1   1.500 -0.500  1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         260     80    2  0 -1  -1.500  0.500  1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         283     57    2  3  2   1.500  0.500  1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         302     38    3  1  1  -0.500  1.500  1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         309     31    3  2  2   0.500  1.500  1.500   2.179   -0.000016  -0.000211
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          32    308   -3 -2 -1   0.000 -1.000 -2.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          58    282   -2 -3 -1  -1.000  0.000 -2.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          73    267   -2 -1  1   1.000  0.000 -2.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         108    232   -1 -2  1   0.000  1.000 -2.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          37    303   -3 -1 -2   0.000 -2.000 -1.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          99    241   -1 -3 -2  -2.000  0.000 -1.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         131    209   -1  1  2   2.000  0.000 -1.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         213    127    1 -1  2   0.000  2.000 -1.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          69    271   -2 -1 -3  -1.000 -2.000  0.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          84    256   -2  1 -1   1.000 -2.000  0.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         104    236   -1 -2 -3  -2.000 -1.000  0.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         136    204   -1  2  1   2.000 -1.000  0.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         204    136    1 -2 -1  -2.000  1.000  0.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         236    104    1  2  3   2.000  1.000  0.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         256     84    2 -1  1  -1.000  2.000  0.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         271     69    2  1  3   1.000  2.000  0.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         127    213   -1  1 -2   0.000 -2.000  1.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         209    131    1 -1 -2  -2.000  0.000  1.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         241     99    1  3  2   2.000  0.000  1.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         303     37    3  1  2   0.000  2.000  1.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         232    108    1  2 -1   0.000 -1.000  2.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         267     73    2  1 -1  -1.000  0.000  2.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         282     58    2  3  1   1.000  0.000  2.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         308     32    3  2  1   0.000  1.000  2.000   2.236    0.000006   0.000082
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          26    314   -3 -3 -2  -1.000 -1.000 -2.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          39    301   -3 -1  0   1.000 -1.000 -2.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         101    239   -1 -3  0  -1.000  1.000 -2.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         116    224   -1 -1  2   1.000  1.000 -2.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          30    310   -3 -2 -3  -1.000 -2.000 -1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          43    297   -3  0 -1   1.000 -2.000 -1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          56    284   -2 -3 -3  -2.000 -1.000 -1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          86    254   -2  1  1   2.000 -1.000 -1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         148    192    0 -3 -1  -2.000  1.000 -1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         181    159    0  1  3   2.000  1.000 -1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         206    134    1 -2  1  -1.000  2.000 -1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         221    119    1  0  3   1.000  2.000 -1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         119    221   -1  0 -3  -1.000 -2.000  1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         134    206   -1  2 -1   1.000 -2.000  1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         159    181    0 -1 -3  -2.000 -1.000  1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         192    148    0  3  1   2.000 -1.000  1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         254     86    2 -1 -1  -2.000  1.000  1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         284     56    2  3  3   2.000  1.000  1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         297     43    3  0  1  -1.000  2.000  1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         310     30    3  2  3   1.000  2.000  1.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         224    116    1  1 -2  -1.000 -1.000  2.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         239    101    1  3  0   1.000 -1.000  2.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         301     39    3  1  0  -1.000  1.000  2.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         314     26    3  3  2   1.000  1.000  2.000   2.449   -0.000053  -0.000722
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          27    313   -3 -3 -1  -0.500 -0.500 -2.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          33    307   -3 -2  0   0.500 -0.500 -2.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          59    281   -2 -3  0  -0.500  0.500 -2.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          66    274   -2 -2  1   0.500  0.500 -2.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          25    315   -3 -3 -3  -1.500 -1.500 -1.500   2.598    0.000151   0.002051
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          44    296   -3  0  0   1.500 -1.500 -1.500   2.598    0.000151   0.002051
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         149    191    0 -3  0  -1.500  1.500 -1.500   2.598    0.000151   0.002051
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         173    167    0  0  3   1.500  1.500 -1.500   2.598    0.000151   0.002051
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          36    304   -3 -1 -3  -0.500 -2.500 -0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          42    298   -3  0 -2   0.500 -2.500 -0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          98    242   -1 -3 -3  -2.500 -0.500 -0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         137    203   -1  2  2   2.500 -0.500 -0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         147    193    0 -3 -2  -2.500  0.500 -0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         188    152    0  2  3   2.500  0.500 -0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         257     83    2 -1  2  -0.500  2.500 -0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         264     76    2  0  3   0.500  2.500 -0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          76    264   -2  0 -3  -0.500 -2.500  0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          83    257   -2  1 -2   0.500 -2.500  0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         152    188    0 -2 -3  -2.500 -0.500  0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         193    147    0  3  2   2.500 -0.500  0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         203    137    1 -2 -2  -2.500  0.500  0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         242     98    1  3  3   2.500  0.500  0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         298     42    3  0  2  -0.500  2.500  0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         304     36    3  1  3   0.500  2.500  0.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         167    173    0  0 -3  -1.500 -1.500  1.500   2.598    0.000151   0.002051
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         191    149    0  3  0   1.500 -1.500  1.500   2.598    0.000151   0.002051
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         296     44    3  0  0  -1.500  1.500  1.500   2.598    0.000151   0.002051
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         315     25    3  3  3   1.500  1.500  1.500   2.598    0.000151   0.002051
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         274     66    2  2 -1  -0.500 -0.500  2.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         281     59    2  3  0   0.500 -0.500  2.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         307     33    3  2  0  -0.500  0.500  2.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         313     27    3  3  1   0.500  0.500  2.500   2.598    0.000033   0.000455
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          10    330   -4 -2 -2   0.000 -2.000 -2.000   2.828   -0.000006  -0.000084
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          52    288   -2 -4 -2  -2.000  0.000 -2.000   2.828   -0.000006  -0.000084
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          81    259   -2  0  2   2.000  0.000 -2.000   2.828   -0.000006  -0.000084
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         157    183    0 -2  2   0.000  2.000 -2.000   2.828   -0.000006  -0.000084
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          61    279   -2 -2 -4  -2.000 -2.000  0.000   2.828   -0.000006  -0.000084
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          90    250   -2  2  0   2.000 -2.000  0.000   2.828   -0.000006  -0.000084
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         250     90    2 -2  0  -2.000  2.000  0.000   2.828   -0.000006  -0.000084
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         279     61    2  2  4   2.000  2.000  0.000   2.828   -0.000006  -0.000084
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         183    157    0  2 -2   0.000 -2.000  2.000   2.828   -0.000006  -0.000084
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         259     81    2  0 -2  -2.000  0.000  2.000   2.828   -0.000006  -0.000084
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         288     52    2  4  2   2.000  0.000  2.000   2.828   -0.000006  -0.000084
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         330     10    4  2  2   0.000  2.000  2.000   2.828   -0.000006  -0.000084
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+           6    334   -4 -3 -2  -0.500 -1.500 -2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          11    329   -4 -2 -1   0.500 -1.500 -2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          22    318   -3 -4 -2  -1.500 -0.500 -2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          40    300   -3 -1  1   1.500 -0.500 -2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          53    287   -2 -4 -1  -1.500  0.500 -2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          74    266   -2 -1  2   1.500  0.500 -2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         102    238   -1 -3  1  -0.500  1.500 -2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         109    231   -1 -2  2   0.500  1.500 -2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+           9    331   -4 -2 -3  -0.500 -2.500 -1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          14    326   -4 -1 -2   0.500 -2.500 -1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          51    289   -2 -4 -3  -2.500 -0.500 -1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          87    253   -2  1  2   2.500 -0.500 -1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          94    246   -1 -4 -2  -2.500  0.500 -1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         132    208   -1  1  3   2.500  0.500 -1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         207    133    1 -2  2  -0.500  2.500 -1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         214    126    1 -1  3   0.500  2.500 -1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          29    311   -3 -2 -4  -1.500 -2.500 -0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          47    293   -3  1 -1   1.500 -2.500 -0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          55    285   -2 -3 -4  -2.500 -1.500 -0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          91    249   -2  2  1   2.500 -1.500 -0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         199    141    1 -3 -1  -2.500  1.500 -0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         237    103    1  2  4   2.500  1.500 -0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         251     89    2 -2  1  -1.500  2.500 -0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         272     68    2  1  4   1.500  2.500 -0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          68    272   -2 -1 -4  -1.500 -2.500  0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          89    251   -2  2 -1   1.500 -2.500  0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         103    237   -1 -2 -4  -2.500 -1.500  0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         141    199   -1  3  1   2.500 -1.500  0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         249     91    2 -2 -1  -2.500  1.500  0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         285     55    2  3  4   2.500  1.500  0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         293     47    3 -1  1  -1.500  2.500  0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         311     29    3  2  4   1.500  2.500  0.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         126    214   -1  1 -3  -0.500 -2.500  1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         133    207   -1  2 -2   0.500 -2.500  1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         208    132    1 -1 -3  -2.500 -0.500  1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         246     94    1  4  2   2.500 -0.500  1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         253     87    2 -1 -2  -2.500  0.500  1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         289     51    2  4  3   2.500  0.500  1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         326     14    4  1  2  -0.500  2.500  1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         331      9    4  2  3   0.500  2.500  1.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         231    109    1  2 -2  -0.500 -1.500  2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         238    102    1  3 -1   0.500 -1.500  2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         266     74    2  1 -2  -1.500 -0.500  2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         287     53    2  4  1   1.500 -0.500  2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         300     40    3  1 -1  -1.500  0.500  2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         318     22    3  4  2   1.500  0.500  2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         329     11    4  2  1  -0.500  1.500  2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         334      6    4  3  2   0.500  1.500  2.500   2.958    0.000004   0.000058
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          28    312   -3 -3  0   0.000  0.000 -3.000   3.000    0.000030   0.000415
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+           5    335   -4 -3 -3  -1.000 -2.000 -2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          15    325   -4 -1 -1   1.000 -2.000 -2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          21    319   -3 -4 -3  -2.000 -1.000 -2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          45    295   -3  0  1   2.000 -1.000 -2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          95    245   -1 -4 -1  -2.000  1.000 -2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         125    215   -1  0  3   2.000  1.000 -2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         150    190    0 -3  1  -1.000  2.000 -2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         165    175    0 -1  3   1.000  2.000 -2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          24    316   -3 -3 -4  -2.000 -2.000 -1.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          48    292   -3  1  0   2.000 -2.000 -1.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         200    140    1 -3  0  -2.000  2.000 -1.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         230    110    1  1  4   2.000  2.000 -1.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          41    299   -3  0 -3   0.000 -3.000  0.000   3.000    0.000030   0.000415
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         146    194    0 -3 -3  -3.000  0.000  0.000   3.000    0.000030   0.000415
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         194    146    0  3  3   3.000  0.000  0.000   3.000    0.000030   0.000415
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         299     41    3  0  3   0.000  3.000  0.000   3.000    0.000030   0.000415
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         110    230   -1 -1 -4  -2.000 -2.000  1.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         140    200   -1  3  0   2.000 -2.000  1.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         292     48    3 -1  0  -2.000  2.000  1.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         316     24    3  3  4   2.000  2.000  1.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         175    165    0  1 -3  -1.000 -2.000  2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         190    150    0  3 -1   1.000 -2.000  2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         215    125    1  0 -3  -2.000 -1.000  2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         245     95    1  4  1   2.000 -1.000  2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         295     45    3  0 -1  -2.000  1.000  2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         319     21    3  4  3   2.000  1.000  2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         325     15    4  1  1  -1.000  2.000  2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         335      5    4  3  3   1.000  2.000  2.000   3.000    0.000010   0.000143
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         312     28    3  3  0   0.000  0.000  3.000   3.000    0.000030   0.000415
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+           7    333   -4 -3 -1   0.000 -1.000 -3.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          23    317   -3 -4 -1  -1.000  0.000 -3.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          34    306   -3 -2  1   1.000  0.000 -3.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          60    280   -2 -3  1   0.000  1.000 -3.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          13    327   -4 -1 -3   0.000 -3.000 -1.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          93    247   -1 -4 -3  -3.000  0.000 -1.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         138    202   -1  2  3   3.000  0.000 -1.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         258     82    2 -1  3   0.000  3.000 -1.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          35    305   -3 -1 -4  -1.000 -3.000  0.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          46    294   -3  1 -2   1.000 -3.000  0.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          97    243   -1 -3 -4  -3.000 -1.000  0.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         142    198   -1  3  2   3.000 -1.000  0.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         198    142    1 -3 -2  -3.000  1.000  0.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         243     97    1  3  4   3.000  1.000  0.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         294     46    3 -1  2  -1.000  3.000  0.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         305     35    3  1  4   1.000  3.000  0.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          82    258   -2  1 -3   0.000 -3.000  1.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         202    138    1 -2 -3  -3.000  0.000  1.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         247     93    1  4  3   3.000  0.000  1.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         327     13    4  1  3   0.000  3.000  1.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         280     60    2  3 -1   0.000 -1.000  3.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         306     34    3  2 -1  -1.000  0.000  3.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         317     23    3  4  1   1.000  0.000  3.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         333      7    4  3  1   0.000  1.000  3.000   3.162   -0.000014  -0.000188
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+           2    338   -4 -4 -3  -1.500 -1.500 -2.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          16    324   -4 -1  0   1.500 -1.500 -2.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          96    244   -1 -4  0  -1.500  1.500 -2.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         117    223   -1 -1  3   1.500  1.500 -2.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+           4    336   -4 -3 -4  -1.500 -2.500 -1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          18    322   -4  0 -1   1.500 -2.500 -1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          20    320   -3 -4 -4  -2.500 -1.500 -1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          49    291   -3  1  1   2.500 -1.500 -1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         144    196    0 -4 -1  -2.500  1.500 -1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         182    158    0  1  4   2.500  1.500 -1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         201    139    1 -3  1  -1.500  2.500 -1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         222    118    1  0  4   1.500  2.500 -1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         118    222   -1  0 -4  -1.500 -2.500  1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         139    201   -1  3 -1   1.500 -2.500  1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         158    182    0 -1 -4  -2.500 -1.500  1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         196    144    0  4  1   2.500 -1.500  1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         291     49    3 -1 -1  -2.500  1.500  1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         320     20    3  4  4   2.500  1.500  1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         322     18    4  0  1  -1.500  2.500  1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         336      4    4  3  4   1.500  2.500  1.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         223    117    1  1 -3  -1.500 -1.500  2.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         244     96    1  4  0   1.500 -1.500  2.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         324     16    4  1  0  -1.500  1.500  2.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         338      2    4  4  3   1.500  1.500  2.500   3.279    0.000064   0.000873
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+           3    337   -4 -4 -2  -1.000 -1.000 -3.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          12    328   -4 -2  0   1.000 -1.000 -3.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          54    286   -2 -4  0  -1.000  1.000 -3.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          67    273   -2 -2  2   1.000  1.000 -3.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+           8    332   -4 -2 -4  -1.000 -3.000 -1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          17    323   -4  0 -2   1.000 -3.000 -1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          50    290   -2 -4 -4  -3.000 -1.000 -1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          92    248   -2  2  2   3.000 -1.000 -1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         143    197    0 -4 -2  -3.000  1.000 -1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         189    151    0  2  4   3.000  1.000 -1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         252     88    2 -2  2  -1.000  3.000 -1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         265     75    2  0  4   1.000  3.000 -1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          75    265   -2  0 -4  -1.000 -3.000  1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          88    252   -2  2 -2   1.000 -3.000  1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         151    189    0 -2 -4  -3.000 -1.000  1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         197    143    0  4  2   3.000 -1.000  1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         248     92    2 -2 -2  -3.000  1.000  1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         290     50    2  4  4   3.000  1.000  1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         323     17    4  0  2  -1.000  3.000  1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         332      8    4  2  4   1.000  3.000  1.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         273     67    2  2 -2  -1.000 -1.000  3.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         286     54    2  4  0   1.000 -1.000  3.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         328     12    4  2  0  -1.000  1.000  3.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         337      3    4  4  2   1.000  1.000  3.000   3.317   -0.000020  -0.000269
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+           1    339   -4 -4 -4  -2.000 -2.000 -2.000   3.464   -0.000041  -0.000564
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+          19    321   -4  0  0   2.000 -2.000 -2.000   3.464   -0.000041  -0.000564
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         145    195    0 -4  0  -2.000  2.000 -2.000   3.464   -0.000041  -0.000564
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         174    166    0  0  4   2.000  2.000 -2.000   3.464   -0.000041  -0.000564
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         166    174    0  0 -4  -2.000 -2.000  2.000   3.464   -0.000041  -0.000564
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         195    145    0  4  0   2.000 -2.000  2.000   3.464   -0.000041  -0.000564
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         321     19    4  0  0  -2.000  2.000  2.000   3.464   -0.000041  -0.000564
+
+     IQ =  1 IT =  1                     JQ =  1 JT =  1
+        ->Q = (  0.000,  0.000,  0.000)        ->Q = (  0.000,  0.000,  0.000)
+     ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]
+         339      1    4  4  4   2.000  2.000  2.000   3.464   -0.000041  -0.000564
+
+          results written to file:Fe_JXC_J_ij.dat
+
+  
+    exchange-coupling parameter written to file Fe_JXC_Jij_Fe.agr
+  
+
+ CPU - TIME  USED        1417.049
+
+
+ *******************************************************************************
+          THIS TASK DOES NOT RUN IN MPI MODE .!
+          CHANGING TO SEQUENTIAL MODE         
+ *******************************************************************************
+
+ KKR-run finished successfully

@@ -1,0 +1,3223 @@
+ 
+
+          **************************************************************
+          *                                                            *
+          *        ****   *****   *****   *    *  *    *  *****        *
+          *       *    *  *    *  *    *  *   *   *   *   *    *       *
+          *       *       *    *  *    *  *  *    *  *    *    *       *
+          *        ****   *****   *****   * *     * *     *****        *
+          *            *  *       *  *    ** *    ** *    *  *         *
+          *       *    *  *       *   *   *   *   *   *   *   *        *
+          *        ****   *       *    *  *    *  *    *  *    *       *
+          *                                                            *
+          *------------------------------------------------------------*
+          *       KKRSCF  VERSION  6.3.1          (C) 2012  H. Ebert   *
+          **************************************************************
+
+
+          programm execution  on    14/03/2017    at   20:25:51
+
+          Compiled on      : Linux
+          Compilation time : Птн Июл
+          Compiler settings: -O2 -axSSE4.2
+
+
+ *******************************************************************************
+                                 <GETLRECREAL>
+ *******************************************************************************
+
+          record length parameter for REAL's   LRECREAL8 =  8
+          a double precission real*8 is stored in 8 Bytes             
+
+
+
+ *******************************************************************************
+                                    <POTRD2>
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                 <POTIO_SWSRMT>
+ *******************************************************************************
+
+          IRMTALG =  2    read from potential file 
+
+          => muffin tin radii = half interatomic distance
+
+
+          system dimension: 3D        
+          system type:      BULK      
+          SCF status:       START     
+
+
+
+ *******************************************************************************
+                               <INIT_MOD_LATTICE>
+ *******************************************************************************
+
+          initialize the module <MOD_LATTICE> according to SYSDIM = 3D
+
+          set up basis vectors for reciprocal space 
+
+
+          real space Bravais lattice: cubic       body-centered  m3m    O_h 
+
+          primitive vectors for real space Bravais lattice
+
+            (  -0.50000,   0.50000,   0.50000 )
+            (   0.50000,  -0.50000,   0.50000 )
+            (   0.50000,   0.50000,  -0.50000 )
+
+          basis vectors in units of a
+
+            (   0.00000,   0.00000,   0.00000 )
+
+          primitive vectors of reciprocal space Bravais lattice
+                 in units of 2*pi/a
+
+            (   0.00000,   1.00000,   1.00000 )
+            (   1.00000,   0.00000,   1.00000 )
+            (   1.00000,   1.00000,   0.00000 )
+
+
+ *******************************************************************************
+                                   <SYMINIT>
+ *******************************************************************************
+
+          set up possible symmetry operations for the 
+          real space Bravais lattice: cubic       body-centered  m3m    O_h 
+
+          crystal system   7     CUB
+
+          symmetry operations to scan       NSYM  48
+          maximum possible symmetry operations    48
+
+           T T T T T T T T T T T T T T T T T T T T T T T T
+           T T T T T T T T T T T T T T T T T T T T T T T T
+
+
+ *******************************************************************************
+                                  <SYMLATTICE>
+ *******************************************************************************
+
+          find out symmetry properties of the lattice 
+
+
+          crystal system accepted symmetry operations      48
+          accepted symmetry operations                     48
+
+
+       I    Euler angles  INV SYMBOL TIM     shift  ->DQ     Q' 
+       1     0    0    0       E           0.00  0.00  0.00   1
+       2     0  180  180       C2x         0.00  0.00  0.00   1
+       3     0  180    0       C2y         0.00  0.00  0.00   1
+       4     0    0  180       C2z         0.00  0.00  0.00   1
+       5     0   90   90       C+31        0.00  0.00  0.00   1
+       6   180   90  270       C+32        0.00  0.00  0.00   1
+       7   180   90   90       C+33        0.00  0.00  0.00   1
+       8     0   90  270       C+34        0.00  0.00  0.00   1
+       9    90   90  180       C-31        0.00  0.00  0.00   1
+      10   270   90    0       C-32        0.00  0.00  0.00   1
+      11    90   90    0       C-33        0.00  0.00  0.00   1
+      12   270   90  180       C-34        0.00  0.00  0.00   1
+      13   270   90   90       C+4x        0.00  0.00  0.00   1
+      14     0   90    0       C+4y        0.00  0.00  0.00   1
+      15     0    0   90       C+4z        0.00  0.00  0.00   1
+      16    90   90  270       C-4x        0.00  0.00  0.00   1
+      17   180   90  180       C-4y        0.00  0.00  0.00   1
+      18     0    0  270       C-4z        0.00  0.00  0.00   1
+      19     0  180   90       C2a         0.00  0.00  0.00   1
+      20     0  180  270       C2b         0.00  0.00  0.00   1
+      21     0   90  180       C2c         0.00  0.00  0.00   1
+      22    90   90   90       C2d         0.00  0.00  0.00   1
+      23   180   90    0       C2e         0.00  0.00  0.00   1
+      24   270   90  270       C2f         0.00  0.00  0.00   1
+      25     0    0    0   I   I           0.00  0.00  0.00   1
+      26     0  180  180   I   sx          0.00  0.00  0.00   1
+      27     0  180    0   I   sy          0.00  0.00  0.00   1
+      28     0    0  180   I   sz          0.00  0.00  0.00   1
+      29     0   90   90   I   S-61        0.00  0.00  0.00   1
+      30   180   90  270   I   S-62        0.00  0.00  0.00   1
+      31   180   90   90   I   S-63        0.00  0.00  0.00   1
+      32     0   90  270   I   S-64        0.00  0.00  0.00   1
+      33    90   90  180   I   S+61        0.00  0.00  0.00   1
+      34   270   90    0   I   S+62        0.00  0.00  0.00   1
+      35    90   90    0   I   S+63        0.00  0.00  0.00   1
+      36   270   90  180   I   S+64        0.00  0.00  0.00   1
+      37   270   90   90   I   S-4x        0.00  0.00  0.00   1
+      38     0   90    0   I   S-4y        0.00  0.00  0.00   1
+      39     0    0   90   I   S-4z        0.00  0.00  0.00   1
+      40    90   90  270   I   S+4x        0.00  0.00  0.00   1
+      41   180   90  180   I   S+4y        0.00  0.00  0.00   1
+      42     0    0  270   I   S+4z        0.00  0.00  0.00   1
+      43     0  180   90   I   sda         0.00  0.00  0.00   1
+      44     0  180  270   I   sdb         0.00  0.00  0.00   1
+      45     0   90  180   I   sdc         0.00  0.00  0.00   1
+      46    90   90   90   I   sdd         0.00  0.00  0.00   1
+      47   180   90    0   I   sde         0.00  0.00  0.00   1
+      48   270   90  270   I   sdf         0.00  0.00  0.00   1
+
+          the detected  48 symmetry operations form a group
+
+
+          BZ-wedges to be treated  NWEDGE   1
+          created by operations  
+           1  E   
+
+
+ *******************************************************************************
+                                    <SYMROT>
+ *******************************************************************************
+
+          set up of rotation matrices  DROT  for IREL = 2
+
+          CHECK of rotation matrices   DROT  for COMPLEX spherical harmonics
+          comparison of analytical and numerical results
+          out of  1944 elements     0 deviate more than TOL =   1.0E-08
+          maximum deviation found:    2.6E-14
+
+
+
+ *******************************************************************************
+                                 <POTRDSPR>
+ *******************************************************************************
+
+          POTFMTINP =  6
+
+ SCF-start data created by xband  Tue Mar 14 15:01:23 YEKT 2017                 
+  
+
+
+ *******************************************************************************
+                                 <POTIO_SWSRMT>
+ *******************************************************************************
+
+          IRMTALG =  2    read from potential file 
+
+          => muffin tin radii = half interatomic distance
+
+
+          radial mesh parameters:
+
+          IM    JRMT   R(JRMT)    RMT      JRWS    RWS       DX
+           1    714   2.28550   2.32069    721   2.63883   0.020535897
+
+          Bravais lattice:                cubic       body-centered
+          lattice constant  ALAT               5.35941
+          number of sites   NQ                       1
+          average Wigner-Seitz radius          2.63883
+
+
+
+                   spin-polarized calculation
+
+                   SELFENERGY applied:NONE      
+
+
+   number of lattice sites (NQ):   1
+
+   site NL mesh MTET MPHI   RWS  CPA NOQ IT ELMT VAL CONC QREP SYMG equi. sites
+     1   3   1     0    0 2.6388  0   1                     1    1   1
+                                          1 Fe     8 1.00
+   average                2.6388          total    8.00
+
+   KMROT:     0   no M-rotation       
+   QMVEC:   0.000  0.000  0.000
+
+
+
+   number of atomic types  (NT):   1
+
+   type TXTT     NL mesh    RMT     RWS   NAT  CONC   on sites
+     1  Fe        3   1   2.3207  2.6388   1  1.000     1
+
+
+
+
+ mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+
+          spin polarized SCALAR-relativistic calculation 
+
+          the  BREIT interaction  will be ignored
+
+          the  ORBITAL POLARISATION  will be ignored
+
+          solver for     spherical SREL  equation: BS           TOL = 2.0E-08
+          solver for NON-spherical SREL  equation: BORN         TOL = 1.0E-10
+                                                                LIM =      10
+
+
+          SWS =  2.638828     ALAT =  5.359414
+
+          NQ =  1     NL =  3     NLM =   9   NQ*NLM =   9
+                      NK =  5     NKM =  18     NKKR =   9     NLIN =  30
+
+          POTFMTINP = 6     POTFMTOUT = 7
+          RDTAU     = F     RDTAUMQ   = F
+          WRTAU     = F     WRTAUMQ   = F
+          PLOTPOT   = F     PLOTRHO   = F     PLOTSFN   = F
+          PLOT2DPOT = F     PLOT2DRHO = F
+          IPRINT    = 0     ITEST     = 0     WRMAT     = F
+          INITELOOP = T     RUNELOOP  = T     SPLITSS   = F
+          NO_SYM    = F     SYM MSS   = T     SYM RHO   = T
+          LLOYD     = F
+          GF_CONV_RH= F
+          NONMAG    = F
+          FULLPOT   = F
+          FULLCHARGE= F
+
+          TASK      = SCF       
+
+          SYSDIM    = 3D        
+          SYSTYPE   = BULK      
+          SUBSYSTEM = BULK      
+          KKRMODE   = STANDARD  
+
+ eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+
+          energy path:  ARC IN COMPLEX PLANE                    
+          energies  :          30
+          E_min     :   -0.200000
+          E_Fermi will be searched
+  
+
+ *******************************************************************************
+                                   <STRINIT>
+ *******************************************************************************
+
+          parameters for calculation of structure constants:
+
+          primitive vectors for Bravais lattice
+
+            (  -0.50000,   0.50000,   0.50000 )
+            (   0.50000,  -0.50000,   0.50000 )
+            (   0.50000,   0.50000,  -0.50000 )
+
+          basis vectors in units of a
+
+            (   0.00000,   0.00000,   0.00000 )
+
+          primitive vectors of reciprocal space
+                 in units of 2*pi/a
+
+            (   0.00000,   1.00000,   1.00000 )
+            (   1.00000,   0.00000,   1.00000 )
+            (   1.00000,   1.00000,   0.00000 )
+
+          number of inequivalent QQP-block-matrices  NQQP_STR     =       1
+          reduced number of inequiv. block-matrices  NQQP_STR_RED =       1
+
+
+
+          RMAX  =    3.0388          GMAX  =    3.6179
+          RMAX1 =    0.0000          GMAX1 =    1.4142
+          RA    =    3.0388          GA    =    3.6179
+
+          NUMR  =         9          NUMG  =         7
+          NRDL  =       259          NGRL  =       225
+
+          for LMAX = 2    96 non-zero GAUNTS tabulated
+
+
+ *******************************************************************************
+            array sizes for calculation of structure constants
+ *******************************************************************************
+                                          used              available
+          G-vectors table       NGRL       225        NGRLMAX     729
+          R-vectors table       NRDL       259        NRDLMAX    1331
+          R-vectors (max.)      SMAX       259        NSDL        259
+          R-vectors (min.)      SMAX       259
+          l-max + 1             NL           3        NLMAX         3
+          sites                 NQ_STR       1        NQMAX         1
+          q-q'-blocks           NQQP_STR     1        LIMIT         1
+          auxilary array        R123MAX      4
+          auxilary array        G123MAX      3
+          Davis eq. (13)        J13MAX      22        LIMIT       300
+          Davis eq. (22)        J22MAX      30        LIMIT       150
+          Gaunts                LRGNT12     45
+          Gaunts                LRGNT123    96
+          Ewald parameter       ETA       0.31
+ *******************************************************************************
+
+
+          <INIT_MOD_STR>: section 1 of module MOD_STR initialized
+          allocated         586  integers        101842  reals (incl. complex)
+          corresp. to         0  Mbytes               0  Mbytes
+
+
+ ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+
+          parameters for k-space integration:
+          NWEDGE:   1  wedges:  1
+          regular k-mesh used for point sampling
+
+          number of k-vectors to start                96000                91125
+          mesh parameters                          45   45   45
+          number of k-vectors created                  2300
+          array size (NKTABMAX)                        2880
+
+
+
+          ****************************
+          no CPA-iteration required !!
+          ****************************
+
+
+ fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+
+          FILES:
+
+          potential :  ( 4) Fe.pot
+  
+
+
+ *******************************************************************************
+                            parameters for SCF-cycle
+ *******************************************************************************
+          pot-file  :  Fe.pot_new
+          XC-pot    :  PBE       
+          SCF-alg   :  BROYDEN2  
+          SCF-niter :         200
+          SCF-mix   :          0.2000000000
+          SCF-tol   :          0.0000100000
+          BREIT-int :    F
+          OP-scheme :  NONE      
+          FULLPOT   :    F
+          LLOYD     :    F
+          NFCOR     :    F
+
+
+ *******************************************************************************
+                                  <SCFMAD3D>
+ *******************************************************************************
+
+          set up Madelung matrix for 3D-bulk calculations
+
+          NLVMAD =   2     NLMVMAD =   4
+          NLQMAD =   2     NLMQMAD =   4
+
+
+
+ *******************************************************************************
+                                <SCFMAD3D_SMAT>
+ *******************************************************************************
+
+          calculate Madelung potential matrices 
+
+          relative tolerance imposed 1.0E-12
+
+
+          primitive vectors for Bravais lattice
+
+            (  -0.50000,   0.50000,   0.50000 )
+            (   0.50000,  -0.50000,   0.50000 )
+            (   0.50000,   0.50000,  -0.50000 )
+
+          basis vectors in units of a
+
+            (   0.00000,   0.00000,   0.00000 )
+
+          primitive vectors of reciprocal space
+                 in units of 2*pi/a
+
+            (   0.00000,   1.17236,   1.17236 )
+            (   1.17236,   0.00000,   1.17236 )
+            (   1.17236,   1.17236,   0.00000 )
+
+          summations converged after   1 updates for
+
+          lattice constant    ALAT:   5.359414081700000
+          RMAX:  21.43766     GMAX:   5.31775
+          NUMR:        13     NUMG:         9
+
+
+
+ *******************************************************************************
+                                 <SCFMAD_SETUP>
+ *******************************************************************************
+
+          for ASA  NO  dipole moments expected from AVMAD
+
+          angular momentum parameters reset to:
+
+          NLVMAD =   1     NLMVMAD =   1
+          NLQMAD =   1     NLMQMAD =   1
+
+
+
+ *******************************************************************************
+                                  <SCFINITPOT>
+           setting up a starting potential and fixing the Fermi energy
+ *******************************************************************************
+
+
+     INFO: SOLVER temporarily set to: BS        
+
+
+     for atom Fe          Z =  26
+
+     Level  Energy        Occ. Val.      R**2          R
+      1S  -5.1323464E+02   2    1   4.6104851E-03   5.8552898E-02
+      2S  -6.0187068E+01   2    1   8.4475163E-02   2.6737243E-01
+      2P* -5.1987218E+01   2    1   6.7259954E-02   2.3372744E-01
+      2P  -5.1072245E+01   4    1   6.8889627E-02   2.3677531E-01
+      3S  -6.9685617E+00   2    1   7.6252889E-01   8.1217546E-01
+      3P* -4.5771116E+00   2    1   8.5835771E-01   8.5222787E-01
+      3P  -4.4629464E+00   4    1   8.7782144E-01   8.6183884E-01
+      4S  -5.1014713E-01   2    1   1.1713826E+01   3.1494695E+00
+      3D* -6.7185036E-01   4    1   1.7644598E+00   1.1381102E+00
+      3D  -6.6059250E-01   2    1   1.7900279E+00   1.1455078E+00
+
+ *******************************************************************************
+                                  <SCFINITRHO>
+ *******************************************************************************
+
+          initializing charge density  
+
+     charge and spin moment from input and Mattheiss construction
+
+                             Z-Q_el     Q(corr)      m_spin
+     type  1 Fe       :     -0.0629      0.0000      2.1000
+     sum              :     -0.0629      0.0000      2.1000
+
+     QION will be scaled by         0.8000
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  26  26.00000   0.00000  -0.00000    1   0.00000  -0.00000
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -84277616.9458559       IR=
+           1
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -42138808.4143995       IR=
+           1
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -42138808.5314564       IR=
+           1
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -80871016.8440039       IR=
+           2
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -40435508.3658364       IR=
+           2
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -40435508.4781675       IR=
+           2
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -77601798.0556361       IR=
+           3
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -38800898.9739201       IR=
+           3
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -38800899.0817160       IR=
+           3
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -74464426.2798033       IR=
+           4
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -37232213.0881800       IR=
+           4
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -37232213.1916233       IR=
+           4
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -71453590.0380307       IR=
+           5
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -35726794.9693822       IR=
+           5
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -35726795.0686485       IR=
+           5
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -68564191.7069307       IR=
+           6
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -34282095.8058366       IR=
+           6
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -34282095.9010941       IR=
+           6
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -65791338.9093877       IR=
+           7
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -32895669.4089886       IR=
+           7
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -32895669.5003991       IR=
+           7
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -63130336.2526275       IR=
+           8
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -31565168.0824545       IR=
+           8
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -31565168.1701730       IR=
+           8
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -60576677.4004492       IR=
+           9
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -30288338.6581369       IR=
+           9
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -30288338.7423122       IR=
+           9
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -58126037.4620489       IR=
+          10
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -29063018.6906370       IR=
+          10
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -29063018.7714120       IR=
+          10
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -55774265.6895909       IR=
+          11
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -27887132.8060396       IR=
+          11
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -27887132.8835513       IR=
+          11
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -53517378.4678509       IR=
+          12
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -26758689.1967354       IR=
+          12
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -26758689.2711155       IR=
+          12
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -51351552.5861011       IR=
+          13
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -25675776.2573632       IR=
+          13
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -25675776.3287379       IR=
+          13
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -49273118.7828760       IR=
+          14
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -24636559.3571927       IR=
+          14
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -24636559.4256833       IR=
+          14
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -47278555.5473593       IR=
+          15
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -23639277.7408183       IR=
+          15
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -23639277.8065410       IR=
+          15
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -45364483.1728233       IR=
+          16
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -22682241.5548784       IR=
+          16
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -22682241.6179449       IR=
+          16
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -43527658.0483471       IR=
+          17
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -21763828.9939149       IR=
+          17
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -21763829.0544322       IR=
+          17
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -41764967.1802486       IR=
+          18
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -20882483.5610888       IR=
+          18
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -20882483.6191598       IR=
+          18
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -40073422.9338103       IR=
+          19
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -20036711.4390435       IR=
+          19
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -20036711.4947668       IR=
+          19
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -38450157.9877242       IR=
+          20
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -19225078.9671269       IR=
+          20
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -19225079.0205973       IR=
+          20
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -36892420.4902090       IR=
+          21
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -18446210.2194504       IR=
+          21
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -18446210.2707587       IR=
+          21
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -35397569.4110177       IR=
+          22
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -17698784.6808922       IR=
+          22
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -17698784.7301256       IR=
+          22
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -33963070.0800218       IR=
+          23
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -16981535.0163898       IR=
+          23
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -16981535.0636320       IR=
+          23
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -32586489.9058741       IR=
+          24
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -16293244.9302713       IR=
+          24
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -16293244.9756027       IR=
+          24
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -31265494.2665282       IR=
+          25
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -15632747.1115153       IR=
+          25
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -15632747.1550130       IR=
+          25
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -29997842.5649753       IR=
+          26
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -14998921.2616187       IR=
+          26
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -14998921.3033566       IR=
+          26
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -28781384.4447438       IR=
+          27
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -14390692.2023473       IR=
+          27
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -14390692.2423965       IR=
+          27
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -27614056.1561986       IR=
+          28
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -13807028.0588850       IR=
+          28
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -13807028.0973136       IR=
+          28
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -26493877.0706844       IR=
+          29
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -13246938.5169055       IR=
+          29
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -13246938.5537788       IR=
+          29
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -25418946.3338906       IR=
+          30
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -12709473.1492549       IR=
+          30
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -12709473.1846358       IR=
+          30
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -24387439.6541447       IR=
+          31
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -12193719.8100980       IR=
+          31
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -12193719.8440467       IR=
+          31
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -23397606.2202245       IR=
+          32
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -11698803.0938251       IR=
+          32
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -11698803.1263994       IR=
+          32
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -22447765.7429761       IR=
+          33
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -11223882.8558604       IR=
+          33
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -11223882.8871157       IR=
+          33
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -21536305.6161015       IR=
+          34
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -10768152.7930559       IR=
+          34
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -10768152.8230455       IR=
+          34
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -20661678.1914373       IR=
+          35
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -10330839.0813311       IR=
+          35
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -10330839.1101061       IR=
+          35
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -19822398.1634133       IR=
+          36
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -9911199.06790193       IR=
+          36
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -9911199.09551137       IR=
+          36
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -19017040.0590978       IR=
+          37
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -9508520.01630344       IR=
+          37
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -9508520.04279438       IR=
+          37
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -18244235.8295146       IR=
+          38
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -9122117.90204853       IR=
+          38
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -9122117.92746612       IR=
+          38
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -17502672.5372208       IR=
+          39
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -8751336.25641659       IR=
+          39
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -8751336.28080418       IR=
+          39
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -16791090.1377239       IR=
+          40
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -8395545.05716236       IR=
+          40
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -8395545.08056154       IR=
+          40
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -16108279.3496764       IR=
+          41
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -8054139.66361283       IR=
+          41
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -8054139.68606352       IR=
+          41
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -15453079.6109810       IR=
+          42
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -7726539.79472027       IR=
+          42
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -7726539.81626078       IR=
+          42
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -14824377.1172866       IR=
+          43
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -7412188.54830976       IR=
+          43
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -7412188.56897686       IR=
+          43
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -14221102.9391658       IR=
+          44
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -7110551.45966844       IR=
+          44
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -7110551.47949740       IR=
+          44
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -13642231.2151617       IR=
+          45
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -6821115.59806850       IR=
+          45
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -6821115.61709319       IR=
+          45
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -13086777.4179329       IR=
+          46
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -6543388.69983998       IR=
+          46
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -6543388.71809289       IR=
+          46
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -12553796.6895560       IR=
+          47
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -6276898.33602185       IR=
+          47
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -6276898.35353417       IR=
+          47
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -12042382.2444375       IR=
+          48
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -6021191.11381794       IR=
+          48
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -6021191.13061959       IR=
+          48
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -11551663.8360147       IR=
+          49
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -5775831.90994748       IR=
+          49
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -5775831.92606717       IR=
+          49
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -11080806.2855543       IR=
+          50
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -5540403.13504450       IR=
+          50
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -5540403.15050981       IR=
+          50
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -10629008.0700941       IR=
+          51
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -5314504.02762835       IR=
+          51
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -5314504.04246572       IR=
+          51
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -10195499.9669712       IR=
+          52
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -5097749.97636818       IR=
+          52
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -5097749.99060300       IR=
+          52
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -9779543.75321764       IR=
+          53
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -4889771.86978051       IR=
+          53
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -4889771.88343713       IR=
+          53
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -9380430.95717330       IR=
+          54
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -4690215.47203575       IR=
+          54
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -4690215.48513755       IR=
+          54
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -8997481.66043789       IR=
+          55
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -4498740.82393424       IR=
+          55
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -4498740.83650366       IR=
+          55
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -8630043.34787325       IR=
+          56
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -4315021.66790734       IR=
+          56
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -4315021.67996591       IR=
+          56
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -8277489.80412131       IR=
+          57
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -4138744.89627647       IR=
+          57
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -4138744.90784484       IR=
+          57
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -7939220.05435567       IR=
+          58
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -3969610.02162883       IR=
+          58
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -3969610.03272684       IR=
+          58
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -7614657.34784482       IR=
+          59
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -3807328.66859908       IR=
+          59
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -3807328.67924575       IR=
+          59
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -7303248.18228332       IR=
+          60
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -3651624.08603487       IR=
+          60
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -3651624.09624846       IR=
+          60
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -7004461.36750816       IR=
+          61
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -3502230.67885506       IR=
+          61
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -3502230.68865309       IR=
+          61
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -6717787.12678961       IR=
+          62
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -3358893.55869516       IR=
+          62
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -3358893.56809445       IR=
+          62
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -6442736.23448533       IR=
+          63
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -3221368.11273432       IR=
+          63
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -3221368.12175101       IR=
+          63
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -6178839.18820214       IR=
+          64
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -3089419.58977628       IR=
+          64
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -3089419.59842585       IR=
+          64
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -5925645.41444455       IR=
+          65
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -2962822.70307361       IR=
+          65
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -2962822.71137093       IR=
+          65
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -5682722.50619094       IR=
+          66
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -2841361.24911581       IR=
+          66
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -2841361.25707513       IR=
+          66
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -5449655.49110153       IR=
+          67
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -2724827.74173326       IR=
+          67
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -2724827.74936827       IR=
+          67
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -5226046.12927363       IR=
+          68
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -2613023.06097490       IR=
+          68
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -2613023.06829874       IR=
+          68
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -5011512.23928655       IR=
+          69
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -2505756.11613064       IR=
+          69
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -2505756.12315591       IR=
+          69
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -4805687.05123646       IR=
+          70
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -2402843.52224884       IR=
+          70
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -2402843.52898762       IR=
+          70
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -4608218.58602879       IR=
+          71
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -2304109.28978244       IR=
+          71
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -2304109.29624635       IR=
+          71
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -4418769.05945142       IR=
+          72
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -2209384.52662562       IR=
+          72
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -2209384.53282580       IR=
+          72
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -4237014.31036654       IR=
+          73
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -2118507.15220971       IR=
+          73
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -2118507.15815684       IR=
+          73
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -4062643.25195620       IR=
+          74
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -2031321.62312593       IR=
+          74
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -2031321.62883027       IR=
+          74
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -3895357.34490737       IR=
+          75
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1947678.66971799       IR=
+          75
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1947678.67518938       IR=
+          75
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -3734870.09197883       IR=
+          76
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1867435.04336547       IR=
+          76
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1867435.04861336       IR=
+          76
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -3580906.55281480       IR=
+          77
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1790453.27389068       IR=
+          77
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1790453.27892412       IR=
+          77
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -3433202.87829671       IR=
+          78
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1716601.43673451       IR=
+          78
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1716601.44156220       IR=
+          78
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -3291505.86374201       IR=
+          79
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1645752.92955586       IR=
+          79
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1645752.93418615       IR=
+          79
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -3155572.51993116       IR=
+          80
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1577786.25774513       IR=
+          80
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1577786.26218603       IR=
+          80
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -3025169.66158529       IR=
+          81
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1512584.82866305       IR=
+          81
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1512584.83292224       IR=
+          81
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -2900073.51227476       IR=
+          82
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1450036.75409495       IR=
+          82
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1450036.75817981       IR=
+          82
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -2780069.32529622       IR=
+          83
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1390034.66068931       IR=
+          83
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1390034.66460691       IR=
+          83
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -2664951.01981508       IR=
+          84
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1332475.50802897       IR=
+          84
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1332475.51178611       IR=
+          84
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -2554520.83167836       IR=
+          85
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1277260.41403759       IR=
+          85
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1277260.41764077       IR=
+          85
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -2448588.97822478       IR=
+          86
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1224294.48738465       IR=
+          86
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1224294.49084013       IR=
+          86
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -2346973.33666327       IR=
+          87
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1173486.66667474       IR=
+          87
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1173486.66998853       IR=
+          87
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -2249499.13535371       IR=
+          88
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1124749.56608793       IR=
+          88
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1124749.56926578       IR=
+          88
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -2155998.65755716       IR=
+          89
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1077999.32725486       IR=
+          89
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1077999.33030229       IR=
+          89
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -2066310.95708379       IR=
+          90
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1033155.47708074       IR=
+          90
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1033155.48000305       IR=
+          90
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1980281.58539310       IR=
+          91
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -990140.791295409       IR=
+          91
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -990140.794097687       IR=
+          91
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1897762.32975911       IR=
+          92
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -948881.163535991       IR=
+          92
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -948881.166223119       IR=
+          92
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1818610.96184824       IR=
+          93
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -909305.479635787       IR=
+          93
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -909305.482212449       IR=
+          93
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1742690.99653406       IR=
+          94
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -871345.497031685       IR=
+          94
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -871345.499502374       IR=
+          94
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1669871.46037010       IR=
+          95
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -834935.729000538       IR=
+          95
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -834935.731369565       IR=
+          95
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1600026.66941872       IR=
+          96
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -800013.333573609       IR=
+          96
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -800013.335845113       IR=
+          96
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1533036.01600398       IR=
+          97
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -766518.006913015       IR=
+          97
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -766518.009090966       IR=
+          97
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1468783.76405267       IR=
+          98
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -734391.880982231       IR=
+          98
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -734391.883070438       IR=
+          98
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1407158.85271307       IR=
+          99
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -703579.425355476       IR=
+          99
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -703579.427357595       IR=
+          99
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1348054.70783835       IR=
+         100
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -674027.352959407       IR=
+         100
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -674027.354878944       IR=
+         100
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1291369.06108245       IR=
+         101
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -645684.529621062       IR=
+         101
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -645684.531461384       IR=
+         101
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1237003.77631135       IR=
+         102
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -618501.887273508       IR=
+         102
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -618501.889037843       IR=
+         102
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1184864.68293515       IR=
+         103
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -592432.340621851       IR=
+         103
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -592432.342313297       IR=
+         103
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1134861.41604411       IR=
+         104
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -567430.707211288       IR=
+         104
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -567430.708832818       IR=
+         104
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1086907.26290856       IR=
+         105
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -543453.630677049       IR=
+         105
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -543453.632231514       IR=
+         105
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1040919.01570055       IR=
+         106
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -520459.507105207       IR=
+         106
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -520459.508595344       IR=
+         106
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -996816.830144861       IR=
+         107
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -498408.414358212       IR=
+         107
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -498408.415786649       IR=
+         107
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -954524.089852450       IR=
+         108
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -477262.044241598       IR=
+         108
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -477262.045610852       IR=
+         108
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -913967.276126777       IR=
+         109
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -456983.637407143       IR=
+         109
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -456983.638719633       IR=
+         109
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -875075.843027784       IR=
+         110
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -437537.920884870       IR=
+         110
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -437537.922142914       IR=
+         110
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -837782.097440717       IR=
+         111
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -418891.048117447       IR=
+         111
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -418891.049323270       IR=
+         111
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -802021.084001045       IR=
+         112
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -401010.541422653       IR=
+         112
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -401010.542578392       IR=
+         112
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -767730.474649811       IR=
+         113
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -383865.236771055       IR=
+         113
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -383865.237878756       IR=
+         113
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -734850.462622607       IR=
+         114
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -367425.230780489       IR=
+         114
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -367425.231842118       IR=
+         114
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -703323.660748803       IR=
+         115
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -351661.829865680       IR=
+         115
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -351661.830883123       IR=
+         115
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -673095.003796937       IR=
+         116
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -336547.501410935       IR=
+         116
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -336547.502386002       IR=
+         116
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -644111.654802507       IR=
+         117
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -322055.826934041       IR=
+         117
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -322055.827868466       IR=
+         117
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -616322.915143710       IR=
+         118
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -308161.457124131       IR=
+         118
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -308161.458019579       IR=
+         118
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -589680.138239981       IR=
+         119
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -294840.068690956       IR=
+         119
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -294840.069549026       IR=
+         119
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -564136.646747542       IR=
+         120
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -282068.322962659       IR=
+         120
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -282068.323784883       IR=
+         120
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -539647.653068867       IR=
+         121
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -269823.826140509       IR=
+         121
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -269823.826928357       IR=
+         121
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -516170.183084358       IR=
+         122
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -258085.091164737       IR=
+         122
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -258085.091919620       IR=
+         122
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -493663.002949104       IR=
+         123
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -246831.501112917       IR=
+         123
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -246831.501836188       IR=
+         123
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -472086.548834657       IR=
+         124
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -236043.274070850       IR=
+         124
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -236043.274763807       IR=
+         124
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -451402.859517831       IR=
+         125
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -225701.429426970       IR=
+         125
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -225701.430090861       IR=
+         125
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -431575.511668161       IR=
+         126
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -215787.755516072       IR=
+         126
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -215787.756152089       IR=
+         126
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -412569.557766819       IR=
+         127
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -206284.778578764       IR=
+         127
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -206284.779188055       IR=
+         127
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -394351.466494026       IR=
+         128
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -197175.732955181       IR=
+         128
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -197175.733538845       IR=
+         128
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -376889.065559671       IR=
+         129
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -188444.532500289       IR=
+         129
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -188444.533059381       IR=
+         129
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -360151.486806650       IR=
+         130
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -180075.743135559       IR=
+         130
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -180075.743671091       IR=
+         130
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -344109.113544368       IR=
+         131
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -172054.556515712       IR=
+         131
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -172054.557028656       IR=
+         131
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -328733.529994466       IR=
+         132
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -164366.764751590       IR=
+         132
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -164366.765242876       IR=
+         132
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -313997.472790806       IR=
+         133
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -156998.736160142       IR=
+         133
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -156998.736630663       IR=
+         133
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -299874.784411483       IR=
+         134
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -149937.391980435       IR=
+         134
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -149937.392431048       IR=
+         134
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -286340.368511428       IR=
+         135
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -143170.184039950       IR=
+         135
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -143170.184471478       IR=
+         135
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -273370.147041524       IR=
+         136
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -136685.073314146       IR=
+         136
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -136685.073727378       IR=
+         136
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -260941.019103712       IR=
+         137
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -130470.509354010       IR=
+         137
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -130470.509749701       IR=
+         137
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -249030.821460782       IR=
+         138
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -124515.410540953       IR=
+         138
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -124515.410919829       IR=
+         138
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -237618.290640799       IR=
+         139
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -118809.145139021       IR=
+         139
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -118809.145501778       IR=
+         139
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -226683.026571533       IR=
+         140
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -113341.513112114       IR=
+         140
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -113341.513459420       IR=
+         140
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -216205.457679580       IR=
+         141
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -108102.728673543       IR=
+         141
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -108102.729006037       IR=
+         141
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -206166.807393455       IR=
+         142
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -103083.403537579       IR=
+         142
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -103083.403855876       IR=
+         142
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -196549.062007010       IR=
+         143
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -98274.5308511599       IR=
+         143
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -98274.5311558499       IR=
+         143
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -187334.939828702       IR=
+         144
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -93667.4697685276       IR=
+         144
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -93667.4700601748       IR=
+         144
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -178507.861584228       IR=
+         145
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -89253.9306525410       IR=
+         145
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -89253.9309316873       IR=
+         145
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -170051.922006204       IR=
+         146
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -85025.9608695194       IR=
+         146
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -85025.9611366846       IR=
+         146
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -161951.862573130       IR=
+         147
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -80975.9311587236       IR=
+         147
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -80975.9314144063       IR=
+         147
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -154193.045349597       IR=
+         148
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -77096.5225524596       IR=
+         148
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -77096.5227971377       IR=
+         148
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -146761.427879009       IR=
+         149
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -73380.7138224384       IR=
+         149
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -73380.7140565706       IR=
+         149
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -139643.539088585       IR=
+         150
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -69821.7694322796       IR=
+         150
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -69821.7696563057       IR=
+         150
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -132826.456173891       IR=
+         151
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -66413.2279797745       IR=
+         151
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -66413.2281941162       IR=
+         151
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -126297.782403897       IR=
+         152
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -63148.8910994177       IR=
+         152
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -63148.8913044796       IR=
+         152
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -120045.625834247       IR=
+         153
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -60022.8128190387       IR=
+         153
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -60022.8130152087       IR=
+         153
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -114058.578871478       IR=
+         154
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -57029.2893419140       IR=
+         154
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -57029.2895295640       IR=
+         154
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -108325.698664004       IR=
+         155
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -54162.8492422585       IR=
+         155
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -54162.8494217454       IR=
+         155
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -102836.488286459       IR=
+         156
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -51418.2440573968       IR=
+         156
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -51418.2442290626       IR=
+         156
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -97580.8786821711       IR=
+         157
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -48790.4392589991       IR=
+         157
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -48790.4394231719       IR=
+         157
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -92549.2113320990       IR=
+         158
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -46274.6055875523       IR=
+         158
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -46274.6057445467       IR=
+         158
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -87732.2216294199       IR=
+         159
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -43866.1107396511       IR=
+         159
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -43866.1108897688       IR=
+         159
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -83121.0229201372       IR=
+         160
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -41560.5113883035       IR=
+         160
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -41560.5115318338       IR=
+         160
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -78707.0911888358       IR=
+         161
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -39353.5455258078       IR=
+         161
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -39353.5456630280       IR=
+         161
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -74482.2503645583       IR=
+         162
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -37241.1251166911       IR=
+         162
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -37241.1252478672       IR=
+         162
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -70438.6582199762       IR=
+         163
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -35219.3290472946       IR=
+         163
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -35219.3291726816       IR=
+         163
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -66568.7928372521       IR=
+         164
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -33284.3963587048       IR=
+         164
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -33284.3964785473       IR=
+         164
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -62865.4396251121       IR=
+         165
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -31432.7197552899       IR=
+         165
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -31432.7198698223       IR=
+         165
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -59321.6788550853       IR=
+         166
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -29660.8393728191       IR=
+         166
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -29660.8394822662       IR=
+         166
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -55930.8737053984       IR=
+         167
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -27965.4368004106       IR=
+         167
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -27965.4369049878       IR=
+         167
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -52686.6587857977       IR=
+         168
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -26343.3293429418       IR=
+         168
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -26343.3294428558       IR=
+         168
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -49582.9291262044       IR=
+         169
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -24791.4645153777       IR=
+         169
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -24791.4646108266       IR=
+         169
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -46613.8296108776       IR=
+         170
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -23306.9147598520       IR=
+         170
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -23306.9148510256       IR=
+         170
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -43773.7448392628       IR=
+         171
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -21886.8723760912       IR=
+         171
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -21886.8724631716       IR=
+         171
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -41057.2893956146       IR=
+         172
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -20528.6446562264       IR=
+         172
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -20528.6447393882       IR=
+         172
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -38459.2985135950       IR=
+         173
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -19229.6492170923       IR=
+         173
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -19229.6492965027       IR=
+         173
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -35974.8191169436       IR=
+         174
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -17987.4095205621       IR=
+         174
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -17987.4095963815       IR=
+         174
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -33599.1012223421       IR=
+         175
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -16799.5505749800       IR=
+         175
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -16799.5506473622       IR=
+         175
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -31327.5896906558       IR=
+         176
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -15663.7948107817       IR=
+         176
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -15663.7948798741       IR=
+         176
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -29155.9163107489       IR=
+         177
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -14577.9581224026       IR=
+         177
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -14577.9581883463       IR=
+         177
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -27079.8922035991       IR=
+         178
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -13539.9460703343       IR=
+         178
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -13539.9461332647       IR=
+         178
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -25095.5005347243       IR=
+         179
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -12547.7502373387       IR=
+         179
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -12547.7502973856       IR=
+         179
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -23198.8895187017       IR=
+         180
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -11599.4447307070       IR=
+         180
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -11599.4447879947       IR=
+         180
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -21386.3657096957       IR=
+         181
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -10693.1828275240       IR=
+         181
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -10693.1828821717       IR=
+         181
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -19654.3875610358       IR=
+         182
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -9827.19375445691       IR=
+         182
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -9827.19380657886       IR=
+         182
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -17999.5592468003       IR=
+         183
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -8999.77959854734       IR=
+         183
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -8999.77964825300       IR=
+         183
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -16418.6247326215       IR=
+         184
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -8209.31234261362       IR=
+         184
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -8209.31239000790       IR=
+         184
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -14908.4620861941       IR=
+         185
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -7454.23102050535       IR=
+         185
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -7454.23106568875       IR=
+         185
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -13466.0780191695       IR=
+         186
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -6733.03898805032       IR=
+         186
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -6733.03903111919       IR=
+         186
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -12088.6026486183       IR=
+         187
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -6044.30130378584       IR=
+         187
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -6044.30134483247       IR=
+         187
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -10773.2844712583       IR=
+         188
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -5386.64221607273       IR=
+         188
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -5386.64225518556       IR=
+         188
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -9517.48554148693       IR=
+         189
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -4758.74275211158       IR=
+         189
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -4758.74278937535       IR=
+         189
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -8318.67684337143       IR=
+         190
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -4159.33840393777       IR=
+         190
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -4159.33843943366       IR=
+         190
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -7174.43385127471       IR=
+         191
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -3587.21690873446       IR=
+         191
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -3587.21694254025       IR=
+         191
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -6082.43227005885       IR=
+         192
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -3041.21611893431       IR=
+         192
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -3041.21615112454       IR=
+         192
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -5040.44394716163       IR=
+         193
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -2520.22195825780       IR=
+         193
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -2520.22198890383       IR=
+         193
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -4046.33295085128       IR=
+         194
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -2023.16646084053       IR=
+         194
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -2023.16649001076       IR=
+         194
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -3098.05180755058       IR=
+         195
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1549.02588989533       IR=
+         195
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1549.02591765526       IR=
+         195
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -2193.63789075229       IR=
+         196
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -1096.81893216996       IR=
+         196
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -1096.81895858234       IR=
+         196
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -1331.20995732313       IR=
+         197
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -665.604966099102       IR=
+         197
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -665.604991224025       IR=
+         197
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  -508.964823457215       IR=
+         198
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  -254.482399781094       IR=
+         198
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  -254.482423676121       IR=
+         198
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   274.825824255783       IR=
+         199
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   137.412923488022       IR=
+         199
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   137.412900767761       IR=
+         199
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   1021.81848861413       IR=
+         200
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   510.909255106209       IR=
+         200
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   510.909233507921       IR=
+         200
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   1733.60079747934       IR=
+         201
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   866.800409003106       IR=
+         201
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   866.800388476232       IR=
+         201
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   2411.69432014858       IR=
+         202
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   1205.84716982623       IR=
+         202
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   1205.84715032235       IR=
+         202
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   3057.55727010476       IR=
+         203
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   1528.77864431600       IR=
+         203
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   1528.77862578877       IR=
+         203
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   3672.58709727109       IR=
+         204
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   1836.29355743303       IR=
+         204
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   1836.29353983806       IR=
+         204
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   4258.12297587341       IR=
+         205
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   2129.06149628931       IR=
+         205
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   2129.06147958410       IR=
+         205
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   4815.44819071163       IR=
+         206
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   2407.72410328389       IR=
+         206
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   2407.72408742774       IR=
+         206
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   5345.79242687993       IR=
+         207
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   2672.89622096297       IR=
+         207
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   2672.89620591696       IR=
+         207
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   5850.33396659351       IR=
+         208
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   2925.16699043334       IR=
+         208
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   2925.16697616017       IR=
+         208
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   6330.20179640412       IR=
+         209
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   3165.10090497007       IR=
+         209
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   3165.10089143404       IR=
+         209
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   6786.47762938456       IR=
+         210
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   3393.23882110880       IR=
+         210
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   3393.23880827576       IR=
+         210
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   7220.19784468231       IR=
+         211
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   3610.09892842252       IR=
+         211
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   3610.09891625978       IR=
+         211
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   7632.35534849546       IR=
+         212
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   3816.17768000960       IR=
+         212
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   3816.17766848586       IR=
+         212
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   8023.90135946255       IR=
+         213
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   4011.95068518861       IR=
+         213
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   4011.95067427394       IR=
+         213
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   8395.74712124023       IR=
+         214
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   4197.87356578724       IR=
+         214
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   4197.87355545299       IR=
+         214
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   8748.76554578090       IR=
+         215
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   4374.38277778108       IR=
+         215
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   4374.38276799982       IR=
+         215
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   9083.79278940504       IR=
+         216
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   4541.89639932976       IR=
+         216
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   4541.89639007528       IR=
+         216
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   9401.62976518786       IR=
+         217
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   4700.81488697033       IR=
+         217
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   4700.81487821753       IR=
+         217
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   9703.04359338404       IR=
+         218
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   4851.52180082958       IR=
+         218
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   4851.52179255446       IR=
+         218
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   9988.76899320729       IR=
+         219
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   4994.38450051385       IR=
+         219
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   4994.38449269344       IR=
+         219
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   10259.5096176644       IR=
+         220
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   5129.75481252600       IR=
+         220
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   5129.75480513835       IR=
+         220
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   10515.9393342472       IR=
+         221
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   5257.96967061153       IR=
+         221
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   5257.96966363563       IR=
+         221
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   10758.7034533337       IR=
+         222
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   5379.35172995895       IR=
+         222
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   5379.35172337473       IR=
+         222
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   10988.4199066606       IR=
+         223
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   5494.20995643617       IR=
+         223
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   5494.20995022441       IR=
+         223
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   11205.6803776801       IR=
+         224
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   5602.84019176886       IR=
+         224
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   5602.84018591121       IR=
+         224
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   11411.0513859190       IR=
+         225
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   5705.52569572003       IR=
+         225
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   5705.52569019893       IR=
+         225
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   11605.0753270750       IR=
+         226
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   5802.53766613816       IR=
+         226
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   5802.53766093683       IR=
+         226
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   11788.2714707746       IR=
+         227
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   5894.13573783608       IR=
+         227
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   5894.13573293848       IR=
+         227
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   11961.1369175621       IR=
+         228
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   5980.56846108563       IR=
+         228
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   5980.56845647643       IR=
+         228
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   12124.1475168834       IR=
+         229
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6062.07376060943       IR=
+         229
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6062.07375627399       IR=
+         229
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   12277.7587475793       IR=
+         230
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6138.87937582749       IR=
+         230
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6138.87937175180       IR=
+         230
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   12422.4065624383       IR=
+         231
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6211.20328313381       IR=
+         231
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6211.20327930450       IR=
+         231
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   12558.5081982830       IR=
+         232
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6279.25410093935       IR=
+         232
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6279.25409734365       IR=
+         232
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   12686.4629529280       IR=
+         233
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6343.23147815117       IR=
+         233
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6343.23147477687       IR=
+         233
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   12806.6529304372       IR=
+         234
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6403.32646680089       IR=
+         234
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6403.32646363633       IR=
+         234
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   12919.4437558617       IR=
+         235
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6459.72187941384       IR=
+         235
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6459.72187644790       IR=
+         235
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13025.1852607465       IR=
+         236
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6512.59263176226       IR=
+         236
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6512.59262898429       IR=
+         236
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13124.2121407010       IR=
+         237
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6562.10607165057       IR=
+         237
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6562.10606905044       IR=
+         237
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13216.8445859368       IR=
+         238
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6608.42229418440       IR=
+         238
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6608.42229175242       IR=
+         238
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13303.3888860421       IR=
+         239
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6651.69444415757       IR=
+         239
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6651.69444188449       IR=
+         239
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13384.1380100244       IR=
+         240
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6692.06900607371       IR=
+         240
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6692.06900395072       IR=
+         240
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13459.3721625479       IR=
+         241
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6729.68608226461       IR=
+         241
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6729.68608028328       IR=
+         241
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13529.3593173892       IR=
+         242
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6764.67965961845       IR=
+         242
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6764.67965777075       IR=
+         242
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13594.3557290423       IR=
+         243
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6797.17786538201       IR=
+         243
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6797.17786366028       IR=
+         243
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13654.6064233169       IR=
+         244
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6827.30321245999       IR=
+         244
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6827.30321085692       IR=
+         244
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13710.3456678210       IR=
+         245
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6855.17283465618       IR=
+         245
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6855.17283316481       IR=
+         245
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13761.7974231206       IR=
+         246
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6880.89871225348       IR=
+         246
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6880.89871086716       IR=
+         246
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13809.1757754082       IR=
+         247
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6904.58788834788       IR=
+         247
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6904.58788706028       IR=
+         247
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13852.6853513450       IR=
+         248
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6926.34267626996       IR=
+         248
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6926.34267507506       IR=
+         248
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13892.5217158996       IR=
+         249
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6946.26085850376       IR=
+         249
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6946.26085739580       IR=
+         249
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13928.8717537916       IR=
+         250
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6964.43587740906       IR=
+         250
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6964.43587638257       IR=
+         250
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13961.9140352906       IR=
+         251
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6980.95701812040       IR=
+         251
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6980.95701717016       IR=
+         251
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   13991.8191668996       IR=
+         252
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   6995.90958388928       IR=
+         252
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   6995.90958301032       IR=
+         252
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   14018.7501276593       IR=
+         253
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   7009.37506423585       IR=
+         253
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   7009.37506342345       IR=
+         253
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   14042.8625915520       IR=
+         254
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   7021.43129615118       IR=
+         254
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   7021.43129540083       IR=
+         254
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   14064.3052366408       IR=
+         255
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   7032.15261866668       IR=
+         255
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   7032.15261797411       IR=
+         255
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   14083.2200414648       IR=
+         256
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   7041.61002105182       IR=
+         256
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   7041.61002041295       IR=
+         256
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   14099.7425691865       IR=
+         257
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   7049.87128488780       IR=
+         257
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   7049.87128429875       IR=
+         257
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   14114.0022400131       IR=
+         258
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   7057.00112027801       IR=
+         258
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   7057.00111973510       IR=
+         258
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   14126.1225923818       IR=
+         259
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   7063.06129644105       IR=
+         259
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   7063.06129594079       IR=
+         259
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   14136.2215333331       IR=
+         260
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   7068.11076689701       IR=
+         260
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   7068.11076643606       IR=
+         260
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   14144.4115785387       IR=
+         261
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   7072.20578948175       IR=
+         261
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   7072.20578905696       IR=
+         261
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   14150.8000823987       IR=
+         262
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   7075.40004139515       IR=
+         262
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   7075.40004100351       IR=
+         262
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   14155.4894586073       IR=
+         263
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   7077.74472948431       IR=
+         263
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   7077.74472912298       IR=
+         263
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   14158.5773915840       IR=
+         264
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   7079.28869595886       IR=
+         264
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   7079.28869562513       IR=
+         264
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=   14160.1570391417       IR=
+         265
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=   7080.07851972517       IR=
+         265
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=   7080.07851941649       IR=
+         265
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  1.906007562402165E-002  IR=
+         719
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  3.987020862783309E-002  IR=
+         720
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  1.912369941040305E-002  IR=
+         720
+  WARNING IN <SCFNEWPOT> D RHO/DR > 0.0 FOR R=  3.996240828572574E-002  IR=
+         721
+  WARNING IN <SCFNEWPOT> D RHO(UP)/DR > 0.0 FOR R=  2.069646441660847E-002  IR=
+         721
+  WARNING IN <SCFNEWPOT> D RHO(DN)/DR > 0.0 FOR R=  1.926594386911728E-002  IR=
+         721
+
+ *******************************************************************************
+          start potential set up using Mattheiss construction for  RHO
+                    the corresponding ionicity has been used
+ *******************************************************************************
+
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.798323
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.200
+          lower limit for semi-core states          ESCBOT =  -0.200
+          upper limit for core states               ECTOP  =  -3.047
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+ 
+          Fe     1  26   1  s  1/2    -513.055979     2     2    core     -
+          Fe     1  26   2  s  1/2     -58.909668     2     4    core     -
+          Fe     1  26   2  p  1/2     -50.615743
+          Fe     1  26   2  p  3/2     -49.697861     6    10    core     -
+          Fe     1  26   3  s  1/2      -5.576511     2    12    core     -
+          Fe     1  26   3  p  1/2      -3.160123
+          Fe     1  26   3  p  3/2      -3.047357     6    18    core     -
+
+
+            12    E    0.0228    0.0100    NOS    0.0190    DOS    0.1114
+            24    E    0.2658    0.0100    NOS    0.1645    DOS    1.5002
+            36    E    0.5089    0.0100    NOS    1.5410    DOS   10.6438
+            48    E    0.7519    0.0100    NOS    7.0076    DOS   33.9985
+
+     INFO: SOLVER reset to: BS        
+
+
+
+ *******************************************************************************
+          Fermi energy fixed by <SCFINITPOT>
+          EFERMI =   0.806600 Ry    using DOS
+          DOS written to file  Fe_SCF_SCFSTART.dos
+ *******************************************************************************
+
+
+ *******************************************************************************
+                            BROYDEN - mixing scheme
+
+          broyden's method # 2 used
+          iterationdepth to accumulate the jacobian:   40
+          broyden used after   1 iteration different mix
+
+          straight mixing factor used:       0.2000000
+          parameter for broyden-update:      0.2000000
+ *******************************************************************************
+
+          integrated core charge density for atom type  1: 18.00000000
+          integrated core  spin  density for atom type  1: -0.00002913
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: Fe
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.01073913 els.
+ E_F CORRECTION     -0.00071407
+ NEW FERMI ENERGY    0.80588580   extrapolated     
+
+
+  31 E= 0.8059 0.0000          IT= 1  Fe      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2157   0.6350    0.1651  -0.0021   0.00000  0.00000   16.80 s   -250.71
+  p    0.7806   0.8030    0.0344  -0.0283   0.00000  0.00000    0.00 ns     0.79
+  d   14.0431   6.5620    6.6232   2.2345   0.00000  0.00000    0.00 cor -249.92
+ sum  15.0394   8.0000    6.8227   2.2041   0.00000  0.00000   16.80 v+c -233.12
+dipole moment   1   0.00000   0.00000   0.00000
+ -------------------------------------------------------------------------------
+ TOT  15.0394   8.0000             2.2041            0.00000
+ E_band         5.04215463 [Ry]
+ ===============================================================================
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  26  26.00000   0.00000   0.00000    1   0.00000  -0.00000
+
+     total energy       -2545.61345594
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.795769
+ *******************************************************************************
+
+     rms-error for type  1:  V =  1.0088D-01     B =  2.0139D-01
+     iter.   1     average:  V =  1.0088D-01     B =  2.0139D-01
+
+     execution time for last iteration         0.464 secs
+
+
+ *******************************************************************************
+   1 ERR 0.101E+00 0.201E+00 EF  0.80589 -0.00071 D  15.039 M   2.2041   0.0000
+     ETOT      -2545.61345594    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.200
+          lower limit for semi-core states          ESCBOT =  -0.200
+          upper limit for core states               ECTOP  =  -3.044
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+ 
+          Fe     1  26   1  s  1/2    -513.028570     2     2    core     -
+          Fe     1  26   2  s  1/2     -58.901438     2     4    core     -
+          Fe     1  26   2  p  1/2     -50.606221
+          Fe     1  26   2  p  3/2     -49.688484     6    10    core     -
+          Fe     1  26   3  s  1/2      -5.572610     2    12    core     -
+          Fe     1  26   3  p  1/2      -3.156317
+          Fe     1  26   3  p  3/2      -3.043598     6    18    core     -
+
+
+          integrated core charge density for atom type  1: 18.00000000
+          integrated core  spin  density for atom type  1: -0.00002680
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: Fe
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT      -0.02517239 els.
+ E_F CORRECTION      0.00165875
+ NEW FERMI ENERGY    0.80754455   extrapolated     
+
+
+  31 E= 0.8075 0.0000          IT= 1  Fe      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2150   0.6360    0.1449  -0.0036   0.00000  0.00000   11.22 s   -254.02
+  p    0.8230   0.8077    0.0536  -0.0343   0.00000  0.00000    0.00 ns     0.79
+  d   14.1376   6.5563    6.9059   2.2502   0.00000  0.00000    0.00 cor -253.23
+ sum  15.1755   8.0000    7.1043   2.2123   0.00000  0.00000   11.22 v+c -242.01
+dipole moment   1   0.00000   0.00000   0.00000
+ -------------------------------------------------------------------------------
+ TOT  15.1755   8.0000             2.2123            0.00000
+ E_band         5.05279075 [Ry]
+ ===============================================================================
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  26  26.00000   0.00000   0.00000    1   0.00000  -0.00000
+
+     total energy       -2545.61402664
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.796732
+ *******************************************************************************
+
+     rms-error for type  1:  V =  8.4109D-02     B =  1.7368D-01
+     iter.   2     average:  V =  8.4109D-02     B =  1.7368D-01
+
+     execution time for last iteration         0.464 secs
+
+
+ *******************************************************************************
+   2 ERR 0.841E-01 0.174E+00 EF  0.80754  0.00166 D  15.176 M   2.2123   0.0000
+     ETOT      -2545.61402664    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.200
+          lower limit for semi-core states          ESCBOT =  -0.200
+          upper limit for core states               ECTOP  =  -3.039
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+ 
+          Fe     1  26   1  s  1/2    -512.958821     2     2    core     -
+          Fe     1  26   2  s  1/2     -58.889959     2     4    core     -
+          Fe     1  26   2  p  1/2     -50.591052
+          Fe     1  26   2  p  3/2     -49.673736     6    10    core     -
+          Fe     1  26   3  s  1/2      -5.568298     2    12    core     -
+          Fe     1  26   3  p  1/2      -3.151950
+          Fe     1  26   3  p  3/2      -3.039286     6    18    core     -
+
+
+          integrated core charge density for atom type  1: 18.00000000
+          integrated core  spin  density for atom type  1: -0.00001945
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: Fe
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.02600196 els.
+ E_F CORRECTION     -0.00207259
+ NEW FERMI ENERGY    0.80547196   extrapolated     
+
+
+  31 E= 0.8055 0.0000          IT= 1  Fe      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.1907   0.6373    0.1243  -0.0082   0.00000  0.00000   -4.80 s   -266.17
+  p    0.7849   0.8128   -0.0493  -0.0544   0.00000  0.00000    0.00 ns     0.82
+  d   11.5700   6.5498    5.3123   2.3361   0.00000  0.00000    0.00 cor -265.35
+ sum  12.5456   8.0000    5.3873   2.2735   0.00000  0.00000   -4.80 v+c -270.15
+dipole moment   1   0.00000   0.00000   0.00000
+ -------------------------------------------------------------------------------
+ TOT  12.5456   8.0000             2.2735            0.00000
+ E_band         5.04583438 [Ry]
+ ===============================================================================
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  26  26.00000   0.00000  -0.00000    1   0.00000  -0.00000
+
+     total energy       -2545.61494076
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.797507
+ *******************************************************************************
+
+     rms-error for type  1:  V =  2.6445D-02     B =  7.8052D-02
+     iter.   3     average:  V =  2.6445D-02     B =  7.8052D-02
+
+     execution time for last iteration         0.464 secs
+
+
+ *******************************************************************************
+   3 ERR 0.264E-01 0.781E-01 EF  0.80547 -0.00207 D  12.546 M   2.2735   0.0000
+     ETOT      -2545.61494076    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.200
+          lower limit for semi-core states          ESCBOT =  -0.200
+          upper limit for core states               ECTOP  =  -3.039
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+ 
+          Fe     1  26   1  s  1/2    -512.930230     2     2    core     -
+          Fe     1  26   2  s  1/2     -58.887776     2     4    core     -
+          Fe     1  26   2  p  1/2     -50.587320
+          Fe     1  26   2  p  3/2     -49.670186     6    10    core     -
+          Fe     1  26   3  s  1/2      -5.567824     2    12    core     -
+          Fe     1  26   3  p  1/2      -3.151382
+          Fe     1  26   3  p  3/2      -3.038727     6    18    core     -
+
+
+          integrated core charge density for atom type  1: 18.00000000
+          integrated core  spin  density for atom type  1: -0.00001553
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: Fe
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.03430459 els.
+ E_F CORRECTION     -0.00317460
+ NEW FERMI ENERGY    0.80229736   extrapolated     
+
+
+  31 E= 0.8023 0.0000          IT= 1  Fe      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.1678   0.6373    0.1231  -0.0113   0.00000  0.00000  -16.48 s   -275.48
+  p    0.7080   0.8135   -0.0420  -0.0674   0.00000  0.00000    0.00 ns     0.85
+  d    9.9302   6.5491    4.5911   2.3822   0.00000  0.00000    0.00 cor -274.63
+ sum  10.8060   8.0000    4.6723   2.3035   0.00000  0.00000  -16.48 v+c -291.11
+dipole moment   1   0.00000   0.00000   0.00000
+ -------------------------------------------------------------------------------
+ TOT  10.8060   8.0000             2.3035            0.00000
+ E_band         5.03077030 [Ry]
+ ===============================================================================
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  26  26.00000  -0.00000  -0.00000    1  -0.00000   0.00000
+
+     total energy       -2545.61516156
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.797397
+ *******************************************************************************
+
+     rms-error for type  1:  V =  6.8702D-03     B =  2.3123D-02
+     iter.   4     average:  V =  6.8702D-03     B =  2.3123D-02
+
+     execution time for last iteration         0.464 secs
+
+
+ *******************************************************************************
+   4 ERR 0.687E-02 0.231E-01 EF  0.80230 -0.00317 D  10.806 M   2.3035   0.0000
+     ETOT      -2545.61516156    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.200
+          lower limit for semi-core states          ESCBOT =  -0.200
+          upper limit for core states               ECTOP  =  -3.039
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+ 
+          Fe     1  26   1  s  1/2    -512.931340     2     2    core     -
+          Fe     1  26   2  s  1/2     -58.888350     2     4    core     -
+          Fe     1  26   2  p  1/2     -50.588009
+          Fe     1  26   2  p  3/2     -49.670866     6    10    core     -
+          Fe     1  26   3  s  1/2      -5.567928     2    12    core     -
+          Fe     1  26   3  p  1/2      -3.151485
+          Fe     1  26   3  p  3/2      -3.038829     6    18    core     -
+
+
+          integrated core charge density for atom type  1: 18.00000000
+          integrated core  spin  density for atom type  1: -0.00001461
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: Fe
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.01161392 els.
+ E_F CORRECTION     -0.00096860
+ NEW FERMI ENERGY    0.80132876   extrapolated     
+
+
+  31 E= 0.8013 0.0000          IT= 1  Fe      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.1932   0.6373    0.1395  -0.0122   0.00000  0.00000  -19.47 s   -279.02
+  p    0.7939   0.8131   -0.0837  -0.0702   0.00000  0.00000    0.00 ns     0.86
+  d   11.0033   6.5496    4.8936   2.3928   0.00000  0.00000    0.00 cor -278.16
+ sum  11.9904   8.0000    4.9494   2.3104   0.00000  0.00000  -19.47 v+c -297.63
+dipole moment   1   0.00000   0.00000   0.00000
+ -------------------------------------------------------------------------------
+ TOT  11.9904   8.0000             2.3104            0.00000
+ E_band         5.02618133 [Ry]
+ ===============================================================================
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  26  26.00000   0.00000   0.00000    1   0.00000  -0.00000
+
+     total energy       -2545.61520898
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.797275
+ *******************************************************************************
+
+     rms-error for type  1:  V =  1.0313D-02     B =  1.1194D-02
+     iter.   5     average:  V =  1.0313D-02     B =  1.1194D-02
+
+     execution time for last iteration         0.460 secs
+
+
+ *******************************************************************************
+   5 ERR 0.103E-01 0.112E-01 EF  0.80133 -0.00097 D  11.990 M   2.3104   0.0000
+     ETOT      -2545.61520898    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.200
+          lower limit for semi-core states          ESCBOT =  -0.200
+          upper limit for core states               ECTOP  =  -3.039
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+ 
+          Fe     1  26   1  s  1/2    -512.937286     2     2    core     -
+          Fe     1  26   2  s  1/2     -58.888787     2     4    core     -
+          Fe     1  26   2  p  1/2     -50.588850
+          Fe     1  26   2  p  3/2     -49.671663     6    10    core     -
+          Fe     1  26   3  s  1/2      -5.567800     2    12    core     -
+          Fe     1  26   3  p  1/2      -3.151386
+          Fe     1  26   3  p  3/2      -3.038732     6    18    core     -
+
+
+          integrated core charge density for atom type  1: 18.00000000
+          integrated core  spin  density for atom type  1: -0.00001426
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: Fe
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.00278989 els.
+ E_F CORRECTION     -0.00022649
+ NEW FERMI ENERGY    0.80110228   extrapolated     
+
+
+  31 E= 0.8011 0.0000          IT= 1  Fe      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2040   0.6373    0.1424  -0.0124   0.00000  0.00000  -20.31 s   -281.30
+  p    0.8349   0.8130   -0.1003  -0.0712   0.00000  0.00000    0.00 ns     0.86
+  d   11.2793   6.5498    5.0278   2.3998   0.00000  0.00000    0.00 cor -280.43
+ sum  12.3182   8.0000    5.0700   2.3161   0.00000  0.00000  -20.31 v+c -300.74
+dipole moment   1   0.00000   0.00000   0.00000
+ -------------------------------------------------------------------------------
+ TOT  12.3182   8.0000             2.3161            0.00000
+ E_band         5.02544495 [Ry]
+ ===============================================================================
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  26  26.00000   0.00000   0.00000    1   0.00000  -0.00000
+
+     total energy       -2545.61526855
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.797237
+ *******************************************************************************
+
+     rms-error for type  1:  V =  8.4734D-03     B =  7.5612D-03
+     iter.   6     average:  V =  8.4734D-03     B =  7.5612D-03
+
+     execution time for last iteration         0.464 secs
+
+
+ *******************************************************************************
+   6 ERR 0.847E-02 0.756E-02 EF  0.80110 -0.00023 D  12.318 M   2.3161   0.0000
+     ETOT      -2545.61526855    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.200
+          lower limit for semi-core states          ESCBOT =  -0.200
+          upper limit for core states               ECTOP  =  -3.038
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+ 
+          Fe     1  26   1  s  1/2    -512.950713     2     2    core     -
+          Fe     1  26   2  s  1/2     -58.889212     2     4    core     -
+          Fe     1  26   2  p  1/2     -50.590186
+          Fe     1  26   2  p  3/2     -49.672902     6    10    core     -
+          Fe     1  26   3  s  1/2      -5.567224     2    12    core     -
+          Fe     1  26   3  p  1/2      -3.150893
+          Fe     1  26   3  p  3/2      -3.038246     6    18    core     -
+
+
+          integrated core charge density for atom type  1: 18.00000000
+          integrated core  spin  density for atom type  1: -0.00001366
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: Fe
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.00156856 els.
+ E_F CORRECTION     -0.00012874
+ NEW FERMI ENERGY    0.80097353   extrapolated     
+
+
+  31 E= 0.8010 0.0000          IT= 1  Fe      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2032   0.6373    0.1336  -0.0128   0.00000  0.00000  -21.32 s   -286.17
+  p    0.8514   0.8129   -0.1253  -0.0729   0.00000  0.00000    0.00 ns     0.87
+  d   11.1292   6.5498    4.5767   2.4136   0.00000  0.00000    0.00 cor -285.30
+ sum  12.1838   8.0000    4.5850   2.3279   0.00000  0.00000  -21.32 v+c -306.61
+dipole moment   1   0.00000   0.00000   0.00000
+ -------------------------------------------------------------------------------
+ TOT  12.1838   8.0000             2.3279            0.00000
+ E_band         5.02591403 [Ry]
+ ===============================================================================
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  26  26.00000   0.00000  -0.00000    1   0.00000  -0.00000
+
+     total energy       -2545.61535345
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.797216
+ *******************************************************************************
+
+     rms-error for type  1:  V =  2.4963D-03     B =  1.9865D-03
+     iter.   7     average:  V =  2.4963D-03     B =  1.9865D-03
+
+     execution time for last iteration         0.460 secs
+
+
+ *******************************************************************************
+   7 ERR 0.250E-02 0.199E-02 EF  0.80097 -0.00013 D  12.184 M   2.3279   0.0000
+     ETOT      -2545.61535345    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.200
+          lower limit for semi-core states          ESCBOT =  -0.200
+          upper limit for core states               ECTOP  =  -3.038
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+ 
+          Fe     1  26   1  s  1/2    -512.953916     2     2    core     -
+          Fe     1  26   2  s  1/2     -58.889143     2     4    core     -
+          Fe     1  26   2  p  1/2     -50.590325
+          Fe     1  26   2  p  3/2     -49.673017     6    10    core     -
+          Fe     1  26   3  s  1/2      -5.567006     2    12    core     -
+          Fe     1  26   3  p  1/2      -3.150699
+          Fe     1  26   3  p  3/2      -3.038053     6    18    core     -
+
+
+          integrated core charge density for atom type  1: 18.00000000
+          integrated core  spin  density for atom type  1: -0.00001353
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: Fe
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT      -0.00035585 els.
+ E_F CORRECTION      0.00002915
+ NEW FERMI ENERGY    0.80100269   extrapolated     
+
+
+  31 E= 0.8010 0.0000          IT= 1  Fe      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2038   0.6373    0.1329  -0.0129   0.00000  0.00000  -21.41 s   -287.60
+  p    0.8568   0.8129   -0.1290  -0.0732   0.00000  0.00000    0.00 ns     0.88
+  d   11.1450   6.5498    4.5157   2.4174   0.00000  0.00000    0.00 cor -286.72
+ sum  12.2056   8.0000    4.5196   2.3313   0.00000  0.00000  -21.41 v+c -308.13
+dipole moment   1   0.00000   0.00000   0.00000
+ -------------------------------------------------------------------------------
+ TOT  12.2056   8.0000             2.3313            0.00000
+ E_band         5.02640379 [Ry]
+ ===============================================================================
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  26  26.00000  -0.00000   0.00000    1  -0.00000   0.00000
+
+     total energy       -2545.61538071
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.797215
+ *******************************************************************************
+
+     rms-error for type  1:  V =  5.9278D-04     B =  9.0878D-04
+     iter.   8     average:  V =  5.9278D-04     B =  9.0878D-04
+
+     execution time for last iteration         0.460 secs
+
+
+ *******************************************************************************
+   8 ERR 0.593E-03 0.909E-03 EF  0.80100  0.00003 D  12.206 M   2.3313   0.0000
+     ETOT      -2545.61538071    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.200
+          lower limit for semi-core states          ESCBOT =  -0.200
+          upper limit for core states               ECTOP  =  -3.038
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+ 
+          Fe     1  26   1  s  1/2    -512.953801     2     2    core     -
+          Fe     1  26   2  s  1/2     -58.888977     2     4    core     -
+          Fe     1  26   2  p  1/2     -50.590149
+          Fe     1  26   2  p  3/2     -49.672842     6    10    core     -
+          Fe     1  26   3  s  1/2      -5.566917     2    12    core     -
+          Fe     1  26   3  p  1/2      -3.150612
+          Fe     1  26   3  p  3/2      -3.037967     6    18    core     -
+
+
+          integrated core charge density for atom type  1: 18.00000000
+          integrated core  spin  density for atom type  1: -0.00001348
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: Fe
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.00002509 els.
+ E_F CORRECTION     -0.00000206
+ NEW FERMI ENERGY    0.80100063   extrapolated     
+
+
+  31 E= 0.8010 0.0000          IT= 1  Fe      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2027   0.6374    0.1317  -0.0129   0.00000  0.00000  -21.48 s   -288.14
+  p    0.8558   0.8129   -0.1312  -0.0733   0.00000  0.00000    0.00 ns     0.88
+  d   11.1000   6.5497    4.4545   2.4189   0.00000  0.00000    0.00 cor -287.26
+ sum  12.1586   8.0000    4.4550   2.3327   0.00000  0.00000  -21.48 v+c -308.74
+dipole moment   1   0.00000   0.00000   0.00000
+ -------------------------------------------------------------------------------
+ TOT  12.1586   8.0000             2.3327            0.00000
+ E_band         5.02648152 [Ry]
+ ===============================================================================
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  26  26.00000  -0.00000   0.00000    1  -0.00000   0.00000
+
+     total energy       -2545.61538423
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.797214
+ *******************************************************************************
+
+     rms-error for type  1:  V =  4.7694D-04     B =  6.3260D-04
+     iter.   9     average:  V =  4.7694D-04     B =  6.3260D-04
+
+     execution time for last iteration         0.464 secs
+
+
+ *******************************************************************************
+   9 ERR 0.477E-03 0.633E-03 EF  0.80100 -0.00000 D  12.159 M   2.3327   0.0000
+     ETOT      -2545.61538423    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.200
+          lower limit for semi-core states          ESCBOT =  -0.200
+          upper limit for core states               ECTOP  =  -3.038
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+ 
+          Fe     1  26   1  s  1/2    -512.952544     2     2    core     -
+          Fe     1  26   2  s  1/2     -58.888781     2     4    core     -
+          Fe     1  26   2  p  1/2     -50.589866
+          Fe     1  26   2  p  3/2     -49.672567     6    10    core     -
+          Fe     1  26   3  s  1/2      -5.566874     2    12    core     -
+          Fe     1  26   3  p  1/2      -3.150566
+          Fe     1  26   3  p  3/2      -3.037921     6    18    core     -
+
+
+          integrated core charge density for atom type  1: 18.00000000
+          integrated core  spin  density for atom type  1: -0.00001347
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: Fe
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT      -0.00002767 els.
+ E_F CORRECTION      0.00000228
+ NEW FERMI ENERGY    0.80100290   extrapolated     
+
+
+  31 E= 0.8010 0.0000          IT= 1  Fe      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2026   0.6374    0.1314  -0.0129   0.00000  0.00000  -21.47 s   -288.29
+  p    0.8557   0.8129   -0.1317  -0.0733   0.00000  0.00000    0.00 ns     0.88
+  d   11.0949   6.5497    4.4438   2.4193   0.00000  0.00000    0.00 cor -287.41
+ sum  12.1532   8.0000    4.4436   2.3330   0.00000  0.00000  -21.47 v+c -308.88
+dipole moment   1   0.00000   0.00000   0.00000
+ -------------------------------------------------------------------------------
+ TOT  12.1532   8.0000             2.3330            0.00000
+ E_band         5.02652024 [Ry]
+ ===============================================================================
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  26  26.00000  -0.00000  -0.00000    1  -0.00000   0.00000
+
+     total energy       -2545.61538310
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.797216
+ *******************************************************************************
+
+     rms-error for type  1:  V =  2.9469D-04     B =  4.5005D-04
+     iter.  10     average:  V =  2.9469D-04     B =  4.5005D-04
+
+     execution time for last iteration         0.460 secs
+
+
+ *******************************************************************************
+  10 ERR 0.295E-03 0.450E-03 EF  0.80100  0.00000 D  12.153 M   2.3330   0.0000
+     ETOT      -2545.61538310    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.200
+          lower limit for semi-core states          ESCBOT =  -0.200
+          upper limit for core states               ECTOP  =  -3.038
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+ 
+          Fe     1  26   1  s  1/2    -512.950447     2     2    core     -
+          Fe     1  26   2  s  1/2     -58.888382     2     4    core     -
+          Fe     1  26   2  p  1/2     -50.589321
+          Fe     1  26   2  p  3/2     -49.672036     6    10    core     -
+          Fe     1  26   3  s  1/2      -5.566750     2    12    core     -
+          Fe     1  26   3  p  1/2      -3.150437
+          Fe     1  26   3  p  3/2      -3.037793     6    18    core     -
+
+
+          integrated core charge density for atom type  1: 18.00000000
+          integrated core  spin  density for atom type  1: -0.00001343
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: Fe
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT      -0.00003697 els.
+ E_F CORRECTION      0.00000305
+ NEW FERMI ENERGY    0.80100595   extrapolated     
+
+
+  31 E= 0.8010 0.0000          IT= 1  Fe      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2018   0.6374    0.1305  -0.0130   0.00000  0.00000  -21.49 s   -288.85
+  p    0.8550   0.8129   -0.1334  -0.0734   0.00000  0.00000    0.00 ns     0.88
+  d   11.0669   6.5497    4.3960   2.4208   0.00000  0.00000    0.00 cor -287.97
+ sum  12.1238   8.0000    4.3931   2.3344   0.00000  0.00000  -21.49 v+c -309.45
+dipole moment   1   0.00000   0.00000   0.00000
+ -------------------------------------------------------------------------------
+ TOT  12.1238   8.0000             2.3344            0.00000
+ E_band         5.02663761 [Ry]
+ ===============================================================================
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  26  26.00000   0.00000   0.00000    1   0.00000  -0.00000
+
+     total energy       -2545.61538329
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.797218
+ *******************************************************************************
+
+     rms-error for type  1:  V =  4.7229D-05     B =  2.6012D-05
+     iter.  11     average:  V =  4.7229D-05     B =  2.6012D-05
+
+     execution time for last iteration         0.460 secs
+
+
+ *******************************************************************************
+  11 ERR 0.472E-04 0.260E-04 EF  0.80101  0.00000 D  12.124 M   2.3344   0.0000
+     ETOT      -2545.61538329    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.200
+          lower limit for semi-core states          ESCBOT =  -0.200
+          upper limit for core states               ECTOP  =  -3.038
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+ 
+          Fe     1  26   1  s  1/2    -512.950721     2     2    core     -
+          Fe     1  26   2  s  1/2     -58.888433     2     4    core     -
+          Fe     1  26   2  p  1/2     -50.589392
+          Fe     1  26   2  p  3/2     -49.672106     6    10    core     -
+          Fe     1  26   3  s  1/2      -5.566757     2    12    core     -
+          Fe     1  26   3  p  1/2      -3.150445
+          Fe     1  26   3  p  3/2      -3.037800     6    18    core     -
+
+
+          integrated core charge density for atom type  1: 18.00000000
+          integrated core  spin  density for atom type  1: -0.00001343
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: Fe
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.00000527 els.
+ E_F CORRECTION     -0.00000044
+ NEW FERMI ENERGY    0.80100552   extrapolated     
+
+
+  31 E= 0.8010 0.0000          IT= 1  Fe      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2018   0.6374    0.1305  -0.0130   0.00000  0.00000  -21.49 s   -288.83
+  p    0.8550   0.8129   -0.1334  -0.0734   0.00000  0.00000    0.00 ns     0.88
+  d   11.0658   6.5497    4.3956   2.4207   0.00000  0.00000    0.00 cor -287.95
+ sum  12.1226   8.0000    4.3927   2.3344   0.00000  0.00000  -21.49 v+c -309.44
+dipole moment   1   0.00000   0.00000   0.00000
+ -------------------------------------------------------------------------------
+ TOT  12.1226   8.0000             2.3344            0.00000
+ E_band         5.02663017 [Ry]
+ ===============================================================================
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  26  26.00000  -0.00000   0.00000    1  -0.00000   0.00000
+
+     total energy       -2545.61538330
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.797219
+ *******************************************************************************
+
+     rms-error for type  1:  V =  3.2337D-05     B =  2.4707D-05
+     iter.  12     average:  V =  3.2337D-05     B =  2.4707D-05
+
+     execution time for last iteration         0.464 secs
+
+
+ *******************************************************************************
+  12 ERR 0.323E-04 0.247E-04 EF  0.80101 -0.00000 D  12.123 M   2.3344   0.0000
+     ETOT      -2545.61538330    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.200
+          lower limit for semi-core states          ESCBOT =  -0.200
+          upper limit for core states               ECTOP  =  -3.038
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+ 
+          Fe     1  26   1  s  1/2    -512.950905     2     2    core     -
+          Fe     1  26   2  s  1/2     -58.888469     2     4    core     -
+          Fe     1  26   2  p  1/2     -50.589443
+          Fe     1  26   2  p  3/2     -49.672155     6    10    core     -
+          Fe     1  26   3  s  1/2      -5.566759     2    12    core     -
+          Fe     1  26   3  p  1/2      -3.150448
+          Fe     1  26   3  p  3/2      -3.037803     6    18    core     -
+
+
+          integrated core charge density for atom type  1: 18.00000000
+          integrated core  spin  density for atom type  1: -0.00001343
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: Fe
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.00000684 els.
+ E_F CORRECTION     -0.00000056
+ NEW FERMI ENERGY    0.80100495   extrapolated     
+
+
+  31 E= 0.8010 0.0000          IT= 1  Fe      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2018   0.6374    0.1305  -0.0130   0.00000  0.00000  -21.49 s   -288.84
+  p    0.8550   0.8129   -0.1334  -0.0734   0.00000  0.00000    0.00 ns     0.88
+  d   11.0653   6.5497    4.3949   2.4208   0.00000  0.00000    0.00 cor -287.96
+ sum  12.1221   8.0000    4.3919   2.3344   0.00000  0.00000  -21.49 v+c -309.45
+dipole moment   1   0.00000   0.00000   0.00000
+ -------------------------------------------------------------------------------
+ TOT  12.1221   8.0000             2.3344            0.00000
+ E_band         5.02662630 [Ry]
+ ===============================================================================
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  26  26.00000   0.00000   0.00000    1   0.00000  -0.00000
+
+     total energy       -2545.61538336
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.797219
+ *******************************************************************************
+
+     rms-error for type  1:  V =  2.4062D-05     B =  1.8709D-05
+     iter.  13     average:  V =  2.4062D-05     B =  1.8709D-05
+
+     execution time for last iteration         0.460 secs
+
+
+ *******************************************************************************
+  13 ERR 0.241E-04 0.187E-04 EF  0.80100 -0.00000 D  12.122 M   2.3344   0.0000
+     ETOT      -2545.61538336    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.200
+          lower limit for semi-core states          ESCBOT =  -0.200
+          upper limit for core states               ECTOP  =  -3.038
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+ 
+          Fe     1  26   1  s  1/2    -512.951313     2     2    core     -
+          Fe     1  26   2  s  1/2     -58.888547     2     4    core     -
+          Fe     1  26   2  p  1/2     -50.589552
+          Fe     1  26   2  p  3/2     -49.672262     6    10    core     -
+          Fe     1  26   3  s  1/2      -5.566763     2    12    core     -
+          Fe     1  26   3  p  1/2      -3.150453
+          Fe     1  26   3  p  3/2      -3.037809     6    18    core     -
+
+
+          integrated core charge density for atom type  1: 18.00000000
+          integrated core  spin  density for atom type  1: -0.00001343
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: Fe
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.00001807 els.
+ E_F CORRECTION     -0.00000149
+ NEW FERMI ENERGY    0.80100346   extrapolated     
+
+
+  31 E= 0.8010 0.0000          IT= 1  Fe      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2017   0.6374    0.1304  -0.0130   0.00000  0.00000  -21.49 s   -288.85
+  p    0.8549   0.8129   -0.1335  -0.0734   0.00000  0.00000    0.00 ns     0.88
+  d   11.0637   6.5497    4.3926   2.4208   0.00000  0.00000    0.00 cor -287.97
+ sum  12.1204   8.0000    4.3894   2.3345   0.00000  0.00000  -21.49 v+c -309.46
+dipole moment   1   0.00000   0.00000   0.00000
+ -------------------------------------------------------------------------------
+ TOT  12.1204   8.0000             2.3345            0.00000
+ E_band         5.02661630 [Ry]
+ ===============================================================================
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  26  26.00000   0.00000   0.00000    1   0.00000   0.00000
+
+     total energy       -2545.61538346
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.797219
+ *******************************************************************************
+
+     rms-error for type  1:  V =  4.8037D-06     B =  2.5117D-06
+     iter.  14     average:  V =  4.8037D-06     B =  2.5117D-06
+
+     execution time for last iteration         0.464 secs
+
+
+ *******************************************************************************
+  14 ERR 0.480E-05 0.251E-05 EF  0.80100 -0.00000 D  12.120 M   2.3345   0.0000
+     ETOT      -2545.61538346    SCF - cycle converged !!!!!!!!! 
+ *******************************************************************************
+

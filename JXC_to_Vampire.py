@@ -17,9 +17,10 @@ from pymatgen.io.vasp.inputs import Poscar
 
 
 da_max = 10  # lst val: 2.15
-macrocell_size = np.array([25, 25, 25])
+macrocell_size = np.array([36, 36, 36])
+macrocell_atoms = 20000
 T_min = 0
-T_max = 1400
+T_max = 1800
 T_step = 10
 MC_step = 1000
 
@@ -61,6 +62,146 @@ material[index]:uniaxial-anisotropy-direction = 0.0 , 0.0, 1.0
 '''
 
 
+class Material:
+    def __init__(self, idx, label, spin, element, sites):
+        self.idx = idx
+        self.label = label
+        self.spin = spin
+        self.element = element
+        self.sites = sites
+
+    def to_mat_block(self):
+        if abs(self.spin) < 0.15:
+            spin_str = 'non-magnetic=keep'
+        else:
+            spin_str = f'spin-moment = {self.spin: .6f}'
+        return (
+            f"material[{self.idx}]\n"
+            f"material-name = {self.label}\n"
+            f"element = {self.element}\n"
+            f"{spin_str}\n"
+            f"number-of-sites = {self.sites}\n"
+        )
+
+
+class Materials:
+    def __init__(self, path: Path):
+        if isinstance(path, str):
+            path = Path(path)
+        self._materials = []
+        scfs = [i for i in path.glob('*SCF.out')]
+        if len(scfs) > 1:
+            raise Warning('Too many scf.out files, got only first')
+        scf = scfs[0].read_text().split('\n')
+
+        flag = False
+        flag_mat = False
+        table_start = None
+        table_end = None
+        for i, line in enumerate(scf):
+            if 'type TXTT   NL VAL COR mesh    RMT     RWS   NAT  CONC  on sites' in line and table_start is None:
+                table_start = i
+            if table_start is not None and table_end is None and len(line.split()) < 5:
+                table_end = i
+                break
+
+        for i in range(len(scf) - 1, 0, -1):
+            if 'results extrapolated to corrected Fermi energy:' in scf[i]:
+                start_mags = i
+                break
+
+        for i in range(start_mags, len(scf), 1):
+            line = scf[i]
+            if flag and 'sum' in line:
+                magmom = abs(float(line.split()[4]))
+                flag = False
+                flag_mat = True
+
+            if 'DOS      NOS     P_spin   m_spin    P_orb    m_orb     B_val      B_core' in line:
+                flag = True
+                it = int(scf[i - 1].split()[-2])
+                name = scf[i - 1].split()[-1]
+                element = name.split('_')[0]
+
+            if flag_mat:
+                for j in range(table_start, table_end):
+                    if name in scf[j]:
+                        sites = [int(i) for i in scf[j].split()[10:]]
+                        break
+
+                self.add(Material(idx=it,
+                                  label=name,
+                                  spin=magmom,
+                                  element=element,
+                                  sites=sites))
+                flag_mat = False
+
+    def __repr__(self):
+        out = ['Materials object:']
+        for mat in self._materials:
+            out.append(f'idx: {mat.idx}, label: {mat.label}, spin: {mat.spin}, el: {mat.element}, sites: {mat.sites}')
+        return '\n'.join(out)
+
+    def __str__(self):
+        out = ['Materials object:']
+        for mat in self._materials:
+            out.append(f'idx: {mat.idx}, label: {mat.label}, spin: {mat.spin}, el: {mat.element}, sites: {mat.sites}')
+        return '\n'.join(out)
+
+    def parse_scf_out(self, path: Path):
+
+        scfs = [i for i in path.glob('*SCF.out')]
+        if len(scfs) > 1:
+            raise Warning('Too many scf.out files, got only first')
+        scf = scfs[0].read_text().split('\n')
+
+        flag = False
+        flag_mat = False
+        table_start = None
+        table_end = None
+        for i, line in enumerate(scf):
+            if 'type TXTT   NL VAL COR mesh    RMT     RWS   NAT  CONC  on sites' in line:
+                table_start = i
+            if table_start is not None and table_end is None and len(line.split()) < 5:
+                table_end = i
+
+            if flag and 'sum' in line:
+                magmom = float(line.split()[4])
+                flag = False
+                flag_mat = True
+
+            if 'DOS      NOS     P_spin   m_spin    P_orb    m_orb     B_val      B_core' in line:
+                flag = True
+                it = int(scf[i - 1].split()[-2])
+                name = scf[i - 1].split()[-1]
+                element = name.split('_')[0]
+
+            if flag_mat:
+                for j in range(table_start, table_end):
+                    if name in scf[j]:
+                        sites = scf[j].split()[10:]
+                        break
+
+                self.add(Material(idx=it,
+                                  label=name,
+                                  spin=magmom,
+                                  element=element,
+                                  sites=sites))
+
+    def add(self, material: Material):
+        self._materials.append(material)
+
+    def __iter__(self):
+        return iter(self._materials)
+
+    def __len__(self):
+        return len(self._materials)
+
+    # --- генерация .mat ---
+    def to_mat(self):
+        return "\n".join(m.to_mat_block() for m in self._materials)
+
+
 #### Считываем тип атомов ####
 def read_atoms(path='*JXC.out'):
     '''
@@ -99,7 +240,7 @@ def read_atoms(path='*JXC.out'):
 
 def get_ba_ca(path: Path):
     sys_path = [i for i in path.parent.glob('*.sys')]
-    print(path)
+    # print(path)
     if not sys_path:
         sys_path = [i for i in path.parents[1].glob('*.sys')]
         if not sys_path:
@@ -122,15 +263,13 @@ def get_ba_ca(path: Path):
     # return 'ba, ca didn\'t define'
 
 
-
 #### Считывание файла JXC.out ####
 def read_cell(path='*JXC.out'):
     '''
-
     :param path:
     :return: tuple of basis and coords
     '''
-    print(path)
+    # print(path)
     f = open(path, "r")
     lines = f.readlines()
     f.close()
@@ -169,54 +308,98 @@ def read_cell(path='*JXC.out'):
     # species = [i.split('_')[0] for i in read_atoms(path)[0]]
     # print(np.round(primitive_vectors * a_lat * 0.52917721090, 5), np.round(basis, 3))
     # exit()
-    lens = np.array([a_lat, ba * a_lat, ca * a_lat]) * 0.52917721090
+
+    a = a_lat * (primitive_vectors[0, 0]**2 + primitive_vectors[0, 1]**2 + primitive_vectors[0, 2]**2)**0.5
+    b = a_lat * (primitive_vectors[1, 0]**2 + primitive_vectors[1, 1]**2 + primitive_vectors[1, 2]**2)**0.5 * ba
+    c = a_lat * (primitive_vectors[2, 0]**2 + primitive_vectors[2, 1]**2 + primitive_vectors[2, 2]**2)**0.5 * ca
+    lens = np.array([a, b, c]) * 0.52917721090
     return np.round(primitive_vectors, 5), np.round(basis, 3), lens
     # return np.round(primitive_vectors * a_lat * 0.52917721090, 5), np.round(basis, 3)
 
 
 #### Считываем обменные интегралы ####
-def read_J(d_a, dr_max_count: int = 100, path='*JXC.out'):
-    with open(path, "r", encoding='utf-8') as f:
-        lines = f.read().split('\n')
+def read_J(d_a, dr_max_count: int = 100, path: Path = '*JXC.out'):
+    if isinstance(path, str):
+        path = Path(path)
+    temp = path.read_text().split('\n')
+
+    if 'VERSION' in temp[13]:
+        kkr_ver = temp[13].split()[3]
+
+    if kkr_ver == '8.6.0':
+        line_length = 13
+        dr_pos = 10
+        jij_pos = 12
+        n1_pos = 4
+        flag_line = 'IT   IQ   JT   JQ    N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [meV]  J_ij [eV]'
+    elif kkr_ver == '7.7.3':
+        line_length = 11
+        dr_pos = 8
+        jij_pos = 10
+        n1_pos = 2
+        flag_line = 'ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]'
+    elif kkr_ver == '6.3.1':
+        line_length = 11
+        dr_pos = 8
+        jij_pos = 10
+        n1_pos = 2
+        flag_line = 'ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]'
+    else:
+        raise RuntimeError('Unsupportable version of SPR-KKR, try to set other version')
 
     J = []
     dr_count = 0
     prev = 0
     # curr = 0
-    for i in range(len(lines)):
-        inp = lines[i].split()
+    if dr_max_count == -1:
+        limit = False
+    else:
+        limit = True
+    for i in range(len(temp)):
+        inp = temp[i].split()
 
         if len(inp) == 0:
             continue
 
         if inp[0] == 'IQ' and inp[6] == 'JQ' and len(inp) == 12:
-            IQ = float(inp[5])
-            JQ = float(inp[11])
-            inp_J = lines[i + 3].split()
-            if float(inp_J[8]) < d_a and abs(float(inp_J[10]) * 1000) > 0.01:
-                curr = float(inp_J[8])
+            IT = float(inp[5])
+            JT = float(inp[11])
+
+            if IT == 1 and JT == 1:
+                print('exchange 0-0 exist')
+            inp_J = temp[i + 3].split()
+            if float(inp_J[dr_pos]) < d_a and abs(float(inp_J[jij_pos]) * 1000) > 1e-2:
+                curr = float(inp_J[dr_pos])
                 if abs(prev - curr) > 0.001:
                     # print(curr)
                     dr_count += 1
 
-                if dr_count == dr_max_count + 1:
+                if dr_count == dr_max_count + 1 and limit:
                     break
                     # pass
-
-                J.append([IQ - 1, JQ - 1, float(inp_J[2]), float(inp_J[3]), float(inp_J[4]),
-                       float(inp_J[10]) * constants.e * 2])
-                J.append([JQ - 1, IQ - 1, -float(inp_J[2]), -float(inp_J[3]), -float(inp_J[4]),
-                       float(inp_J[10]) * constants.e * 2])
+                # print(constants.e)
+                # exit()
+                J.append([IT - 1, JT - 1,
+                          float(inp_J[n1_pos]),
+                          float(inp_J[n1_pos + 1]),
+                          float(inp_J[n1_pos + 2]),
+                          float(inp_J[jij_pos]) * constants.e * 2])
+                J.append([JT - 1, IT - 1,
+                         -float(inp_J[n1_pos]),
+                         -float(inp_J[n1_pos + 1]),
+                         -float(inp_J[n1_pos + 2]),
+                          float(inp_J[jij_pos]) * constants.e * 2])
                 prev = curr
                 # print(curr, float(inp_J[10]))
-    print(dr_count)
+    # print(dr_count)
     J = np.array(J)
 
     sorted_idx = np.lexsort(J.T)
     sorted_data = J[sorted_idx, :]
+    # sorted_data = J
     row_mask = np.append([True], np.any(np.diff(sorted_data, axis=0), 1))
     out = sorted_data[row_mask]
-    out = sorted(out, key=lambda x: (x[0], x[1]))
+    # out = sorted(out, key=lambda x: (x[0], x[1]))
     J = np.array(out)
 
     return J
@@ -250,7 +433,12 @@ def read_magmom(num_atoms, composition: list, path='*SCF.out'):
     return magmom
 
 
-def write_ucf_and_input(path: str, dr_max: int):
+def get_macrosize(cell: np.ndarray, required_n_atoms: int = macrocell_atoms):
+    size = round((required_n_atoms / cell.shape[0]) ** (1/3))
+    return size, size, size
+
+
+def write_ucf_and_input(path: str, dr_max: int, materials: Materials):
     with open(f'{path}/vampire.UCF', "w") as file:
         file.write('# Unit cell size (Angstrom):\n')
 
@@ -267,11 +455,16 @@ def write_ucf_and_input(path: str, dr_max: int):
         #                  [x_size, y_size, z_size]])
 
         file.write(f'{x_size} {y_size} {z_size}\n')
+        print(f"{path.split('/')[-3]}_{path.split('/')[-2]}: {x_size} {y_size} {z_size}")
+
         np.savetxt(file, cell[0], fmt='%6f', header='Unit cell lattice vectors:')
         file.write('# Atoms\n')
-        file.write(f'{cell[1].shape[0]} {cell[1].shape[0]}\n')  # Число атомов в элементарной ячейке, число материалов
+        file.write(f'{cell[1].shape[0]} {len(materials)}\n')  # Число атомов в элементарной ячейке, число материалов
         for i in range(cell[1].shape[0]):
-            file.write(f'{i} {cell[1][i, 0]} {cell[1][i, 1]} {cell[1][i, 2]} {i}\n')
+            for mat in materials:
+                if i+1 in mat.sites:
+                    num_material = mat.idx - 1
+            file.write(f'{i} {cell[1][i, 0]} {cell[1][i, 1]} {cell[1][i, 2]} {num_material}\n')
         file.write('# Interactions\n')
         Jij = read_J(da_max, dr_max, f'{path}/*JXC.out')
         interactions = np.column_stack((np.arange(0, Jij.shape[0]), Jij))
@@ -304,9 +497,16 @@ def write_ucf_and_input(path: str, dr_max: int):
         file.write(f'dimensions:unit-cell-size-y = {y_size} !A\n')
         file.write(f'dimensions:unit-cell-size-z = {z_size} !A\n')
 
+        macrocell_size = get_macrosize(cell[1])
+
         file.write(f'dimensions:system-size-x = {0.1 * x_size * macrocell_size[0]} !nm\n')
         file.write(f'dimensions:system-size-y = {0.1 * y_size * macrocell_size[1]} !nm\n')
         file.write(f'dimensions:system-size-z = {0.1 * z_size * macrocell_size[2]} !nm\n')
+
+        file.write('#------------------------------------------\n')
+        file.write('# Exchange parameter:\n')
+        file.write('#------------------------------------------\n')
+        file.write('#exchange:ab-initio = true\n')
 
         file.write('#------------------------------------------\n')
         file.write('# Simulation attributes:\n')
@@ -315,7 +515,7 @@ def write_ucf_and_input(path: str, dr_max: int):
         file.write(f'sim:maximum-temperature = {T_max}\n')
         file.write(f'sim:temperature-increment = {T_step}\n')
 
-        file.write(f'sim:equilibration-time-steps = {MC_step / 10}\n')
+        file.write(f'sim:equilibration-time-steps = {MC_step // 10}\n')
         file.write(f'sim:loop-time-steps = {MC_step}\n')
         file.write('sim:time-steps-increment = 1\n')
         file.write('#------------------------------------------\n')
@@ -331,57 +531,27 @@ def write_ucf_and_input(path: str, dr_max: int):
         file.write('#output:material-magnetisation\n')
         file.write('output:magnetisation-length\n')
         file.write('output:mean-total-energy\n')
-        # file.write('exchange:ab-initio = True\n')
 
 
-def generate_vampire_inputs(wd: str):
-    alloys = [i for i in os.listdir(f'{wd}') if os.path.isdir(f'{wd}/{i}')]
-    for alloy in alloys:
-        groups = [i for i in os.listdir(f'{wd}/{alloy}') if os.path.isdir(f'{wd}/{alloy}/{i}')]
-        for group in groups:
-            if alloy == 'Ta4Ti8Mo4' and group == '216':
-                continue
-            orders = [i for i in os.listdir(f'{wd}/{alloy}/{group}') if os.path.isdir(f'{wd}/{alloy}/{group}/{i}')]
-            for order in orders:
-                path = f'{wd}/{alloy}/{group}/{order}'
-                # if os.path.isfile(f'{path}/vampire/output'):
-                #     continue
+def write_materials(materials: Materials):
 
-                if not os.path.isdir(f'{path}/vampire'):
-                    os.mkdir(f'{path}/vampire')
+    mat_file = [f'material:num-materials = {len(materials)}']
+    for mat in materials:
+        mat_file.append(f'#---------------------------------------------------')
+        mat_file.append(f'# Material {mat.idx}')
+        mat_file.append(f'#---------------------------------------------------')
+        mat_file.append(f'material[{mat.idx}]:material-name={mat.label}')
+        mat_file.append(f'material[{mat.idx}]:damping-constant=1.0')
+        if abs(mat.spin) < 0.15:
+            mat_file.append(f'material[{mat.idx}]:non-magnetic=keep')
+        else:
+            mat_file.append(f'material[{mat.idx}]:atomic-spin-moment={mat.spin} !muB')
+        mat_file.append(f'material[{mat.idx}]:uniaxial-anisotropy-constant=0.0')
+        mat_file.append(f'material[{mat.idx}]:material-element={mat.element}')
+        mat_file.append(f'material[{mat.idx}]:initial-spin-direction = 0.0,0.0,1.0')
+        mat_file.append(f'material[{mat.idx}]:uniaxial-anisotropy-direction = 0.0 , 0.0, 1.0')
 
-                for file in ['*JXC.out', '*SCF.out']:
-                    src = f'{path}/{file}'
-                    dst = f'{path}/vampire/{file}'
-                    shutil.copy2(src, dst)
-                path = f'{wd}/{alloy}/{group}/{order}/vampire'
-                shutil.copy2('/home/buche/VaspTesting/Danil/magnetocaloric_nn/vampire/vampire.mat',
-                             f'{path}/vampire.mat')
-                # print(len(read_atoms(f'{path}/*JXC.out')[0]))
-                # print(read_atoms(f'{path}/*JXC.out')[0])
-                # print(read_atoms(f'{path}/*JXC.out')[1])
-                # print(read_magmom(num, f'{path}/*SCF.out'))
-                print(path)
-                labels = read_atoms(f'{path}/*JXC.out')[0]
-                rwss = read_atoms(f'{path}/*JXC.out')[0]
-                num = len(read_atoms(f'{path}/*JXC.out')[0])
-                mags = read_magmom(num, labels, f'{path}/*SCF.out')
-                mags = [abs(float(mag)) for mag in mags]
-                # print(mags)
-
-                with open(f'{path}/vampire.mat', 'w') as f:
-                    f.write(f'material:num-materials = {num}\n')
-                    for i in range(num):
-                        # mat =  ''
-
-                        mat = mat_sample.format(i + 1, labels[i], mags[i], labels[i].split('_')[0]).replace('[index]', f'[{i+1}]')
-                        if mags[i] < 0.1:
-                            mat = mat.replace(f'material[{i+1}]:atomic-spin-moment', f'# material[{i+1}]:atomic-spin-moment')
-
-                        f.write(mat)
-                # for i in range(num):
-                #     print(mat_sample.format(i+1, labels[i], mags[i], labels[i].split('_')[0]), end='')
-                write_ucf_and_input(path)
+    return '\n'.join(mat_file)
 
 
 def generate_vampire_inputs_recursive(root_path: Path, depth: int, dr_max: int):
@@ -395,9 +565,11 @@ def generate_vampire_inputs_recursive(root_path: Path, depth: int, dr_max: int):
     # depth = 2
 
     for system_path in root_path.rglob('*JXC.out'):
+        if 'Al/L21' not in system_path.as_posix():
+            continue
         if len(system_path.relative_to(root_path).parts) != depth + 1:
             continue
-        print(system_path)
+        # print(system_path)
         path = system_path.parent
         # if dr_max:
         #     path = path / dr_max
@@ -406,8 +578,8 @@ def generate_vampire_inputs_recursive(root_path: Path, depth: int, dr_max: int):
         #     shutil.rmtree(f'{path}/vampire')
         #
         # continue
-        # vamp_dir_name = 'vampire'
-        vamp_dir_name = str(dr_max)
+        vamp_dir_name = 'vampire'
+        # vamp_dir_name = str(dr_max)
         if not (path / vamp_dir_name).exists():
             (path / vamp_dir_name).mkdir()
 
@@ -416,10 +588,10 @@ def generate_vampire_inputs_recursive(root_path: Path, depth: int, dr_max: int):
             dst = path / vamp_dir_name / file
             shutil.copy2(src, dst)
         path = path / vamp_dir_name
-        shutil.copy2('/home/buche/VaspTesting/Danil/magnetocaloric_nn/vampire/vampire.mat',
-                     f'{path}/vampire.mat')
+        # shutil.copy2('/home/buche/VaspTesting/Danil/magnetocaloric_nn/vampire/vampire.mat',
+        #              f'{path}/vampire.mat')
 
-        print(path)
+        # print(path)
         labels = read_atoms(f'{path}/*JXC.out')[0]
         rwss = read_atoms(f'{path}/*JXC.out')[0]
         num = len(read_atoms(f'{path}/*JXC.out')[0])
@@ -427,77 +599,20 @@ def generate_vampire_inputs_recursive(root_path: Path, depth: int, dr_max: int):
         mags = [abs(float(mag)) for mag in mags]
         # print(mags)
 
-        with open(f'{path}/vampire.mat', 'w') as f:
-            f.write(f'material:num-materials = {num}\n')
-            for i in range(num):
-                # mat =  ''
-
-                mat = mat_sample.format(i + 1, labels[i], mags[i], labels[i].split('_')[0]).replace('[index]',
-                                                                                                    f'[{i + 1}]')
-                if mags[i] < 0.1:
-                    mat = mat.replace(f'material[{i + 1}]:atomic-spin-moment',
-                                      f'# material[{i + 1}]:atomic-spin-moment')
-
-                f.write(mat)
-        # for i in range(num):
-        #     print(mat_sample.format(i+1, labels[i], mags[i], labels[i].split('_')[0]), end='')
-        write_ucf_and_input(path.as_posix(), dr_max)
-
-
-def generate_run(wd: str):
-    comms = ''
-    alloys = [i for i in os.listdir(f'{wd}') if os.path.isdir(f'{wd}/{i}')]
-    for alloy in alloys:
-        groups = [i for i in os.listdir(f'{wd}/{alloy}') if os.path.isdir(f'{wd}/{alloy}/{i}')]
-        for group in groups:
-            if alloy == 'Ta4Ti8Mo4' and group == '216':
-                continue
-            orders = [i for i in os.listdir(f'{wd}/{alloy}/{group}') if os.path.isdir(f'{wd}/{alloy}/{group}/{i}')]
-            for order in orders:
-                path = f'{wd}{alloy}/{group}/{order}/vampire'
-                comms += command_vampire.replace('PATH_TO_VAMP_INP', f'{path}') + '\n'
-
-    with open(f'{wd}/vampire_qsub', 'w') as f:
-        f.write(vampire_run.replace('COMMANDS', comms))
-    # print(vampire_run.replace('COMMANDS', comms))
-
-
-def generate_run_recursively(root_path: Path):
-    commands = ''
-    for system_path in root_path.rglob('*.UCF'):
-        path = system_path.parent.as_posix()
-        commands += command_vampire.replace('PATH_TO_VAMP_INP', f'{path}') + '\n'
-
-    (root_path / 'vampire_qsub').write_text(vampire_run.replace('COMMANDS', commands))
-
-
-def get_curve(wd: Path):
-    alloys = [i for i in os.listdir(f'{wd}') if os.path.isdir(f'{wd}/{i}')]
-    for alloy in alloys:
-        groups = [i for i in os.listdir(f'{wd}/{alloy}') if os.path.isdir(f'{wd}/{alloy}/{i}')]
-        for group in groups:
-            if alloy == 'Ta4Ti8Mo4' and group == '216':
-                continue
-            orders = [i for i in os.listdir(f'{wd}/{alloy}/{group}') if os.path.isdir(f'{wd}/{alloy}/{group}/{i}')]
-            for order in orders:
-                path = f'{wd}/{alloy}/{group}/{order}/vampire'
-                if not os.path.isfile(f'{path}/output'):
-                    continue
-                with open(f'{path}/output') as f:
-                    temp = f.readlines()
-                    flag = False
-                    curve = []
-                    for line in temp:
-                        if line[0] == '0':
-                            flag = True
-                            curve.append([float(i) for i in line.split()[:2]])
-                        if flag:
-                            curve.append([float(i) for i in line.split()[:2]])
-                    curve = np.array(curve)
-                    print(curve)
+        materials = Materials(path)
+        # print(materials)
+        (path / 'vampire.mat').write_text(write_materials(materials))
+        # print(write_materials(materials))
+        write_ucf_and_input(path.as_posix(), dr_max, materials)
 
 
 def get_curve_recursively(root: Path):
+    '''
+    get Magnetisation against temperature curve
+    from certain folder recursively (look for "output" files
+    :param root: root folder
+    :return: dict[full_path_str, np.ndarray curve]
+    '''
     curves = {}
     for path in root.rglob('output'):
         if not check_status_vampire(path.parent):
@@ -509,6 +624,8 @@ def get_curve_recursively(root: Path):
         flag = False
         curve = []
         for line in out[:-1]:
+            if len(line.split()) <= 2:
+                continue
             if line[0] == '0':
                 flag = True
                 curve.append([float(i) for i in line.split()[:2]])
@@ -516,7 +633,8 @@ def get_curve_recursively(root: Path):
                 curve.append([float(i) for i in line.split()[:2]])
         curves[path.parent.as_posix()] = np.array(curve)
         # print(curve)
-    return dict(sorted(curves.items(), key=lambda item: int(item[0].split('/')[-1])))
+    # return dict(sorted(curves.items(), key=lambda item: int(item[0].split('/')[-1])))
+    return curves
 
 
 import numpy as np
@@ -526,336 +644,15 @@ from scipy.signal import savgol_filter
 from scipy.interpolate import make_interp_spline, PchipInterpolator
 
 
-# ---------------------------------------------------------------------------
-# Критический закон намагниченности: M = A * (1 - T/Tc)^beta
-# ---------------------------------------------------------------------------
-def critical_law(T, A, Tc, beta):
-    """
-    Критический закон с защитой от численных проблем.
-    Возвращает 0 при T >= Tc (физически корректно).
-    """
-    ratio = np.asarray(1.0 - T / Tc, dtype=float)
-    result = np.where(ratio > 0, A * ratio ** beta, 0.0)
-    return result
-
-
-# ---------------------------------------------------------------------------
-# Основная функция
-# ---------------------------------------------------------------------------
-def curie_critical_fit(data: np.ndarray, save_path: str):
-    """
-    Определяет температуру Кюри (Tc) и критический индекс beta
-    методом аппроксимации кривой намагниченности критическим законом
-    M = A*(1 - T/Tc)^beta. FROM CLAUDE.AI
-
-    Параметры
-    ----------
-    data      : np.ndarray, shape (N, 2) — столбцы [T (K), M (норм.)]
-    save_path : str — путь для сохранения графика
-
-    Возвращает
-    ----------
-    (Tc, beta) : tuple[float, float] | (None, None) при неудаче
-    """
-
-    # -----------------------------------------------------------------------
-    # 1. Валидация входных данных
-    # -----------------------------------------------------------------------
-    if data is None or len(data) < 10:
-        warnings.warn(
-            "curie_critical_fit: слишком мало точек данных (< 10). "
-            "Аппроксимация невозможна.",
-            UserWarning,
-        )
-        return None, None
-
-    # -----------------------------------------------------------------------
-    # 2. Удаление дубликатов по температуре, сортировка
-    # -----------------------------------------------------------------------
-    T_unique, indices = np.unique(data[:, 0], return_index=True)
-    M_unique = data[:, 1][indices]
-
-    sort_idx = np.argsort(T_unique)
-    T = T_unique[sort_idx]
-    M = np.abs(M_unique[sort_idx])  # намагниченность — неотрицательна
-
-    # -----------------------------------------------------------------------
-    # 3. Сглаживание Savitzky-Golay
-    # -----------------------------------------------------------------------
-    n = len(T)
-    # window_length должна быть нечётной и <= n; polyorder < window_length
-    window = min(21, n if n % 2 == 1 else n - 1)
-    if window < 5:
-        warnings.warn(
-            "curie_critical_fit: слишком мало уникальных точек для сглаживания. "
-            "Выход без аппроксимации.",
-            UserWarning,
-        )
-        return None, None
-
-    poly = min(3, window - 2)
-    M_smooth = savgol_filter(M, window_length=window, polyorder=poly)
-    M_smooth = np.clip(M_smooth, 0, None)  # сглаживание может дать <0 у края
-
-    # -----------------------------------------------------------------------
-    # 4. Первичная оценка Tc по максимуму |dM/dT|
-    # -----------------------------------------------------------------------
-    dT = np.gradient(T)
-    dT = np.where(np.abs(dT) < 1e-12, 1e-12, dT)  # защита от деления на 0
-    dM_dT = np.gradient(M_smooth) / dT
-
-    Tc_est = float(T[np.argmax(np.abs(dM_dT))])
-
-    # Проверим, что оценка не на краю диапазона (там производная шумит)
-    T_range = T[-1] - T[0]
-    edge_fraction = 0.05
-    if (Tc_est < T[0] + edge_fraction * T_range or
-            Tc_est > T[-1] - edge_fraction * T_range):
-        # Запасной вариант: берём точку наибольшего падения M в средней части
-        mid_mask = (T > T[0] + 0.1 * T_range) & (T < T[-1] - 0.1 * T_range)
-        if mid_mask.sum() >= 5:
-            Tc_est = float(T[mid_mask][np.argmax(np.abs(dM_dT[mid_mask]))])
-        else:
-            # Последний резерв — медиана диапазона
-            Tc_est = float(np.median(T))
-
-    # -----------------------------------------------------------------------
-    # 5. Отбор точек для фита: T < Tc_est и M > порога
-    # -----------------------------------------------------------------------
-    # Адаптивный порог: 3 % от максимальной намагниченности
-    M_threshold = 0.03 * float(M_smooth.max())
-    mask = (T < Tc_est) & (M_smooth > M_threshold)
-
-    T_fit = T[mask]
-    M_fit = M_smooth[mask]
-
-    MIN_FIT_POINTS = 8
-    if len(T_fit) < MIN_FIT_POINTS:
-        warnings.warn(
-            f"curie_critical_fit: точек для аппроксимации ниже Tc меньше {MIN_FIT_POINTS} "
-            f"(найдено {len(T_fit)}). Возвращаем оценку по производной Tc ≈ {Tc_est:.1f} K.",
-            UserWarning,
-        )
-        return Tc_est, None
-
-    # -----------------------------------------------------------------------
-    # 6. Параметры аппроксимации
-    # -----------------------------------------------------------------------
-    A0 = float(M_fit.max())
-    beta0 = 0.33  # теоретическое значение для модели Гейзенберга 3D
-
-    # Tc должна быть строго выше последней точки фита, но не слишком далеко
-    T_fit_max = float(T_fit.max())
-    T_step = float(np.median(np.diff(T)))  # типичный шаг по температуре
-
-    Tc0 = Tc_est  # начальное приближение — наша оценка
-
-    # Границы: Tc между последней точкой фита и концом всего диапазона + запас
-    Tc_lo = T_fit_max + T_step  # чуть выше последней точки фита
-    Tc_hi = T[-1] + 0.20 * T_range  # не дальше 20 % за правый край
-    Tc_hi = max(Tc_hi, Tc_lo + 1.0)  # хотя бы 1 K ширина
-
-    # Если наше начальное Tc0 вне границ — поправим
-    Tc0 = float(np.clip(Tc0, Tc_lo + 0.1, Tc_hi - 0.1))
-
-    lower_bounds = [0.0, Tc_lo, 0.10]
-    upper_bounds = [max(A0 * 2, 1.0), Tc_hi, 0.60]
-
-    # -----------------------------------------------------------------------
-    # 7. Аппроксимация (несколько попыток со случайными возмущениями)
-    # -----------------------------------------------------------------------
-    popt = None
-    pcov = None
-    best_residual = np.inf
-
-    # Набор стартовых значений beta для устойчивости
-    beta_trials = [0.33, 0.36, 0.25, 0.50]
-
-    rng = np.random.default_rng(42)
-    for b0 in beta_trials:
-        for _ in range(5):
-            # Небольшие случайные возмущения начальных параметров
-            A_try = A0 * rng.uniform(0.9, 1.1)
-            Tc_try = Tc0 + rng.uniform(-T_step, T_step)
-            Tc_try = float(np.clip(Tc_try, Tc_lo + 0.1, Tc_hi - 0.1))
-            b_try = b0 * rng.uniform(0.9, 1.1)
-            b_try = float(np.clip(b_try, 0.11, 0.59))
-
-            try:
-                p, cov = curve_fit(
-                    critical_law,
-                    T_fit,
-                    M_fit,
-                    p0=[A_try, Tc_try, b_try],
-                    bounds=(lower_bounds, upper_bounds),
-                    maxfev=50_000,
-                    method="trf",
-                )
-                resid = float(np.sum((critical_law(T_fit, *p) - M_fit) ** 2))
-                if resid < best_residual:
-                    best_residual = resid
-                    popt = p
-                    pcov = cov
-            except RuntimeError:
-                continue
-
-    if popt is None:
-        warnings.warn(
-            "curie_critical_fit: curve_fit не сошёлся ни при одной попытке. "
-            f"Возвращаем оценку по производной Tc ≈ {Tc_est:.1f} K.",
-            UserWarning,
-        )
-        return Tc_est, None
-
-    A, Tc, beta = popt
-
-    # Оценка погрешностей
-    try:
-        perr = np.sqrt(np.diag(pcov))
-        Tc_err, beta_err = perr[1], perr[2]
-    except Exception:
-        Tc_err = beta_err = float("nan")
-
-    tc_mfa = get_tc_mfa(data)
-
-    # -----------------------------------------------------------------------
-    # 8. Вывод результатов
-    # -----------------------------------------------------------------------
-    print(f"Tc   (критический фит) = {Tc:.2f} ± {Tc_err:.2f} K")
-    print(f"Tc_MFA                 = {tc_mfa:.2f} K")
-    print(f"beta                   = {beta:.4f} ± {beta_err:.4f}")
-    print(f"A                      = {A:.4f}")
-    print(f"(Гейзенберг 3D теория: beta ≈ 0.365)")
-
-    # -----------------------------------------------------------------------
-    # 9. Построение графика
-    # -----------------------------------------------------------------------
-    fig, ax = plt.subplots(figsize=(9, 6))
-
-    ax.plot(T, M, color="steelblue", alpha=0.5, lw=1, label="Исходные данные")
-    ax.plot(T, M_smooth, color="steelblue", lw=2, ls="--", label="Сглаженные данные")
-    ax.scatter(T_fit, M_fit, s=15, color="steelblue", alpha=0.6, zorder=3,
-               label=f"Точки фита ({len(T_fit)} шт.)")
-
-    T_model = np.linspace(T_fit.min(), Tc * 0.9999, 500)
-    M_model = critical_law(T_model, A, Tc, beta)
-    ax.plot(T_model, M_model, color="crimson", lw=2.5,
-            label=rf"Критический фит: $\beta={beta:.3f}$")
-
-    ax.axvline(Tc, color="crimson", ls=":", lw=1.5)
-    ax.scatter([Tc], [0], color="crimson", zorder=6, s=80)
-    ax.annotate(
-        f"$T_C = {Tc:.1f}$ K",
-        xy=(Tc, 0),
-        xytext=(12, 16),
-        textcoords="offset points",
-        fontsize=11,
-        color="crimson",
-        arrowprops=dict(arrowstyle="->", color="crimson", lw=1.2),
-    )
-
-    fig.text(0.65, 0.7, r'$T_C^{MFA}$ = ' + f'{tc_mfa:.2f}' + ' K', backgroundcolor='#C8C8C8')
-
-    ax.set_xlabel("Температура (K)", fontsize=12)
-    ax.set_ylabel("Намагниченность (норм.)", fontsize=12)
-    ax.set_title("Температура Кюри — критическая аппроксимация\n"
-                 rf"$M = A\,(1 - T/T_C)^{{\beta}}$", fontsize=13)
-    ax.legend(fontsize=10)
-    ax.grid(True, alpha=0.4)
-    ax.set_ylim(bottom=-0.02)
-
-    fig.tight_layout()
-    fig.savefig(save_path, dpi=300)
-    plt.close(fig)
-    print(f"График сохранён: {save_path}")
-    print('-'*80)
-
-    return Tc, beta
-
-
-def curie_max_derivative(data, save_path, plot: bool):
-    # Удаляем дубликаты температур
-    T_unique, indices = np.unique(data[:,0], return_index=True)
-    M_unique = data[:,1][indices]
-
-    # Сортировка
-    sort_idx = np.argsort(T_unique)
-    T = T_unique[sort_idx]
-    M = M_unique[sort_idx]
-
-    # Сглаживание
-    window = 21 if len(M) > 21 else len(M) - 1
-    if window % 2 == 0:
-        window -= 1
-
-    M_smooth = savgol_filter(M, window_length=window, polyorder=3)
-
-    # Производная
-    dM_dT = np.gradient(M_smooth) / np.gradient(T)
-
-    # Игнорируем крайние 5% точек
-    cut = int(0.05 * len(T))
-    idx_tc = np.argmax(np.abs(dM_dT[cut:-cut])) + cut
-    Tc = T[idx_tc]
-
-    if not plot:
-        return Tc
-    print(f"Tc (max |dM/dT|) = {Tc:.2f} K")
-
-    # График — используем явные объекты fig и ax
-    fig, ax = plt.subplots(figsize=(8, 6))
-
-    ax.plot(T, M, label="Исходные данные")
-    ax.plot(T, M_smooth, '--', label="Сглаженные данные")
-    ax.scatter(Tc, M_smooth[idx_tc], color='red', zorder=5)
-    ax.annotate(
-        f"Tc = {Tc:.1f} K",
-        (Tc, M_smooth[idx_tc]),
-        xytext=(15, 10),
-        textcoords="offset points"
-    )
-
-    ax.set_xlabel("Температура (K)")
-    ax.set_ylabel("Намагниченность")
-    ax.set_title(f"Температура Кюри (максимум |dM/dT|), {save_path.split('/')[-2]}")
-    ax.legend()
-    ax.grid(True)
-
-    fig.tight_layout()
-
-    # Сначала сохраняем, потом показываем
-    fig.savefig(save_path, dpi=300)
-    plt.show()
-    plt.close(fig)
-
-    return Tc
-
-
-def curie_by_critical_index():
-    pass
-
-
-def get_mean_field_Tc(wd: Path):
-    # нерабочий код, тк везде jxc.ou один и Tc одинакова
-    Tc = []
-    for i in wd.rglob('*JXC.out'):
-        text = i.read_text().split('\n')[-1::-1]
-        for line in text:
-            if 'Curie temperature within mean field approximation' in line:
-                Tc.append([int(i.as_posix().split('/')[-1]),
-                           float(line.strip().split()[-2])])
-                break
-
-    Tc = np.array(Tc).sort(axis=0)
-    return Tc
-
-
 def check_status_vampire(p: Path):
-    temp = (p / 'log').read_text()
-    if 'Simulation ended gracefully.' in temp:
-        return True
-    else:
-        return False
+    path = (p / 'log')
+    if path.exists():
+        temp = path.read_text()
+        if 'Simulation ended gracefully.' in temp:
+            return True
+        else:
+            return False
+    return False
 
 
 def plot_exchange_from_jxc(path: Path):
@@ -868,7 +665,7 @@ def plot_exchange_from_jxc(path: Path):
         if flag and len(line.split()) == 11:
             # print(line.split())
             dr = float(line.split()[8])
-            Jij = float(line.split()[10]) * 1000 # meV
+            Jij = float(line.split()[10]) * 1000  # meV
 
             if dr == prev_dr:
                 continue
@@ -931,12 +728,11 @@ def plot_exchange_from_jxc(path: Path):
 
 
 def plot_all_mags(curves: Dict[str, np.ndarray], save_path: Path):
-    fig, ax = plt.subplots(figsize=(9, 6))
+    fig, ax = plt.subplots(figsize=(6, 4))
 
     for path, curve in curves.items():
         T = curve[1:, 0]
         M = curve[1:, 1]
-
         T_smooth = np.linspace(T.min(), T.max(), 500)
         # y_smooth = X_Y_Spline(x_smooth)
         print(T)
@@ -944,13 +740,15 @@ def plot_all_mags(curves: Dict[str, np.ndarray], save_path: Path):
         M_smooth = pchip(T_smooth)
 
         label = path.split('/')[-1]
+        parts = path.split('/')
+        label = f'{parts[-3]}_{parts[-2]}'
         ax.plot(T_smooth, M_smooth, lw=1, label=label)
 
     ax.set_xlabel("Температура (K)", fontsize=12)
     ax.set_ylabel("Намагниченность (норм.)", fontsize=12)
     # ax.set_title(rf"Температура Кюри — критическая аппроксимация"
     #              "\n" rf"$M = A\,(1 - T/T_C)^{{\beta}}$", fontsize=13)
-    ax.legend(fontsize=6)
+    ax.legend(fontsize=6, ncol=2)
     ax.grid(True, alpha=0.4)
     ax.set_ylim(bottom=-0.02)
     fig.tight_layout()
@@ -959,32 +757,62 @@ def plot_all_mags(curves: Dict[str, np.ndarray], save_path: Path):
     print(f"График сохранён: {save_path}")
 
 
-def get_tc_mfa(path_to_jxc: Path, spheres: int):
+def get_tc_mfa(path_to_jxc: Path, spheres: int = None, kkr_ver: str = None):
 #     T_C = 2/3*sum_J_AA [Joul] /kB [Joul/K]
 
     path = path_to_jxc / '*JXC.out'
     temp = path.read_text().split('\n')
+
+    if spheres is None:
+        temp.reverse()
+        for line in temp:
+            if 'Curie temperature within mean field approximation' in line:
+                Tc = float(line.split()[-2])
+                return Tc
+
     jxc = []
     flag = False
     count_spheres = 0
     prev_dr = 0
+
+    if 'VERSION' in temp[13]:
+        kkr_ver = temp[13].split()[3]
+
+    if kkr_ver == '8.6.0':
+        line_length = 13
+        dr_pos = 10
+        jij_pos = 11
+        flag_line = 'IT   IQ   JT   JQ    N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [meV]  J_ij [eV]'
+    elif kkr_ver == '7.7.3':
+        line_length = 11
+        dr_pos = 8
+        jij_pos = 10
+        flag_line = 'ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]'
+    elif kkr_ver == '6.3.1':
+        line_length = 11
+        dr_pos = 8
+        jij_pos = 10
+        flag_line = 'ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]'
+    else:
+        raise RuntimeError('Unsupportable version of SPR-KKR, try to set other version')
+
     for line in temp:
-        if flag and len(line.split()) == 11:
+        if flag and len(line.split()) == line_length:
             # print(line.split())
-            dr = float(line.split()[8])
-            Jij = float(line.split()[10]) # meV
+            dr = float(line.split()[dr_pos])
+            Jij = float(line.split()[jij_pos])  # meV
 
             if dr != prev_dr:
                 count_spheres += 1
                 prev_dr = dr
 
-            if count_spheres > spheres:
+            if count_spheres > spheres and spheres:
                 break
 
             jxc.append([dr, Jij])
             flag = False
 
-        if 'ITAUIJ ITAUJI   N1 N2 N3    DRX    DRY    DRZ     DR     J_ij [Ry]  J_ij [eV]' in line:
+        if flag_line in line:
             flag = True
     jxc = np.array(jxc)
 
@@ -996,16 +824,26 @@ def get_tc_mfa(path_to_jxc: Path, spheres: int):
 
 
 if __name__ == '__main__':
-    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe/')
+    # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe/')
+    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ')
+
+    # curves = get_curve_recursively(wd)
+
+    # curves = dict(sorted(curves.items(), key=lambda item: item[0].split('/')[-3]))
+    # plot_all_mags(curves, (wd / 'All_mags.png'))
+    # generate_vampire_inputs_recursive(wd, 2, -1)
+    # J = read_J(da_max, path=wd / 'Al' / 'L21' / '*JXC.out')
+    # for line in J:
+    #     if line[0] == 0 and line[1] == 0:
+    #         print('good exchanfe')
+    # print(J)
+    # finds = sorted([i.parent.as_posix() for i in wd.rglob('*.UCF')])
+    # (wd / 'vampire_work_paths').write_text('\n'.join(finds))
+    # exit()
     # plot_exchange_from_jxc(wd)
     # exit()
     # print(len(wd.relative_to(wd.parent).parts))
     #
-    # exit()
-    # generate_vampire_inputs(wd)
-    # read_cell('/home/buche/VaspTesting/Danil/magnetocaloric_nn/new_parser/Ti4Fe8Cu4/119/FiM/*JXC.out')
-    # generate_run(wd)
-    # get_curve(wd)
 
     # exit()
     # jij = read_J(da_max, 2, 'JXC.out')
@@ -1013,39 +851,77 @@ if __name__ == '__main__':
     # for i in jij:
     #     print(np.round(i[:-1]), i[-1])
     # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ')
-
-    # for i in range(1, 46):
-    #     (wd / str(i)).mkdir()
-
     # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe_new_parser/')
-    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe/')
-    beta_type = 'fixed'
-    # beta_type = 'free'
-    # # generate_vampire_inputs_recursive(wd, 0, 45)
-    # for i in range(1, 46):
-    #     generate_vampire_inputs_recursive(wd, 0, i)
-    # generate_run_recursively(wd)
+    #
+    # for i in range(1, 49):
+    #     stat = check_status_vampire(wd / str(i))
+    #     print(f'{i:<2} - {stat}')
     # exit()
 
+    # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe_new_parser/')
+    # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe/')
+    # # beta_type = 'fixed'
+    # # beta_type = 'free'
+    # # # generate_vampire_inputs_recursive(wd, 0, 45)
+    # n_t = []
+    # for i in range(1, 24):
+    #     # generate_vampire_inputs_recursive(wd, 0, i)
+    #     # print((wd / str(i)).as_posix())
+    #     path = wd / str(i) / 'log'
+    #     log = path.read_text().split('\n')
+    #
+    #     for line in log:
+    #         if 'Simulation run time' in line:
+    #             n_t.append([i, float(line.split()[-1])])
+    #             break
+    # print(n_t)
+    # t_n = np.array(n_t)
+    # print(t_n)
+    # exit()
+    # fig, ax = plt.subplots()
+    # ax.grid(True)
+    # ax.plot(t_n[:, 0], t_n[:, 1])
+    # ax.set_xticks(np.arange(0, 45, 1))
+    # ax.set_xlim(0, 45)
+    # plt.show()
+    # exit()
+    # generate_run_recursively(wd)
+    # exit()
+    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/')
+
     curves = get_curve_recursively(wd)
-    curves = dict(sorted(curves.items(), key=lambda item: int(item[0].split('/')[-1])))
+    # curves = dict(sorted(curves.items(), key=lambda item: int(item[0].split('/')[-1])))
 
     plot_all_mags(curves, (wd / 'All_mags.png'))
 
-    test_curve = list(curves.values())[0]
-    test_curve[:, 1] = test_curve[:, 1]**(1/0.365)
-    for i in test_curve:
-        if i[1] < 0.01:
-            print(i)
-            break
-    # exit()
-    f, ax = plt.subplots()
-    ax.plot(test_curve[:, 0], test_curve[:, 1], 'or-')
-    plt.grid()
-    plt.show()
+    # test_curve = list(curves.values())[0]
+    # test_curve[:, 1] = test_curve[:, 1]**(1/0.365)
+    # x = list(curves.values())[0][:, 0]
+    # y = list(curves.values())[0][:, 1]
+    # y = test_curve[:, 1]
+    # idx = np.where(y > 0.05)
+    # x = x[idx]
+    # y = y[idx]
+    # test_coefs = np.polyfit(x, y, 1)
+    #
+    # x_fit = np.linspace(0, 1400, 500)
+    # y_fit = test_coefs[0] * x_fit + test_coefs[1]
+    #
+    # tc = x_fit[np.where(y_fit > 0)][-1]
+    # print(tc)
 
-
+    # for i in test_curve:
+    #     if i[1] < 0.01:
+    #         print(i)
+    #         break
     # exit()
+    # f, ax = plt.subplots()
+    # ax.plot(test_curve[:, 0], test_curve[:, 1], 'or-')
+    # ax.plot(x_fit, y_fit, 'b-')
+    # plt.grid()
+    # plt.show()
+
+    exit()
     # for i in curves.keys():
     #     print(i)
     # exit()
@@ -1053,24 +929,25 @@ if __name__ == '__main__':
     # print(dict(sorted(curves.items(), key=lambda item: int(item[0].split('/')[-1]))))
     # exit()
     tc = []
-    from Critical_fit_TC import curie_fit_fixed_beta, curie_fit_free_beta
+    tc_mean = []
+    from Critical_fit_TC import curie_fit_fixed_beta
     for i, (path, curve) in enumerate(curves.items(), start=1):
         # curie_critical_fit(curve, f'{path}/curve.png')
         # tc.append([i, curie_max_derivative(curve, f'{path}/curve.png', plot=False)])
-        print(f'{"":#^100}')
-        tc_mfa = get_tc_mfa(Path(path), i)
-        if beta_type == 'fixed':
-            tc_fit = curie_fit_fixed_beta(curve, tc_mfa, f'{path}/curve.png')
-        elif beta_type == 'free':
-            tc_fit = curie_fit_free_beta(curve, tc_mfa, f'{path}/curve.png')
+        print(f'{"": #^100}')
+        tc_mfa = get_tc_mfa(Path(path), None, None)
+        tc_fit = curie_fit_fixed_beta(curve, tc_mfa, f'{path}/curve.png')
+
         # if tc_fit[1] > 0.4:
         #     continue
-        tc.append([i, tc_fit[0]])
+        tc.append([i, tc_fit])
+        # mean_tc = sum([obj[1] for obj in tc])/len(tc)
+        # tc_mean.append([i, mean_tc])
 
-    tc = np.array(tc)
+    tc = np.array(tc_mean)
     # tc = get_mean_field_Tc(wd)
     print(tc)
-    # exit()
+    exit()
 
     # X_Y_Spline = make_interp_spline(tc[:-1, 0], tc[:-1, 1], k=len(tc)-1)
     x_smooth = np.linspace(tc[:, 0].min(), tc[:, 0].max(), 500)
@@ -1087,7 +964,7 @@ if __name__ == '__main__':
     plt.scatter(tc[:, 0], tc[:, 1], color='red', linewidth=2, marker='o', zorder=10)
 
     ax.set_xlabel("Количество координационных сфер", fontsize=13)
-    ax.set_ylabel("Температура Кюри, $T_C$ (K)", fontsize=13)
+    ax.set_ylabel("Средняя температура Кюри, $T_C$ (K)", fontsize=13)
     ax.set_title("Monte-Carlo", fontsize=14)
 
     ax.set_xticks(np.arange(0, 50, 5))
@@ -1095,13 +972,13 @@ if __name__ == '__main__':
     ax.tick_params(labelsize=11)
 
     fig.tight_layout()
-    fig.savefig(f"{wd}/Monte_Carlo_tc_beta_{beta_type}.png", dpi=300)
+    fig.savefig(f"{wd}/Monte_Carlo_mean_tc.png", dpi=300)
     plt.show()
 
-    dst = wd / f'curves_{beta_type}'
-    dst.mkdir(exist_ok=True)
-    for i in wd.rglob('curve.png'):
-        shutil.copy2(i, dst / f'{i.parent.stem}_mag.png')
+    # dst = wd / f'curves'
+    # dst.mkdir(exist_ok=True)
+    # for i in wd.rglob('curve.png'):
+    #     shutil.copy2(i, dst / f'{i.parent.stem}_mag.png')
 
     print('end')
     # plt.close(fig)
