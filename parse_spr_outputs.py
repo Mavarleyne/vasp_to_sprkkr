@@ -253,15 +253,23 @@ def parse_type_table_scf(lines: List[str], version: Optional[str] = None) -> Lis
     return parse_type_table_jxc(lines, version)
 
 
+# ─── Паттерны для секции OPTIMIZE_BASIS ─────────────────────────────────────
+
+# Заголовок секции оптимизации базиса (только в SCF.out, только для NQ > 1)
+_RE_OPT_BASIS_HDR = re.compile(r'<OPTIMIZE_BASIS_3D>')
+# Заголовок строки-шапки таблицы OLD/NEW
+_RE_OPT_BASIS_COLS = re.compile(r'OLD\s+basis\s+vectors\s+NEW\s+basis\s+vectors')
+
+
 # ─── Параметры решётки ───────────────────────────────────────────────────────
 
 def parse_lattice(lines: List[str]) -> dict:
     """
-    Прочитать параметры решётки из JXC.out или SCF.out.
+    Прочитать параметры решётки из JXC.out (примитивные векторы и NEW-базис).
 
-    Ищет секцию ``<INIT_MOD_LATTICE>``, извлекает примитивные векторы
-    (в единицах *a*) и базисные векторы, а также постоянную решётки ALAT
-    (в боровских радиусах).
+    Читает секцию ``<INIT_MOD_LATTICE>`` и первое вхождение
+    ``basis vectors in units of a`` (= NEW-базис после оптимизации).
+    Постоянная решётки берётся из строки ``lattice constant  ALAT``.
 
     Parameters
     ----------
@@ -271,10 +279,10 @@ def parse_lattice(lines: List[str]) -> dict:
     -------
     dict с ключами:
 
-    * ``alat``            — float, постоянная решётки (Bohr)
-    * ``primitive_vecs``  — np.ndarray shape (3,3), вектора трансляций (в ед. *a*)
-    * ``basis_vecs``      — np.ndarray shape (N,3), базис (в ед. *a*)
-    * ``lens_angstrom``   — np.ndarray shape (3,), длины ребёр ячейки (Å)
+    * ``alat``           — float, постоянная решётки (Bohr)
+    * ``primitive_vecs`` — np.ndarray shape (3,3), прим. вектора (ед. *a*)
+    * ``basis_vecs``     — np.ndarray shape (N,3), NEW-базис (ед. *a*)
+    * ``lens_angstrom``  — np.ndarray shape (3,), длины ребёр ячейки (Å)
 
     Notes
     -----
@@ -302,10 +310,10 @@ def parse_lattice(lines: List[str]) -> dict:
     if len(all_vecs) < 3:
         raise ValueError('Не удалось найти 3 примитивных вектора в секции INIT_MOD_LATTICE.')
 
-    prim = np.array(all_vecs[:3])
+    prim  = np.array(all_vecs[:3])
     basis = np.array(all_vecs[3:]) if len(all_vecs) > 3 else np.zeros((1, 3))
 
-    # Ищем ALAT (первое вхождение после начала файла, вне секции SCF)
+    # Ищем ALAT (первое вхождение)
     alat = None
     for line in lines:
         m = _RE_ALAT.search(line)
@@ -318,8 +326,8 @@ def parse_lattice(lines: List[str]) -> dict:
     # Длины ребёр примитивной ячейки в Å
     bohr_to_ang = 0.52917721090
     lens = np.array([
-        alat * np.linalg.norm(prim[i]) * bohr_to_ang
-        for i in range(3)
+        alat * np.linalg.norm(prim[k]) * bohr_to_ang
+        for k in range(3)
     ])
 
     return {
@@ -327,6 +335,127 @@ def parse_lattice(lines: List[str]) -> dict:
         'primitive_vecs': np.round(prim, 5),
         'basis_vecs': np.round(basis, 5),
         'lens_angstrom': lens,
+    }
+
+
+def parse_basis_scf(lines: List[str]) -> dict:
+    """
+    Прочитать OLD- и NEW-координаты атомов из SCF.out и вычислить
+    трансляции OLD→NEW в единицах примитивных векторов.
+
+    Данные берутся из двух мест файла:
+
+    1. ``<OPTIMIZE_BASIS_3D>`` — таблица ``OLD basis vectors / NEW basis vectors``
+       (присутствует только при NQ > 1; если секция отсутствует, OLD = NEW = basis
+       из ``<INIT_MOD_LATTICE>`` и трансляции нулевые).
+    2. Примитивные векторы из первого блока ``primitive vectors for Bravais lattice``
+       после ``<INIT_MOD_LATTICE>`` (уже содержатся в :func:`parse_lattice`, но
+       здесь они нужны для вычисления трансляций).
+
+    Трансляция для атома *i* определяется как вектор, переводящий его OLD-позицию
+    в NEW-позицию, выраженный в единицах примитивных векторов::
+
+        t_i = (new_i − old_i) @ inv(prim)   →  целые числа ∈ ℤ³
+
+    Эти трансляции используются в :func:`parse_jij` для коррекции N1, N2, N3:
+    при переходе от расчётного (NEW) базиса к исходному (OLD) базису вектор
+    трансляции между атомами IQ и JQ корректируется как::
+
+        N_corr = N_calc + t_JQ − t_IQ
+
+    Parameters
+    ----------
+    lines : list[str]
+        Строки SCF.out.
+
+    Returns
+    -------
+    dict с ключами:
+
+    * ``old_basis``     — np.ndarray shape (NQ, 3), исходные координаты (ед. *a*)
+    * ``new_basis``     — np.ndarray shape (NQ, 3), оптимизированные координаты
+    * ``translations``  — np.ndarray shape (NQ, 3), трансляции в прим. ед. (целые)
+    * ``primitive_vecs``— np.ndarray shape (3, 3), прим. векторы (ед. *a*)
+
+    Notes
+    -----
+    Если в SCF.out нет секции ``<OPTIMIZE_BASIS_3D>`` (однобазисные кристаллы),
+    возвращаются нулевые трансляции и old_basis = new_basis.
+    """
+    # ── 1. Примитивные векторы из первого STRINIT-блока ──────────────────────
+    # Используем уже готовый parse_lattice (он читает из INIT_MOD_LATTICE)
+    lattice = parse_lattice(lines)
+    prim = lattice['primitive_vecs']           # shape (3, 3)
+    new_basis_init = lattice['basis_vecs']     # shape (NQ, 3) — NEW базис
+
+    # ── 2. Секция OPTIMIZE_BASIS_3D ──────────────────────────────────────────
+    opt_start = None
+    for i, line in enumerate(lines):
+        if _RE_OPT_BASIS_HDR.search(line):
+            opt_start = i
+            break
+
+    if opt_start is None:
+        # Секция отсутствует: OLD = NEW, трансляции = 0
+        n = new_basis_init.shape[0]
+        return {
+            'old_basis': new_basis_init.copy(),
+            'new_basis': new_basis_init.copy(),
+            'translations': np.zeros((n, 3), dtype=float),
+            'primitive_vecs': prim,
+        }
+
+    # Ищем строку-шапку "OLD basis vectors   NEW basis vectors"
+    col_hdr = None
+    for i in range(opt_start, min(opt_start + 20, len(lines))):
+        if _RE_OPT_BASIS_COLS.search(lines[i]):
+            col_hdr = i
+            break
+    if col_hdr is None:
+        raise ValueError(
+            'Заголовок "OLD basis vectors  NEW basis vectors" не найден '
+            'в секции <OPTIMIZE_BASIS_3D>.'
+        )
+
+    # Читаем пары (old_vec, new_vec) — каждая строка содержит два вектора
+    # Формат:  "(  x1, y1, z1 )   (  x2, y2, z2 )"
+    _RE_TWO_VECS = re.compile(
+        r'\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)'
+        r'.*?'
+        r'\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)'
+    )
+    old_list: List[List[float]] = []
+    new_list: List[List[float]] = []
+
+    for line in lines[col_hdr + 1:]:
+        m = _RE_TWO_VECS.search(line)
+        if m:
+            old_list.append([float(m.group(1)), float(m.group(2)), float(m.group(3))])
+            new_list.append([float(m.group(4)), float(m.group(5)), float(m.group(6))])
+        elif old_list:
+            # Первая непустая строка без двух векторов → конец таблицы
+            stripped = line.strip()
+            if stripped and not stripped.startswith('('):
+                break
+
+    if not old_list:
+        raise ValueError('Строки OLD/NEW basis vectors не найдены.')
+
+    old_basis = np.array(old_list)   # shape (NQ, 3)
+    new_basis = np.array(new_list)   # shape (NQ, 3)
+
+    # ── 3. Трансляции: t_i = (new_i − old_i) @ inv(prim) ────────────────────
+    prim_inv = np.linalg.inv(prim)
+    translations = (new_basis - old_basis) @ prim_inv   # shape (NQ, 3), должны быть ≈ целыми
+
+    # Округляем до ближайшего целого (должны быть точно целыми ± числ. погрешность)
+    translations = np.round(translations).astype(float)
+
+    return {
+        'old_basis': np.round(old_basis, 5),
+        'new_basis': np.round(new_basis, 5),
+        'translations': translations,
+        'primitive_vecs': prim,
     }
 
 
@@ -372,35 +501,57 @@ def parse_jij(
     da_max: float = 10.0,
     dr_max_count: int = -1,
     version: Optional[str] = None,
+    translations: Optional[np.ndarray] = None,
+    jij_Joul = True
 ) -> np.ndarray:
     """
     Прочитать обменные интегралы J_ij из JXC.out.
+
+    Если переданы ``translations`` (полученные из :func:`parse_basis_scf`),
+    то трансляционные индексы N1, N2, N3 корректируются для перехода от
+    NEW-базиса (используемого в расчёте SPR-KKR) к OLD-базису (исходным
+    физическим координатам атомов)::
+
+        N_corr = N_calc + translations[JQ-1] − translations[IQ-1]
+
+    где IQ, JQ — индексы сайтов (1-based) пары обменного взаимодействия.
 
     Parameters
     ----------
     lines : list[str]
         Строки JXC.out.
     da_max : float
-        Максимальное расстояние пары (в единицах *a*). Пары с DR > da_max
-        пропускаются.
+        Жёсткий отсев по расстоянию: пары с DR > da_max пропускаются
+        ещё при чтении файла.
     dr_max_count : int
         Максимальное число координационных сфер. -1 = без ограничения.
-        Сферы нумеруются глобально по возрастанию DR по всему файлу
-        (не по порядку встречи строк, т.к. блоки разных пар IT/JT
-        могут чередоваться в произвольном порядке DR).
+
+        Фильтрация выполняется **после** сбора всех данных и сортировки
+        по DR: уникальные значения DR нумеруются начиная с 1 (1-я сфера —
+        ближайшие соседи), и из итогового массива удаляются все строки,
+        относящиеся к сферам с номером > dr_max_count.
+
+        Такой подход корректен даже если в JXC.out записи идут не по
+        возрастанию DR (что происходит при нескольких типах атомов).
     version : str, optional
         Версия SPR-KKR. Определяется автоматически, если не передана.
+    translations : np.ndarray, shape (NQ, 3), optional
+        Трансляции сайтов в единицах примитивных векторов — результат
+        ``parse_basis_scf(scf_lines)['translations']``.
+        Если None — коррекция не применяется (N остаются как в JXC.out).
 
     Returns
     -------
-    np.ndarray, shape (N, 6)
-        Столбцы: ``[IT-1, JT-1, N1, N2, N3, J_ij_meV]``
+    np.ndarray, shape (N, 8)
+        Столбцы: ``[IT-1, IQ-1, JT-1, JQ-1, N1, N2, N3, J_ij_SI]``
 
-        * IT-1, JT-1 — индексы типов (0-based, как в VAMPIRE)
-        * N1, N2, N3 — целочисленные трансляции
-        * J_ij_meV   — обменный интеграл в меВ
+        * IT-1, JT-1 — индексы типов (0-based)
+        * IQ-1, JQ-1 — индексы сайтов (0-based)
+        * N1, N2, N3 — целочисленные трансляции (скорректированные, если
+          передан параметр ``translations``); массив отсортирован по DR
+        * J_ij_SI    — обменный интеграл в Дж: ``J_eV * e * 2``
 
-        Дублированные строки удалены, массив отсортирован.
+        Дублированные строки удалены.
 
     Raises
     ------
@@ -411,39 +562,43 @@ def parse_jij(
         version = detect_version(lines)
 
     schema = _make_jij_schema(version)
-    hdr_re = schema['header_re']
-    ll = schema['line_length']
-    n1_pos = schema['n1_pos']
-    dr_pos = schema['dr_pos']
+    hdr_re  = schema['header_re']
+    ll      = schema['line_length']
+    n1_pos  = schema['n1_pos']
+    dr_pos  = schema['dr_pos']
     jij_pos = schema['jij_pos']
-    family = _version_family(version)
+    family  = _version_family(version)
 
-    # Текущая пара IT/JT (нужна для старых версий)
-    curr_IT: float = 0.0
-    curr_JT: float = 0.0
+    use_translations = translations is not None
 
-    # Сырые записи: [IT-1, JT-1, N1, N2, N3, J_meV, DR]
-    # DR хранится отдельно для последующего глобального ранжирования
-    raw: List[List[float]] = []
+    J: List[List[float]] = []
+
+    # Текущие индексы пары (обновляются при встрече заголовка "IQ= IT= JQ= JT=")
+    curr_IT:  float = 0.0
+    curr_JT:  float = 0.0
+    curr_IQ:  float = 0.0
+    curr_JQ:  float = 0.0
 
     i = 0
     while i < len(lines):
-        line = lines[i]
+        line  = lines[i]
         parts = line.split()
 
         if not parts:
             i += 1
             continue
 
-        # Заголовок пары IQ=.. IT=.. JQ=.. JT=..  (все версии)
+        # ── Заголовок пары: "IQ =  1 IT =  1   JQ =  2 JT =  1" ─────────────
         m_pair = _RE_IQ_IT_PAIR.search(line)
         if m_pair:
+            curr_IQ = float(m_pair.group(1))
             curr_IT = float(m_pair.group(2))
+            curr_JQ = float(m_pair.group(3))
             curr_JT = float(m_pair.group(4))
             i += 1
             continue
 
-        # Заголовок столбцов Jij-таблицы
+        # ── Заголовок столбцов Jij-блока ─────────────────────────────────────
         if hdr_re.search(line):
             i += 1
             if i >= len(lines):
@@ -460,69 +615,92 @@ def parse_jij(
                 i += 1
                 continue
 
-            # Фильтр по da_max применяем сразу — очевидно избыточные пары
             if dr > da_max:
                 i += 1
                 continue
+            if abs(j_ev * 1000) < 1e-4:   # |J| < 0.0001 meV → пропускаем
+                i += 1
+                continue
 
-            # Фильтр шумовых J
-            # if abs(j_ev * 1000) < 1e-2:   # |J| < 0.01 meV
-            #     i += 1
-            #     continue
-
+            # N1, N2, N3 из строки данных
             n1 = float(data_parts[n1_pos])
             n2 = float(data_parts[n1_pos + 1])
             n3 = float(data_parts[n1_pos + 2])
 
+            # IT, JT, IQ, JQ
             if family == 'new':
                 IT = float(data_parts[schema['it_pos']])
+                IQ = float(data_parts[schema['iq_pos']])
                 JT = float(data_parts[schema['jt_pos']])
+                JQ = float(data_parts[schema['jq_pos']])
             else:
                 IT = curr_IT
                 JT = curr_JT
+                IQ = curr_IQ
+                JQ = curr_JQ
 
-            j_mev = j_ev * 1000
-            j_si = j_ev * 2 * constants.e
+            # ── Коррекция N на трансляции OLD→NEW ────────────────────────────
+            # В JXC используется NEW-базис: N*prim + new[JQ] - new[IQ] = r
+            # В VAMPIRE нужен OLD-базис:    N'*prim + old[JQ] - old[IQ] = r
+            # Откуда:  N' = N + t_JQ - t_IQ,  t_k = (new_k - old_k) @ inv(prim)
+            if use_translations:
+                iq_idx = int(IQ) - 1
+                jq_idx = int(JQ) - 1
+                t_IQ = translations[iq_idx]
+                t_JQ = translations[jq_idx]
+                n1 += t_JQ[0] - t_IQ[0]
+                n2 += t_JQ[1] - t_IQ[1]
+                n3 += t_JQ[2] - t_IQ[2]
 
-            raw.append([IT - 1, JT - 1,  n1,  n2,  n3, j_mev, dr])
-            raw.append([JT - 1, IT - 1, -n1, -n2, -n3, j_mev, dr])
+            if jij_Joul:
+                j_si = j_ev * constants.e * 2  # Дж
+            else:
+                j_si = j_ev
+            # dr сохраняем последним столбцом — нужен для фильтрации
+            # по координационным сферам после сборки всего массива
+            J.append([IT - 1, IQ - 1, JT - 1, JQ - 1,  n1,  n2,  n3, j_si, dr])
+            J.append([JT - 1, JQ - 1, IT - 1, IQ - 1, -n1, -n2, -n3, j_si, dr])
 
         i += 1
 
-    if not raw:
-        return np.empty((0, 6))
+    if not J:
+        return np.empty((0, 8))
 
-    raw_arr = np.array(raw)  # shape (M, 7): cols 0-5 = данные, col 6 = DR
+    J_arr = np.array(J)   # shape (N, 9): [..., dr]
 
-    # ── Глобальное ранжирование координационных сфер ──────────────────────────
-    # DR может не возрастать монотонно по ходу файла (блоки разных пар IT/JT
-    # чередуются в произвольном порядке), поэтому нумеруем сферы глобально:
-    # собираем все уникальные DR, сортируем, присваиваем номера 1, 2, 3, ...
+    # ── Сортировка по dr, затем дедупликация ─────────────────────────────────
+    # Сортируем по (dr, остальным столбцам) — dr последний, но lexsort читает
+    # с конца, поэтому dr (столбец 8) будет первичным ключом сортировки.
+    idx   = np.lexsort(J_arr.T)
+    J_arr = J_arr[idx]
+    mask  = np.concatenate(([True], np.any(np.diff(J_arr, axis=0) != 0, axis=1)))
+    J_arr = J_arr[mask]
+
+    # ── Фильтрация по числу координационных сфер ─────────────────────────────
+    # Теперь массив отсортирован по dr → уникальные значения dr идут по возрастанию.
+    # Координационная сфера = группа строк с одинаковым dr (с допуском 1e-4).
     if dr_max_count != -1:
-        unique_drs = np.unique(np.round(raw_arr[:, 6], 4))
-        dr_to_sphere = {dr: idx + 1 for idx, dr in enumerate(unique_drs)}
-        sphere_nums = np.array([dr_to_sphere[round(dr, 4)] for dr in raw_arr[:, 6]])
-        mask = sphere_nums < dr_max_count
-        raw_arr = raw_arr[mask]
+        dr_vals = J_arr[:, -1]            # столбец dr
+        sphere_count = 0
+        prev_dr      = -1.0
+        cutoff_idx   = len(J_arr)         # по умолчанию — брать всё
 
-    if raw_arr.size == 0:
-        return np.empty((0, 6))
+        for k, dr in enumerate(dr_vals):
+            if abs(dr - prev_dr) > 1e-4:
+                sphere_count += 1
+                prev_dr = dr
+                if sphere_count > dr_max_count:
+                    cutoff_idx = k
+                    break
 
-    # Возвращаем только первые 6 столбцов (без DR)
-    J_arr = np.array(raw_arr[:, :])
-    # Сортировка и удаление дублей
-    # idx = np.lexsort(J_arr.T)
-    # J_arr = J_arr[idx]
-    # mask = np.concatenate(([True], np.any(np.diff(J_arr, axis=0) != 0, axis=1)))
-    # J_arr = J_arr[mask]
-    out = sorted(J_arr, key=lambda x: (x[0], x[1]))
-    # out = sorted(J_arr, key=lambda x: (x[-1]))
-    J_arr = np.array(out)
-    print(J_arr)
-    return J_arr[:, :6]
+        J_arr = J_arr[:cutoff_idx]
+
+    # Убираем вспомогательный столбец dr и возвращаем итоговый массив
+    return J_arr[:, :-1]
 
 
 # ─── Магнитные моменты из SCF.out ───────────────────────────────────────────
+
 def parse_magmoms_scf(lines: List[str]) -> List[dict]:
     """
     Прочитать магнитные моменты из последней итерации SCF.out.
@@ -637,6 +815,7 @@ def read_jxc(
     path,
     da_max: float = 10.0,
     dr_max_count: int = -1,
+    scf_path=None,
 ) -> dict:
     """
     Прочитать JXC.out и вернуть все данные, нужные для конвертации в VAMPIRE.
@@ -649,29 +828,49 @@ def read_jxc(
         Максимальное расстояние Jij-пар (в единицах *a*).
     dr_max_count : int
         Число координационных сфер (-1 = все).
+    scf_path : str | Path, optional
+        Путь к соответствующему SCF.out. Если передан, из него читаются
+        OLD/NEW базисы и трансляции, которые применяются при извлечении
+        N1, N2, N3 в :func:`parse_jij`. Поддерживаются glob-паттерны.
 
     Returns
     -------
     dict с ключами:
 
-    * ``version``    — str
-    * ``type_table`` — list[dict]  (см. :func:`parse_type_table_jxc`)
-    * ``lattice``    — dict        (см. :func:`parse_lattice`)
-    * ``jij``        — np.ndarray  (см. :func:`parse_jij`)
-    * ``tc_mfa``     — float | None
-    * ``path``       — Path
+    * ``version``      — str
+    * ``type_table``   — list[dict]  (см. :func:`parse_type_table_jxc`)
+    * ``lattice``      — dict        (см. :func:`parse_lattice`)
+    * ``basis_info``   — dict | None (см. :func:`parse_basis_scf`; None если scf_path не передан)
+    * ``jij``          — np.ndarray  (см. :func:`parse_jij`)
+    * ``tc_mfa``       — float | None
+    * ``path``         — Path
     """
     path = _resolve_path(path)
     lines = path.read_text(encoding='utf-8', errors='replace').split('\n')
 
-    version = detect_version(lines)
+    version    = detect_version(lines)
+    lattice    = parse_lattice(lines)
+    type_table = parse_type_table_jxc(lines, version)
+
+    # Трансляции из SCF — если передан путь
+    basis_info = None
+    translations = None
+    if scf_path is not None:
+        scf_p = _resolve_path(scf_path)
+        scf_lines = scf_p.read_text(encoding='utf-8', errors='replace').split('\n')
+        basis_info   = parse_basis_scf(scf_lines)
+        translations = basis_info['translations']
+
+    jij = parse_jij(lines, da_max, dr_max_count, version, translations)
+
     return {
-        'version': version,
-        'type_table': parse_type_table_jxc(lines, version),
-        'lattice': parse_lattice(lines),
-        'jij': parse_jij(lines, da_max, dr_max_count, version),
-        'tc_mfa': parse_tc_mfa(lines),
-        'path': path,
+        'version':    version,
+        'type_table': type_table,
+        'lattice':    lattice,
+        'basis_info': basis_info,
+        'jij':        jij,
+        'tc_mfa':     parse_tc_mfa(lines),
+        'path':       path,
     }
 
 
@@ -688,22 +887,24 @@ def read_scf(path) -> dict:
     -------
     dict с ключами:
 
-    * ``version``    — str
-    * ``type_table`` — list[dict]  (см. :func:`parse_type_table_scf`)
-    * ``lattice``    — dict        (см. :func:`parse_lattice`)
-    * ``magmoms``    — list[dict]  (см. :func:`parse_magmoms_scf`)
-    * ``path``       — Path
+    * ``version``      — str
+    * ``type_table``   — list[dict]  (см. :func:`parse_type_table_scf`)
+    * ``lattice``      — dict        (см. :func:`parse_lattice`)
+    * ``basis_info``   — dict        (см. :func:`parse_basis_scf`)
+    * ``magmoms``      — list[dict]  (см. :func:`parse_magmoms_scf`)
+    * ``path``         — Path
     """
     path = _resolve_path(path)
     lines = path.read_text(encoding='utf-8', errors='replace').split('\n')
 
     version = detect_version(lines)
     return {
-        'version': version,
+        'version':    version,
         'type_table': parse_type_table_scf(lines, version),
-        'lattice': parse_lattice(lines),
-        'magmoms': parse_magmoms_scf(lines),
-        'path': path,
+        'lattice':    parse_lattice(lines),
+        'basis_info': parse_basis_scf(lines),
+        'magmoms':    parse_magmoms_scf(lines),
+        'path':       path,
     }
 
 
@@ -735,6 +936,7 @@ __all__ = [
     'parse_type_table_jxc',
     'parse_type_table_scf',
     'parse_lattice',
+    'parse_basis_scf',
     'parse_jij',
     'parse_magmoms_scf',
     'parse_tc_mfa',
@@ -744,6 +946,12 @@ __all__ = [
 
 if __name__ == '__main__':
     wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/L21/*SCF_auto.out')
+    lines = wd.read_text().split('\n')
+    lattice = parse_lattice(lines)
+    for key, value in lattice.items():
+        print(f'{key}:\n{value}')
+
+    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/L21/*JXC_auto.out')
     lines = wd.read_text().split('\n')
     lattice = parse_lattice(lines)
     for key, value in lattice.items():

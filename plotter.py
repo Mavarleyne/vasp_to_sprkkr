@@ -5,14 +5,14 @@ from matplotlib import pyplot as plt
 
 
 def main():
-    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/L21/vampire_new/*JXC.out')
-    fig, ax = plot_exchanges_from_jxc(wd)
-    plt.show()
-
-    # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/L21/vampire_manual/JXC.out')
+    # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/L21/vampire_new/*JXC.out')
     # fig, ax = plot_exchanges_from_jxc(wd)
     # plt.show()
-    return
+    #
+    # # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/L21/vampire_manual/JXC.out')
+    # # fig, ax = plot_exchanges_from_jxc(wd)
+    # # plt.show()
+    # return
 
     wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ')
     (wd / 'pics').mkdir(exist_ok=True)
@@ -163,16 +163,34 @@ def plot_exchanges_from_jxc(path_to_jxc: Path):
     :param path_to_jxc: Full path to *JXC.out
     :return: Figure
     '''
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'][:5]
+    markers = ['s', 'o', '^', 'D', 'v']
     jij = parse_sprkkr_jxc(path_to_jxc)
     fig, ax = plt.subplots(figsize=(9, 6))
 
+    n_colors = len(colors)
+
+    i = 0
     for pair, curve in jij.items():
         x = curve[:, 0]
         y = curve[:, 1]
-        if np.allclose(y, np.zeros(y.shape), atol=0.2):
+        if np.allclose(y, 0, atol=0.25):
             continue
 
-        ax.plot(x, y, label=pair, linestyle='-', marker='s')
+        color = colors[i % n_colors]
+        marker = markers[(i // n_colors) % len(markers)]
+
+        ax.plot(
+            x, y,
+            label=pair,
+            linestyle='-',
+            color=color,
+            marker=marker,
+            mfc=color,
+            mec='black',
+            mew=0.5,
+        )
+        i += 1
     ax.set_xlim(0.4, 1.5)
     ax.set_xlabel('d/a')
     ax.set_ylabel(r'$J_{ij}$, meV')

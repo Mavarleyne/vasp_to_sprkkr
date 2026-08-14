@@ -76,7 +76,6 @@ def _fit_bounds_and_starts(T, M_smooth, Tc_est):
     """
     Возвращает: T_fit, M_fit, lower_bounds, upper_bounds, trials
     trials — список стартовых (A, Tc, beta).
-    beta_fixed=None → beta свободна; иначе beta зафиксирована.
     """
     T_range = T[-1] - T[0]
     M_threshold = 0.03 * float(M_smooth.max())
@@ -115,10 +114,10 @@ def _fit_bounds_and_starts(T, M_smooth, Tc_est):
 def _save_plot(T, M, M_smooth, T_fit, M_fit, T_model, M_model,
                Tc, tc_mfa, beta, beta_label, save_path, note=""):
     fig, ax = plt.subplots(figsize=(9, 6))
-    ax.plot(T, M,        color="steelblue", alpha=0.4, lw=1,   label="Исходные данные")
+    ax.plot(T, M,        color="steelblue", alpha=0.8, lw=1,   label="Исходные данные")
     ax.plot(T, M_smooth, color="steelblue", lw=2,  ls="--",    label="Сглаженные данные")
-    ax.scatter(T_fit, M_fit, s=15, color="steelblue", alpha=0.7, zorder=3,
-               label=f"Точки фита ({len(T_fit)} шт.)")
+    # ax.scatter(T_fit, M_fit, s=15, color="steelblue", alpha=0.7, zorder=3,
+    #            label=f"Точки фита ({len(T_fit)} шт.)")
     ax.plot(T_model, M_model, color="crimson", lw=2.5,
             label=rf"Критическое построение")
     ax.axvline(Tc, color="crimson", ls=":", lw=1.5)
@@ -138,7 +137,7 @@ def _save_plot(T, M, M_smooth, T_fit, M_fit, T_model, M_model,
     ax.set_ylabel("Намагниченность (норм.)", fontsize=12)
     ax.set_title(rf"Температура Кюри — критическая аппроксимация"
                  "\n" rf"$M = A\,(1 - T/T_C)^{{\beta}}$", fontsize=13)
-    ax.legend(fontsize=10, loc='lower right')
+    ax.legend(fontsize=10, loc='lower left')
     ax.grid(True, alpha=0.4)
     ax.set_ylim(bottom=-0.02)
     fig.tight_layout()
@@ -230,10 +229,10 @@ def curie_fit_fixed_beta(data: np.ndarray, Tc_mfa: float, save_path: str, beta: 
     except Exception:
         Tc_err = float("nan")
 
-    print(f"[fixed beta] T_C    = {Tc:.2f} ± {Tc_err:.2f} K")
-    print(f"[fixed beta] Tc_MFA = {Tc_mfa:.2f} K")
-    print(f"[fixed beta] beta   = {beta:.4f}  (3D-Гейзенберг)")
-    print(f"[fixed beta] A      = {A:.4f}")
+    print(f"T_C    = {Tc:.2f} ± {Tc_err:.2f} K")
+    print(f"Tc_MFA = {Tc_mfa:.2f} K")
+    print(f"beta   = {beta:.4f}  (3D-Гейзенберг)")
+    print(f"A      = {A:.4f}")
 
     T_model = np.linspace(T_fit.min(), Tc * 0.9999, 500)
     M_model = critical_law_fixed_beta(T_model, A, Tc, beta)

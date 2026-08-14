@@ -43,7 +43,7 @@ from parse_spr_outputs import read_jxc, read_scf
 DA_MAX          = 10.0    # максимальное расстояние Jij (в единицах a)
 MACROCELL_ATOMS = 20_000  # целевое число атомов в суперячейке
 T_MIN           = 0       # K
-T_MAX           = 1800    # K
+T_MAX           = 1400    # K
 T_STEP          = 10      # K
 MC_STEP         = 1000    # число шагов Монте-Карло на температурную точку
 
@@ -197,27 +197,32 @@ def write_mat_file(materials: Materials) -> str:
     return '\n'.join(lines)
 
 
-def write_ucf_file(lattice: dict, materials: Materials, jij: np.ndarray) -> str:
+def write_ucf_file(basis_info: dict, lattice: dict,
+                   materials: Materials, jij: np.ndarray) -> str:
     """
     Сформировать содержимое файла ``vampire.UCF``.
 
     Parameters
     ----------
+    basis_info : dict
+        Результат :func:`sprkkr_parser.parse_basis_scf`.
+        Координаты атомов берутся из ``basis_info['old_basis']`` (исходные
+        физические позиции атомов до оптимизации базиса SPR-KKR).
     lattice : dict
         Результат :func:`sprkkr_parser.parse_lattice`.
     materials : Materials
     jij : np.ndarray
-        Массив обменных интегралов, shape (N, 6):
-        [IT-1, JT-1, N1, N2, N3, J_SI].
+        Массив обменных интегралов, shape (N, 8):
+        [IT-1, IQ-1, JT-1, JQ-1, N1, N2, N3, J_SI].
 
     Returns
     -------
     str
         Текст UCF-файла.
     """
-    lens = lattice['lens_angstrom']          # (x, y, z) в Å
-    prim = lattice['primitive_vecs']         # (3, 3) в ед. a
-    basis = lattice['basis_vecs']            # (M, 3)
+    lens  = lattice['lens_angstrom']           # (x, y, z) в Å
+    prim  = lattice['primitive_vecs']          # (3, 3) в ед. a
+    basis = basis_info['old_basis']            # (NQ, 3) — OLD-координаты
 
     n_atoms = basis.shape[0]
     n_mat   = len(materials)
@@ -231,32 +236,35 @@ def write_ucf_file(lattice: dict, materials: Materials, jij: np.ndarray) -> str:
     lines.append('# Atoms')
     lines.append(f'{n_atoms} {n_mat}')
 
-    # Для каждой позиции находим номер материала (0-based для VAMPIRE)
+    # Для каждой позиции (1-based) находим номер материала (0-based для VAMPIRE)
     sites_to_mat: dict[int, int] = {}
     for mat in materials:
         for s in mat.sites:
-            sites_to_mat[s] = mat.idx - 1   # 0-based
+            sites_to_mat[s] = mat.idx - 1
 
-    for i in range(n_atoms):
-        mat_idx = sites_to_mat.get(i + 1, 0)
-        bx, by, bz = basis[i]
-        lines.append(f'{i} {bx:.5f} {by:.5f} {bz:.5f} {mat_idx}')
+    for k in range(n_atoms):
+        mat_idx = sites_to_mat.get(k + 1, 0)
+        bx, by, bz = basis[k]
+        lines.append(f'{k} {bx:.5f} {by:.5f} {bz:.5f} {mat_idx}')
 
     lines.append('# Interactions')
     n_int = jij.shape[0]
     lines.append(f'{n_int} isotropic')
 
+    # Столбцы jij: [IT-1, IQ-1, JT-1, JQ-1, N1, N2, N3, J_SI]
+    # VAMPIRE UCF формат: idx  IQ  JQ  N1 N2 N3  J
+    # IQ и JQ в UCF — это индексы атомов в ячейке (0-based), т.е. IQ-1, JQ-1
     for k, row in enumerate(jij):
-        it, jt, n1, n2, n3, j = row
+        _it, iq, _jt, jq, n1, n2, n3, j = row
         lines.append(
-            f'{k:d} {int(it):d} {int(jt):d} '
+            f'{k:d} {int(iq):d} {int(jq):d} '
             f'{int(n1):d} {int(n2):d} {int(n3):d} {j:.6e}'
         )
 
     return '\n'.join(lines)
 
 
-def write_input_file(lattice: dict, materials: Materials,
+def write_input_file(lattice: dict, basis_info: dict, materials: Materials,
                      t_min: int = T_MIN, t_max: int = T_MAX,
                      t_step: int = T_STEP, mc_step: int = MC_STEP) -> str:
     """
@@ -266,6 +274,8 @@ def write_input_file(lattice: dict, materials: Materials,
     ----------
     lattice : dict
         Результат :func:`sprkkr_parser.parse_lattice`.
+    basis_info : dict
+        Результат :func:`sprkkr_parser.parse_basis_scf`.
     materials : Materials
     t_min, t_max, t_step : int
         Диапазон температур для кривой намагниченности (K).
@@ -277,10 +287,9 @@ def write_input_file(lattice: dict, materials: Materials,
     str
         Текст input-файла.
     """
-    lens = lattice['lens_angstrom']
-    basis = lattice['basis_vecs']
-    n_basis = basis.shape[0]
-    macro = _get_macrosize(n_basis)
+    lens    = lattice['lens_angstrom']
+    n_basis = basis_info['old_basis'].shape[0]
+    macro   = _get_macrosize(n_basis)
 
     lines = [
         '#------------------------------------------',
@@ -350,7 +359,7 @@ def generate_vampire_inputs(
     Parameters
     ----------
     calc_dir : Path
-        Директория с файлами \*JXC.out и \*SCF.out.
+        Директория с файлами *JXC.out и *SCF.out.
     da_max : float
         Максимальное расстояние для Jij (в единицах *a*).
     dr_max : int
@@ -398,18 +407,32 @@ def generate_vampire_inputs(
         print(f'  JXC: {jxc_path.name}')
         print(f'  SCF: {scf_path.name}')
 
-    jxc_data = read_jxc(jxc_path, da_max=da_max, dr_max_count=dr_max)
+    # SCF читаем первым — нужны basis_info и магнитные моменты
     scf_data = read_scf(scf_path)
 
-    version  = jxc_data['version']
-    lattice  = jxc_data['lattice']   # берём решётку из JXC (там всегда есть)
-    jij      = jxc_data['jij']
-    tc_mfa   = jxc_data['tc_mfa']
+    # JXC читаем с передачей scf_path, чтобы parse_jij применил коррекцию трансляций
+    jxc_data = read_jxc(jxc_path, da_max=da_max, dr_max_count=dr_max,
+                        scf_path=scf_path)
+
+    version    = jxc_data['version']
+    lattice    = jxc_data['lattice']
+    basis_info = scf_data['basis_info']   # old_basis + translations
+    print(basis_info)
+    exit()
+    jij        = jxc_data['jij']
+    tc_mfa     = jxc_data['tc_mfa']
 
     if verbose:
         print(f'  SPR-KKR версия : {version}')
         print(f'  Ячейка (Å)     : {np.round(lattice["lens_angstrom"], 4)}')
-        print(f'  Атомов в базисе: {lattice["basis_vecs"].shape[0]}')
+        bi = basis_info
+        print(f'  Атомов в базисе: {bi["old_basis"].shape[0]}')
+        has_opt = np.any(bi['translations'] != 0)
+        print(f'  Оптимизация базиса: {"да, трансляции применены" if has_opt else "нет (OLD = NEW)"}')
+        if has_opt:
+            for k, t in enumerate(bi['translations']):
+                if np.any(t != 0):
+                    print(f'    сайт {k+1}: t = {t.astype(int)}')
         print(f'  Jij пар        : {jij.shape[0]}')
         if tc_mfa is not None:
             print(f'  T_C (MFA)      : {tc_mfa} K')
@@ -422,9 +445,9 @@ def generate_vampire_inputs(
 
     # ── 3. Генерация и запись файлов ─────────────────────────────────────────
     mat_text = write_mat_file(materials)
-    ucf_text = write_ucf_file(lattice, materials, jij)
+    ucf_text = write_ucf_file(basis_info, lattice, materials, jij)
     inp_text = write_input_file(
-        lattice, materials,
+        lattice, basis_info, materials,
         t_min=t_min, t_max=t_max, t_step=t_step, mc_step=mc_step,
     )
 
@@ -478,6 +501,7 @@ def generate_vampire_inputs_recursive(
     ...     Path('/data/SPR_KKR_Fe2CoZ'), depth=2, dr_max=-1
     ... )
     """
+    paths = []
     for jxc_path in root_path.rglob('*JXC.out'):
         rel_parts = jxc_path.relative_to(root_path).parts
         if len(rel_parts) != depth + 1:
@@ -485,6 +509,7 @@ def generate_vampire_inputs_recursive(
 
         calc_dir = jxc_path.parent
         out_dir = calc_dir / subdir
+        paths.append((calc_dir / out_dir).as_posix())
 
         # Создаём поддиректорию и копируем файлы расчёта
         out_dir.mkdir(exist_ok=True)
@@ -502,7 +527,7 @@ def generate_vampire_inputs_recursive(
             )
         except Exception as exc:
             print(f'[ОШИБКА] {calc_dir}: {exc}')
-
+    print('\n'.join(paths))
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CLI
@@ -527,10 +552,41 @@ def _parse_args():
     return p.parse_args()
 
 
+# if __name__ == '__main__':
+#     args = _parse_args()
+#     generate_vampire_inputs(
+#         args.calc_dir,
+#         da_max=args.da_max,
+#         dr_max=args.dr_max,
+#         output_dir=args.output_dir,
+#         t_min=args.t_min,
+#         t_max=args.t_max,
+#         t_step=args.t_step,
+#         mc_step=args.mc_step,
+#     )
+
+
 if __name__ == '__main__':
     # args = _parse_args()
-    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/Al/L21/vampire_manual')
-    generate_vampire_inputs(
-        wd,
-        dr_max=2
-    )
+    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe')
+
+    print(wd.parents[2])
+    # generate_vampire_inputs_recursive(wd.parents[2], depth=2, dr_max=-1)
+    for i in range(1, 90):
+        calc_dir = wd / str(i)
+        print(calc_dir.as_posix())
+        # generate_vampire_inputs(
+        #     calc_dir,
+        #     da_max=500,
+        #     dr_max=i,
+        #     output_dir=calc_dir,
+        #     t_min=0,
+        #     t_max=1400,
+        #     t_step=10,
+        #     mc_step=1000,
+        # )
+    #
+    # generate_vampire_inputs(
+    #     wd,
+    #     dr_max=-1
+    # )

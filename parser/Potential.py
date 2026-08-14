@@ -12,8 +12,11 @@ from pathlib import Path
 from pymatgen.core import Structure
 from pymatgen.io.vasp import Poscar, Potcar
 
-from Wigner_Seitz_radius import get_rws_physical
-from sys_from_gpt import generate_sys_data
+# from Wigner_Seitz_radius import get_rws_physical
+from System import generate_sys_data
+from pymatgen.io.vasp.inputs import PotcarSingle
+PotcarSingle.functional_dir['PBE_64'] = "/home/buche/VaspPot_64/potpaw_PBE.64"
+
 
 
 paws = {
@@ -34,11 +37,46 @@ paws = {
 
 
 def get_valence(structure: Structure):
-    potcar = Potcar([paws[el.symbol] for el in structure.elements], functional='PBE_64')
+    potcars_dir = Path("/home/buche/VaspPot_64/potpaw_PBE.64")
+
+    # Множество доступных имён потенциалов (имена подпапок = символы POTCAR)
+    available = {p.name for p in potcars_dir.iterdir() if p.is_dir()}
+
+    potcars = []
+
+    for el in structure.composition.elements:
+        symbol = el.symbol
+
+        candidates = [f'{symbol}_pv']
+        if symbol in paws:
+            candidates.append(paws[symbol])
+        candidates.append(f'{symbol}_sv')
+        candidates.append(symbol)
+
+        chosen = None
+        for candidate in candidates:
+            if candidate in available:
+                chosen = candidate
+                break
+
+        if chosen is None:
+            raise OSError(
+                f"Не найден POTCAR для элемента '{symbol}' в {potcars_dir}. "
+                f"Проверенные варианты: {candidates}"
+            )
+
+        potcars.append(chosen)
+
+    potcar = Potcar(potcars, functional='PBE_64')
     valences = []
     for element in potcar:
+        # print(dir(element))
+        # print(element.electron_configuration)
+        # exit()
         valence = 0.0
-        for level in element.get_electron_configuration():
+        for level in element.electron_configuration:
+            # print()
+            # exit()
             valence += level[2]
         valences.append(valence)
     return {el.symbol.split('_')[0]: val for el, val in zip(potcar, valences)}

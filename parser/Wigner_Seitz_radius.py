@@ -227,7 +227,7 @@ TABRWS_EXPERIMENTAL = {
 def get_rws_xband(
     structure: Structure,
     rws_vst_path: str = "rws.vst",
-) -> dict[str, float]:
+):
     """
     Вычисляет RWS по алгоритму xband "adjust R_WS by scaling":
 

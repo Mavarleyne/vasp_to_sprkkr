@@ -10,7 +10,7 @@ from pymatgen.core import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from typing import Dict, List, Tuple
 
-from sys_data_gpt import generate_sys_data  # импортируем общую функцию
+from Sys_data import generate_sys_data  # импортируем общую функцию
 import numpy as np
 
 

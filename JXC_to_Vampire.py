@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/env python
-
+import json
 import random
 import os
 import shutil
@@ -614,7 +614,12 @@ def get_curve_recursively(root: Path):
     :return: dict[full_path_str, np.ndarray curve]
     '''
     curves = {}
-    for path in root.rglob('output'):
+    # paths = sorted([Path(i) for i in root.rglob('output')],
+    #                key=lambda x: int(x.parts[-2]))
+    paths = [Path(i) for i in root.rglob('output')]
+    for path in paths:
+        # if 'vampire' not in path.parts:
+        #     continue
         if not check_status_vampire(path.parent):
             continue
 
@@ -629,7 +634,7 @@ def get_curve_recursively(root: Path):
             if line[0] == '0':
                 flag = True
                 curve.append([float(i) for i in line.split()[:2]])
-            if flag:
+            if flag and len(line) > 2:
                 curve.append([float(i) for i in line.split()[:2]])
         curves[path.parent.as_posix()] = np.array(curve)
         # print(curve)
@@ -641,7 +646,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from scipy.signal import savgol_filter
-from scipy.interpolate import make_interp_spline, PchipInterpolator
+from scipy.interpolate import make_interp_spline, PchipInterpolator, UnivariateSpline
 
 
 def check_status_vampire(p: Path):
@@ -728,29 +733,109 @@ def plot_exchange_from_jxc(path: Path):
 
 
 def plot_all_mags(curves: Dict[str, np.ndarray], save_path: Path):
-    fig, ax = plt.subplots(figsize=(6, 4))
+    Z_el = {
+        "Al": "-", "Si": "--", "Ga": "-.", "Ge": ":", }
+    colors = {
+        "L21": "#4C72B0", "XA": "#DD8452", "TC": "#55A868", "TP": "#C44E52", "Tsharp": "#8172B2"}
+    axes = {'Al': (0, 0), 'Si': (0, 1), 'Ga': (1, 0), 'Ge': (1, 1)}
+
+    fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(12, 8))
+    from matplotlib.lines import Line2D
+
+    # Легенда 1: цвет → элемент
+    color_handles = [
+        Line2D([0], [0], color=col, lw=2, label=el)
+        for el, col in colors.items()
+    ]
+
+    # Легенда 2: тип линии → структура
+    # ls_handles = [
+    #     Line2D([0], [0], color="black", lw=2, linestyle=ls, label=struct)
+    #     for struct, ls in Z_el.items()
+    # ]
 
     for path, curve in curves.items():
         T = curve[1:, 0]
         M = curve[1:, 1]
-        T_smooth = np.linspace(T.min(), T.max(), 500)
-        # y_smooth = X_Y_Spline(x_smooth)
-        print(T)
-        pchip = PchipInterpolator(T, M)
-        M_smooth = pchip(T_smooth)
+        # T_smooth = np.linspace(T.min(), T.max(), 500)
+        # # y_smooth = X_Y_Spline(x_smooth)
+        # print(T)
+        # pchip = PchipInterpolator(T, M)
+        # M_smooth = pchip(T_smooth)
 
-        label = path.split('/')[-1]
+        T_smooth = np.linspace(T.min(), T.max(), 500)
+
+        spl = UnivariateSpline(T, M, s=0.01)
+        M_smooth = spl(T_smooth)
+
+        # label = path.split('/')[-1]
         parts = path.split('/')
         label = f'{parts[-3]}_{parts[-2]}'
-        ax.plot(T_smooth, M_smooth, lw=1, label=label)
+        zel = parts[-3]
+        color = colors[parts[-2]]
+        # line = Z_el[parts[-3]]
+        ax[axes[zel]].plot(T_smooth, M_smooth, lw=1, label=label, c=color)
+
+    for i, axs in enumerate(ax.flat):
+        axs.set_xlabel("Температура (K)", fontsize=12)
+        axs.set_ylabel("Намагниченность (норм.)", fontsize=12)
+        # ax.set_title(rf"Температура Кюри — критическая аппроксимация"
+        #              "\n" rf"$M = A\,(1 - T/T_C)^{{\beta}}$", fontsize=13)
+        # ax.legend(fontsize=6, ncol=2)
+
+        leg1 = axs.legend(handles=color_handles, title=f'Fe2Co{list(axes.keys())[i]}',
+                         loc="upper right", fontsize=8, title_fontsize=9)
+        # leg2 = ax.legend(handles=ls_handles, title="Элемент",
+        #                  loc="center right", fontsize=8, title_fontsize=9)
+        axs.add_artist(leg1)  # важно: иначе leg1 перезапишется leg2
+        axs.grid(True, alpha=0.4)
+        axs.set_ylim(bottom=-0.02)
+        axs.set_xlim(0, 1200)
+    fig.tight_layout()
+    fig.savefig(save_path, dpi=300)
+    plt.close(fig)
+    print(f"График сохранён: {save_path}")
+
+
+def plot_all_mean_mags(curves: Dict[str, np.ndarray], save_path: Path):
+    fig, ax = plt.subplots(figsize=(6, 4))
+
+    M_mean = np.zeros((141, 1))
+    mask = np.arange(1, 142)
+    for path, curve in curves.items():
+        T = curve[1:, 0]
+        print(T)
+        M_mean += curve[mask, 1].reshape(-1, 1) / 89
+        # T_smooth = np.linspace(T.min(), T.max(), 500)
+        # # y_smooth = X_Y_Spline(x_smooth)
+        # print(T)
+        # pchip = PchipInterpolator(T, M)
+        # M_smooth = pchip(T_smooth)
+
+    T_smooth = np.linspace(T.min(), T.max(), 500)
+
+    # spl = UnivariateSpline(T, M_mean, s=0.01)
+    # M_smooth = spl(T_smooth)
+    pchip = PchipInterpolator(T, M_mean)
+    M_smooth = pchip(T_smooth)
+
+    ax.plot(T_smooth, M_smooth, lw=1, label='Mean magnetization', c='r')
+
 
     ax.set_xlabel("Температура (K)", fontsize=12)
     ax.set_ylabel("Намагниченность (норм.)", fontsize=12)
     # ax.set_title(rf"Температура Кюри — критическая аппроксимация"
     #              "\n" rf"$M = A\,(1 - T/T_C)^{{\beta}}$", fontsize=13)
-    ax.legend(fontsize=6, ncol=2)
+    ax.legend(fontsize=6)
+
+    # leg1 = ax.legend(handles=color_handles, title=f'Fe2Co{list(axes.keys())[i]}',
+    #                  loc="upper right", fontsize=8, title_fontsize=9)
+    # leg2 = ax.legend(handles=ls_handles, title="Элемент",
+    #                  loc="center right", fontsize=8, title_fontsize=9)
+    # ax.add_artist(leg1)  # важно: иначе leg1 перезапишется leg2
     ax.grid(True, alpha=0.4)
     ax.set_ylim(bottom=-0.02)
+    ax.set_xlim(0, 1400)
     fig.tight_layout()
     fig.savefig(save_path, dpi=300)
     plt.close(fig)
@@ -823,15 +908,83 @@ def get_tc_mfa(path_to_jxc: Path, spheres: int = None, kkr_ver: str = None):
     return Tc
 
 
+def plot_tc_and_mean_tc_vs_CSN(curves: dict):
+    tc = []
+    tc_mean = []
+    curves = dict(sorted(curves.items(), key=lambda item: int(item[0].split('/')[-1])))
+    from Critical_fit_TC import curie_fit_fixed_beta
+    for i, (path, curve) in enumerate(curves.items(), start=1):
+        # curie_critical_fit(curve, f'{path}/curve.png')
+        # tc.append([i, curie_max_derivative(curve, f'{path}/curve.png', plot=False)])
+        # print(f'{"": #^100}')
+        tc_mfa = get_tc_mfa(Path(path), None, None)
+        tc_fit = curie_fit_fixed_beta(curve, tc_mfa, f'{path}/curve.png')
+
+        # if tc_fit[1] > 0.4:
+        #     continue
+        tc.append([i, tc_fit])
+        print('-'*100)
+        print(path)
+        # print(curve)
+        print(tc)
+        mean_tc = sum([obj[1] for obj in tc])/len(tc)
+        tc_mean.append([i, mean_tc])
+
+
+    tc_mean = np.array(tc_mean)
+    tc = np.array(tc)
+    # tc_mean = get_mean_field_Tc(wd)
+    # print(tc)
+    # exit()
+    x_smooth = np.linspace(tc[:, 0].min(), tc[:, 0].max(), 500)
+    pchip = PchipInterpolator(tc[:, 0], tc[:, 1])
+    y_smooth = pchip(x_smooth)
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    plt.plot(x_smooth, y_smooth, linewidth=2, zorder=5)
+    plt.scatter(tc[:, 0], tc[:, 1], color='red', linewidth=0.7, marker='o', zorder=10)
+
+    ax.set_xlabel("Количество координационных сфер", fontsize=13)
+    ax.set_ylabel("Температура Кюри, $T_C$ (K)", fontsize=13)
+    ax.set_title("Monte-Carlo", fontsize=14)
+
+    ax.set_xticks(np.arange(0, 91, 10))
+    ax.grid(True, linestyle='--', alpha=0.6, zorder=1)
+    ax.tick_params(labelsize=11)
+
+    fig.tight_layout()
+    fig.savefig(f"{wd}/Monte_Carlo_tc.png", dpi=300)
+    plt.show()
+
+    x_smooth = np.linspace(tc_mean[:, 0].min(), tc_mean[:, 0].max(), 500)
+    pchip = PchipInterpolator(tc_mean[:, 0], tc_mean[:, 1])
+    y_smooth = pchip(x_smooth)
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    plt.plot(x_smooth, y_smooth, linewidth=2, zorder=5)
+    plt.scatter(tc_mean[:, 0], tc_mean[:, 1], color='red', linewidth=0.7, marker='o', zorder=10)
+
+    ax.set_xlabel("Количество координационных сфер", fontsize=13)
+    ax.set_ylabel("Средняя температура Кюри, $T_C$ (K)", fontsize=13)
+    ax.set_title("Monte-Carlo", fontsize=14)
+
+    ax.set_xticks(np.arange(0, 91, 10))
+    ax.grid(True, linestyle='--', alpha=0.6, zorder=1)
+    ax.tick_params(labelsize=11)
+
+    fig.tight_layout()
+    fig.savefig(f"{wd}/Monte_Carlo_mean_tc.png", dpi=300)
+
+
 if __name__ == '__main__':
     # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/Fe/')
-    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ')
+    # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ')
 
     # curves = get_curve_recursively(wd)
 
     # curves = dict(sorted(curves.items(), key=lambda item: item[0].split('/')[-3]))
     # plot_all_mags(curves, (wd / 'All_mags.png'))
-    generate_vampire_inputs_recursive(wd, 2, 1)
+    # generate_vampire_inputs_recursive(wd, 2, 1)
     # J = read_J(da_max, path=wd / 'Al' / 'L21' / '*JXC.out')
     # for line in J:
     #     if line[0] == 0 and line[1] == 0:
@@ -839,7 +992,7 @@ if __name__ == '__main__':
     # print(J)
     # finds = sorted([i.parent.as_posix() for i in wd.rglob('*.UCF')])
     # (wd / 'vampire_work_paths').write_text('\n'.join(finds))
-    exit()
+    # exit()
     # plot_exchange_from_jxc(wd)
     # exit()
     # print(len(wd.relative_to(wd.parent).parts))
@@ -863,37 +1016,43 @@ if __name__ == '__main__':
     # beta_type = 'fixed'
     # beta_type = 'free'
     # # generate_vampire_inputs_recursive(wd, 0, 45)
-    n_t = []
-    for i in range(1, 24):
-        # generate_vampire_inputs_recursive(wd, 0, i)
-        # print((wd / str(i)).as_posix())
-        path = wd / str(i) / 'log'
-        log = path.read_text().split('\n')
-
-        for line in log:
-            if 'Simulation run time' in line:
-                n_t.append([i, float(line.split()[-1])])
-                break
-    print(n_t)
-    t_n = np.array(n_t)
-    print(t_n)
-    exit()
-    fig, ax = plt.subplots()
-    ax.grid(True)
-    ax.plot(t_n[:, 0], t_n[:, 1])
-    ax.set_xticks(np.arange(0, 45, 1))
-    ax.set_xlim(0, 45)
-    plt.show()
-    exit()
+    # n_t = []
+    # for i in range(1, 24):
+    #     # generate_vampire_inputs_recursive(wd, 0, i)
+    #     # print((wd / str(i)).as_posix())
+    #     path = wd / str(i) / 'log'
+    #     log = path.read_text().split('\n')
+    #
+    #     for line in log:
+    #         if 'Simulation run time' in line:
+    #             n_t.append([i, float(line.split()[-1])])
+    #             break
+    # print(n_t)
+    # t_n = np.array(n_t)
+    # print(t_n)
+    # exit()
+    # fig, ax = plt.subplots()
+    # ax.grid(True)
+    # ax.plot(t_n[:, 0], t_n[:, 1])
+    # ax.set_xticks(np.arange(0, 45, 1))
+    # ax.set_xlim(0, 45)
+    # plt.show()
+    # exit()
     # generate_run_recursively(wd)
     # exit()
-    wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/')
+    # wd = Path('/home/buche/VaspTesting/Danil/magnetocaloric_nn/SPR_KKR_Fe2CoZ/')
 
     curves = get_curve_recursively(wd)
+    # print(json.dumps(curves, indent=4, ensure_ascii=False, default=list))
+    # print(True in [True if None in val else False for val in list(curves.values())])
+    # print(list(curves.values())[-1])
+    # exit()
     # curves = dict(sorted(curves.items(), key=lambda item: int(item[0].split('/')[-1])))
 
-    plot_all_mags(curves, (wd / 'All_mags.png'))
-
+    plot_all_mean_mags(curves, (wd / 'All_mean_mags.png'))
+    # exit()
+    # plot_tc_and_mean_tc_vs_CSN(curves)
+    exit()
     # test_curve = list(curves.values())[0]
     # test_curve[:, 1] = test_curve[:, 1]**(1/0.365)
     # x = list(curves.values())[0][:, 0]
@@ -928,52 +1087,7 @@ if __name__ == '__main__':
     # # print(list(curves.values())[0])
     # print(dict(sorted(curves.items(), key=lambda item: int(item[0].split('/')[-1]))))
     # exit()
-    tc = []
-    tc_mean = []
-    from Critical_fit_TC import curie_fit_fixed_beta
-    for i, (path, curve) in enumerate(curves.items(), start=1):
-        # curie_critical_fit(curve, f'{path}/curve.png')
-        # tc.append([i, curie_max_derivative(curve, f'{path}/curve.png', plot=False)])
-        print(f'{"": #^100}')
-        tc_mfa = get_tc_mfa(Path(path), None, None)
-        tc_fit = curie_fit_fixed_beta(curve, tc_mfa, f'{path}/curve.png')
 
-        # if tc_fit[1] > 0.4:
-        #     continue
-        tc.append([i, tc_fit])
-        # mean_tc = sum([obj[1] for obj in tc])/len(tc)
-        # tc_mean.append([i, mean_tc])
-
-    tc = np.array(tc_mean)
-    # tc = get_mean_field_Tc(wd)
-    print(tc)
-    exit()
-
-    # X_Y_Spline = make_interp_spline(tc[:-1, 0], tc[:-1, 1], k=len(tc)-1)
-    x_smooth = np.linspace(tc[:, 0].min(), tc[:, 0].max(), 500)
-    # y_smooth = X_Y_Spline(x_smooth)
-
-    pchip = PchipInterpolator(tc[:, 0], tc[:, 1])
-    y_smooth = pchip(x_smooth)
-
-    fig, ax = plt.subplots(figsize=(8, 6))
-
-    # ax.plot(tc[:-1, 0], tc[:-1, 1], marker='o', linewidth=2, markersize=6)
-    plt.plot(x_smooth, y_smooth, linewidth=2, zorder=5)
-    # plt.plot(tc[:-1, 0], tc[:-1, 1], '-', linewidth=2, zorder=5)
-    plt.scatter(tc[:, 0], tc[:, 1], color='red', linewidth=2, marker='o', zorder=10)
-
-    ax.set_xlabel("Количество координационных сфер", fontsize=13)
-    ax.set_ylabel("Средняя температура Кюри, $T_C$ (K)", fontsize=13)
-    ax.set_title("Monte-Carlo", fontsize=14)
-
-    ax.set_xticks(np.arange(0, 50, 5))
-    ax.grid(True, linestyle='--', alpha=0.6, zorder=1)
-    ax.tick_params(labelsize=11)
-
-    fig.tight_layout()
-    fig.savefig(f"{wd}/Monte_Carlo_mean_tc.png", dpi=300)
-    plt.show()
 
     # dst = wd / f'curves'
     # dst.mkdir(exist_ok=True)
